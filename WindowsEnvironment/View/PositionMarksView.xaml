@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="WindowsEnvironment.View.PositionMarksView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="41" />
+            <RowDefinition Height="41" />
+            <RowDefinition Height="41" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="41" />
+            <ColumnDefinition Width="41" />
+            <ColumnDefinition Width="41" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Rectangle Name="_topMark" Grid.Row="1" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+        <Rectangle Name="_leftMark" Grid.Row="2" Grid.Column="1" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+        <Rectangle Name="_middleMark" Grid.Row="2" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+        <Rectangle Name="_rightMark" Grid.Row="2" Grid.Column="3" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+        <Rectangle Name="_bottomMark" Grid.Row="3" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,50 @@
+﻿<Window x:Class="WindowsEnvironment.View.FlexWindow"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="FlexWindowView"
+        WindowStyle="None"
+        BorderThickness="1"
+        BorderBrush="Black"
+        Height="200"
+        Width="300"
+        MinWidth="100"
+        MinHeight="100"
+        Topmost="True"
+        ShowInTaskbar="False">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/MainStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid
+        MouseUp="OnWindowMouseUp">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Name="_headerGrid"
+            Background="#4a9bc7"
+            VerticalAlignment="Top"
+            Height="30"
+            MouseDown="OnHeaderMouseDown"
+            MouseMove="OnHeaderMouseMove"
+            MouseUp="OnHeaderMouseUp">
+            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="4,1,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Button Style="{StaticResource CloseButtonStyle}" Margin="0,2,2,0" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Click="OnCloseButtonClick">
+                <TextBlock Text="🗙" Margin="0,-2,0,0" />
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="_contentGrid"></Grid>
+    </Grid>
+</Window>
