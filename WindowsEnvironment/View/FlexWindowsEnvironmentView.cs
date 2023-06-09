@@ -45,9 +45,22 @@ public class FlexWindowsEnvironmentView : Control
         var template = new ControlTemplate(typeof(FlexWindowsEnvironmentView));
         template.VisualTree = new FrameworkElementFactory(typeof(Grid), "master");
         Template = template;
+        Application.Current.MainWindow.StateChanged += OnWindowStateChanged;
         Application.Current.MainWindow.MouseMove += OnWindowMouseMove;
         Application.Current.MainWindow.MouseUp += OnWindowMouseUp;
         Application.Current.MainWindow.Closed += OnWindowClosed;
+    }
+
+    private void OnWindowStateChanged(object? sender, EventArgs e)
+    {
+        if (Application.Current.MainWindow.WindowState == WindowState.Minimized)
+        {
+            Application.Current.Windows.EachFlexWindow(x => x.Hide());
+        }
+        else
+        {
+            Application.Current.Windows.EachFlexWindow(x => x.Show());
+        }
     }
 
     private void OnWindowMouseMove(object sender, MouseEventArgs e)
@@ -59,6 +72,11 @@ public class FlexWindowsEnvironmentView : Control
     private void OnWindowMouseUp(object sender, MouseButtonEventArgs e)
     {
         _mouseController!.OnWindowButtonUp();
+    }
+
+    private void OnWindowClosed(object? sender, EventArgs e)
+    {
+        Application.Current.Windows.EachFlexWindow(x => x.Close());
     }
 
     public override void OnApplyTemplate()
@@ -232,13 +250,5 @@ public class FlexWindowsEnvironmentView : Control
         var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content, Header = header };
         tabControl.Items.Add(tabItem);
         tabControl.SelectedItem = tabItem;
-    }
-
-    private void OnWindowClosed(object? sender, EventArgs e)
-    {
-        foreach (Window w in Application.Current.Windows)
-        {
-            if (w is FlexWindow) w.Close();
-        }
     }
 }
