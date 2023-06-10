@@ -30,6 +30,39 @@ internal partial class PositionMarksView : UserControl
         PanelName = panelName;
     }
 
+    public void ActivatePosition(PanelPosition position)
+    {
+        if (position == PanelPosition.Top)
+        {
+            _topPanel.Visibility = Visibility.Visible;
+        }
+        else if (position == PanelPosition.Left)
+        {
+            _leftPanel.Visibility = Visibility.Visible;
+        }
+        else if (position == PanelPosition.Middle)
+        {
+            _middlePanel.Visibility = Visibility.Visible;
+        }
+        else if (position == PanelPosition.Right)
+        {
+            _rightPanel.Visibility = Visibility.Visible;
+        }
+        else // Bottom
+        {
+            _bottomPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    public void DeactivatePosition()
+    {
+        _topPanel.Visibility = Visibility.Hidden;
+        _leftPanel.Visibility = Visibility.Hidden;
+        _middlePanel.Visibility = Visibility.Hidden;
+        _rightPanel.Visibility = Visibility.Hidden;
+        _bottomPanel.Visibility = Visibility.Hidden;
+    }
+
     public SelectedPositionResult? GetSelectedPosition(FrameworkElement flexEnvironment)
     {
         var mousePosition = Mouse.GetPosition(flexEnvironment);

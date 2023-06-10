@@ -176,15 +176,11 @@ public class FlexWindowsEnvironmentView : Control
             flexWindow.HeaderMouseUp += (s, e) =>
             {
                 if (_marksWindow == null) return;
-                foreach (var marks in _marksWindow.Marks)
+                var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
+                if (marks != null)
                 {
-                    var position = marks.GetSelectedPosition(this);
-                    if (position != null)
-                    {
-                        Model.SetPanelPosition(position.PanelName, position.Position, flexWindow.MainContent);
-                        flexWindow.Close();
-                        break;
-                    }
+                    Model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.MainContent);
+                    flexWindow.Close();
                 }
                 _marksWindow.Close();
                 _marksWindow = null;
@@ -207,6 +203,12 @@ public class FlexWindowsEnvironmentView : Control
                 {
                     _marksWindow.Topmost = false;
                     _marksWindow.Topmost = true;
+                    _marksWindow.DeactivateAllPosition();
+                    var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
+                    if (marks != null)
+                    {
+                        marks.ActivatePosition(selectedPosition!.Position);
+                    }
                 }
             };
             flexWindow.CaptureHeader(mousePosition);

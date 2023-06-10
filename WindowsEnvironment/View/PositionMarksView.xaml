@@ -6,25 +6,97 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200">
+    <UserControl.Resources>
+        <Path
+            x:Key="upTriangle"
+            x:Shared="False"
+            Data="M42.6987,213C26.1987,213,19.5187,201.349,27.8537,187.109L115.1947,37.891C123.5307,23.651,137.1687,23.651,145.5047,37.891L232.8457,187.109C241.1807,201.349,234.4997,213,217.9997,213L42.6987,213z"
+            Stretch="Fill"
+            Fill="LightBlue"
+            Stroke="#111"
+            StrokeStartLineCap="Flat"
+            StrokeEndLineCap="Flat"
+            StrokeThickness="1"
+            StrokeMiterLimit="10"
+            StrokeLineJoin="Miter"
+            Canvas.Left="-0.5"
+            Canvas.Top="-0.5"
+            Width="45"
+            Height="30" />
+        <Border
+            x:Key="middle"
+            Width="41"
+            Height="41"
+            CornerRadius="3 3 3 3"
+            BorderThickness="1"
+            BorderBrush="#111"
+            Background="LightBlue" />
+        <DropShadowEffect
+            x:Key="shadow"
+            ShadowDepth="4"
+            Direction="0"
+            Color="Black"
+            Opacity="0.25"
+            BlurRadius="4" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="41" />
-            <RowDefinition Height="41" />
-            <RowDefinition Height="41" />
+            <RowDefinition Height="45" />
+            <RowDefinition Height="45" />
+            <RowDefinition Height="45" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="41" />
-            <ColumnDefinition Width="41" />
-            <ColumnDefinition Width="41" />
+            <ColumnDefinition Width="45" />
+            <ColumnDefinition Width="45" />
+            <ColumnDefinition Width="45" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Rectangle Name="_topMark" Grid.Row="1" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
-        <Rectangle Name="_leftMark" Grid.Row="2" Grid.Column="1" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
-        <Rectangle Name="_middleMark" Grid.Row="2" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
-        <Rectangle Name="_rightMark" Grid.Row="2" Grid.Column="3" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
-        <Rectangle Name="_bottomMark" Grid.Row="3" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" />
+
+        <Rectangle Name="_topMark" Grid.Row="1" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_leftMark" Grid.Row="2" Grid.Column="1" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_middleMark" Grid.Row="2" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_rightMark" Grid.Row="2" Grid.Column="3" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_bottomMark" Grid.Row="3" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+
+        <Grid Name="_topPanel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_leftPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_middlePanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_rightPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="4" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_bottomPanel" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+
+        <Grid Grid.Row="1" Grid.Column="2" Effect="{StaticResource shadow}">
+            <ContentControl Content="{Binding Source={StaticResource upTriangle}}" />
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="1" Effect="{StaticResource shadow}">
+            <ContentControl Content="{Binding Source={StaticResource upTriangle}}" RenderTransformOrigin="0.5, 0.5">
+                <ContentControl.RenderTransform>
+                    <RotateTransform Angle="270" />
+                </ContentControl.RenderTransform>
+            </ContentControl>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="2" Effect="{StaticResource shadow}">
+            <ContentControl Content="{Binding Source={StaticResource middle}}" />
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="3" Effect="{StaticResource shadow}">
+            <ContentControl Content="{Binding Source={StaticResource upTriangle}}" RenderTransformOrigin="0.5, 0.5">
+                <ContentControl.RenderTransform>
+                    <RotateTransform Angle="90" />
+                </ContentControl.RenderTransform>
+            </ContentControl>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="2" Effect="{StaticResource shadow}">
+            <ContentControl Content="{Binding Source={StaticResource upTriangle}}" RenderTransformOrigin="0.5, 0.5">
+                <ContentControl.RenderTransform>
+                    <RotateTransform Angle="180" />
+                </ContentControl.RenderTransform>
+            </ContentControl>
+        </Grid>
     </Grid>
 </UserControl>

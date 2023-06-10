@@ -44,4 +44,26 @@ internal class PositionMarksWindow : Window
         marks.Height = grid.ActualHeight;
         _contentGrid.Children.Add(marks);
     }
+
+    public (PositionMarksView?, SelectedPositionResult?) GetSelectedMarkAndPosition(FrameworkElement flexEnvironment)
+    {
+        foreach (var marks in Marks)
+        {
+            var selectedPosition = marks.GetSelectedPosition(flexEnvironment);
+            if (selectedPosition != null)
+            {
+                return (marks, selectedPosition);
+            }
+        }
+
+        return (null, null);
+    }
+
+    public void DeactivateAllPosition()
+    {
+        foreach (var mark in Marks)
+        {
+            mark.DeactivatePosition();
+        }
+    }
 }
