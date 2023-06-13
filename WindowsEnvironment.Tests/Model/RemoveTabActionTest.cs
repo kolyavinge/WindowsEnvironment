@@ -29,7 +29,7 @@ internal class RemoveTabActionTest
     [Test]
     public void RemoveWrongTabFromRootPanel()
     {
-        _rootPanel.Tabs.AddNew(_windowContent);
+        _rootPanel.Tabs.Add(_windowContent);
         try
         {
             _action.RemoveTab(_rootPanel.Name, "wrong name", RemoveTabMode.Close);
@@ -44,7 +44,7 @@ internal class RemoveTabActionTest
     [Test]
     public void RemoveLastTabFromRootPanel()
     {
-        var tab = _rootPanel.Tabs.AddNew(_windowContent);
+        var tab = _rootPanel.Tabs.Add(_windowContent);
 
         _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Close);
 
@@ -55,8 +55,8 @@ internal class RemoveTabActionTest
     [Test]
     public void RemoveTabFromRootPanel()
     {
-        var tab1 = _rootPanel.Tabs.AddNew(_windowContent);
-        var tab2 = _rootPanel.Tabs.AddNew(_windowContent);
+        var tab1 = _rootPanel.Tabs.Add(_windowContent);
+        var tab2 = _rootPanel.Tabs.Add(_windowContent);
 
         _action.RemoveTab(_rootPanel.Name, tab2.Name, RemoveTabMode.Close);
 
@@ -70,7 +70,7 @@ internal class RemoveTabActionTest
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
-        var tab = panel2.Tabs.AddNew(_windowContent);
+        var tab = panel2.Tabs.Add(_windowContent);
         _rootPanel.Children.AddBegin(panel1);
         panel1.Children.AddBegin(panel2);
         _panels.Setup(x => x.GetPanelByName(panel2.Name)).Returns(panel2);
@@ -92,7 +92,7 @@ internal class RemoveTabActionTest
         _rootPanel.Children.AddBegin(new Panel("panel_4", new(_nameGenerator.Object)));
         panel1.Children.AddBegin(panel2);
         panel1.Children.AddBegin(panel3);
-        var tab = panel3.Tabs.AddNew(_windowContent);
+        var tab = panel3.Tabs.Add(_windowContent);
         _panels.Setup(x => x.GetPanelByName(panel3.Name)).Returns(panel3);
         _parentsChainFinder.Setup(x => x.FindChain(panel3.Name)).Returns(new List<Panel> { panel3, panel1, _rootPanel });
 

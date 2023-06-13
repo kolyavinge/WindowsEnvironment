@@ -26,7 +26,6 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
     public void SetPanelPosition(string panelName, PanelPosition position, object content)
     {
         var panel = _panels.GetPanelByName(panelName);
-
         if (position != PanelPosition.Middle)
         {
             if (panel.IsMain || panel.Tabs.Any())
@@ -44,13 +43,9 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             {
                 ChangeSplitOrientationIfNeeded(ref panel, position);
             }
-        }
-
-        if (position != PanelPosition.Middle)
-        {
             var childPanel = _panelFactory.MakeNew();
             childPanel.Parent = panel;
-            var tab = childPanel.Tabs.AddNew(content);
+            var tab = childPanel.Tabs.Add(content);
             if (position == PanelPosition.Left)
             {
                 panel.Children.AddBegin(childPanel);
@@ -72,7 +67,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         else
         {
             if (!panel.AllowTabs) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = panel.Tabs.AddNew(content);
+            var tab = panel.Tabs.Add(content);
             _events.RaiseTabAdded(panel, tab);
         }
     }

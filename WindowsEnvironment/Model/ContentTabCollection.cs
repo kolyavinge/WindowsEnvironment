@@ -16,7 +16,7 @@ public class ContentTabCollection : IReadOnlyCollection<ContentTab>
         _nameGenerator = nameGenerator;
     }
 
-    internal ContentTab AddNew(object content)
+    internal ContentTab Add(object content)
     {
         var tab = new ContentTab(_nameGenerator.GetContentTabName(), content);
         _tabs.Add(tab);

@@ -59,7 +59,7 @@ internal class PositionMarksWindow : Window
         return (null, null);
     }
 
-    public void DeactivateAllPosition()
+    public void DeactivateAllPositions()
     {
         foreach (var mark in Marks)
         {

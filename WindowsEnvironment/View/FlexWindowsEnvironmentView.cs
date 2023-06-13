@@ -153,8 +153,8 @@ public class FlexWindowsEnvironmentView : Control
 
     private void OnTabRemoved(object? sender, TabRemovedEventArgs e)
     {
-        var grid = _masterGrid.FindChild<Grid>(e.TabPanel.Name);
-        var tabControl = (TabControl)grid.Children[0];
+        var tabPanelGrid = _masterGrid.FindChild<Grid>(e.TabPanel.Name);
+        var tabControl = (TabControl)tabPanelGrid.Children[0];
         var tab = tabControl.Items.GetByName(e.Tab.Name)!;
         tab.Content = null;
         tabControl.Items.Remove(tab);
@@ -166,13 +166,7 @@ public class FlexWindowsEnvironmentView : Control
         {
             var parentPosition = PointToScreen(new());
             var mousePosition = Mouse.GetPosition(this);
-            var flexWindow = new FlexWindow(this);
-            flexWindow.Title = e.Tab.Name;
-            flexWindow.MainContent = (UIElement)e.Tab.Content;
-            flexWindow.Width = tabControl.ActualWidth;
-            flexWindow.Height = tabControl.ActualHeight;
-            flexWindow.Left = parentPosition.X + mousePosition.X - flexWindow.Width / 2.0;
-            flexWindow.Top = parentPosition.Y + mousePosition.Y - 20;
+            var flexWindow = new FlexWindow(this, e.Tab, tabControl, parentPosition, mousePosition);
             flexWindow.HeaderMouseUp += (s, e) =>
             {
                 if (_marksWindow == null) return;
@@ -190,12 +184,12 @@ public class FlexWindowsEnvironmentView : Control
                 if (_marksWindow == null)
                 {
                     _marksWindow = new PositionMarksWindow(this);
-                    var tabbedPanels = Model.AllPanels.Where(x => x.AllowTabs).ToList();
-                    foreach (var tabbedPanel in tabbedPanels)
+                    var tabPanels = Model.AllPanels.Where(x => x.AllowTabs).ToList();
+                    foreach (var tabPanel in tabPanels)
                     {
-                        var grid = _masterGrid.FindChild<Grid>(tabbedPanel.Name);
-                        var gridPosition = grid.GetPositionWithinParent(this);
-                        _marksWindow.AddMarksFor(tabbedPanel.Name, grid, gridPosition);
+                        var tabPanelGrid = _masterGrid.FindChild<Grid>(tabPanel.Name);
+                        var tabPanelGridPosition = tabPanelGrid.GetPositionWithinParent(this);
+                        _marksWindow.AddMarksFor(tabPanel.Name, tabPanelGrid, tabPanelGridPosition);
                     }
                     _marksWindow.Show();
                 }
@@ -203,7 +197,7 @@ public class FlexWindowsEnvironmentView : Control
                 {
                     _marksWindow.Topmost = false;
                     _marksWindow.Topmost = true;
-                    _marksWindow.DeactivateAllPosition();
+                    _marksWindow.DeactivateAllPositions();
                     var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
                     if (marks != null)
                     {
