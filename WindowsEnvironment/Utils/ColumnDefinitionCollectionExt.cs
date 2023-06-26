@@ -12,4 +12,19 @@ internal static class ColumnDefinitionCollectionExt
             collection.Add(item);
         }
     }
+
+    public static void RemoveAll(this ColumnDefinitionCollection collection, Predicate<ColumnDefinition> condition)
+    {
+        for (int i = 0; i < collection.Count;)
+        {
+            if (condition(collection[i]))
+            {
+                collection.RemoveAt(i);
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
 }

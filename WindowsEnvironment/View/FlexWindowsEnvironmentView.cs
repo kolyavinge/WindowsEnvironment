@@ -93,23 +93,27 @@ public class FlexWindowsEnvironmentView : Control
 
     private void OnPanelAdded(object? sender, PanelAddedEventArgs e)
     {
-        var parentGrid = _masterGrid.FindChild<Grid>(e.ParentPanel.Name);
+        var parentGrid = _masterGrid.FindChildRec<Grid>(e.ParentPanel.Name);
         if (e.ParentPanel.Orientation == SplitOrientation.ByRows)
         {
+            parentGrid.RowDefinitions.Add(new());
             parentGrid.RowDefinitions.Add(new());
         }
         else if (e.ParentPanel.Orientation == SplitOrientation.ByCols)
         {
+            parentGrid.ColumnDefinitions.Add(new());
             parentGrid.ColumnDefinitions.Add(new());
         }
         var childGrid = new Grid { Name = e.ChildPanel.Name };
         childGrid.RowDefinitions.Add(new());
         childGrid.ColumnDefinitions.Add(new());
         var tabControl = new TabControl();
-        AddNewTab(tabControl, e.ChildPanel.Name, e.Tab);
+        MakeNewTab(tabControl, e.ChildPanel.Name, e.Tab);
         childGrid.Children.Add(tabControl);
         parentGrid.Children.Add(childGrid);
-        SetPanelRowsAndCols(e.ParentPanel);
+        parentGrid.Children.Add(GridSplitterFactory.MakeSplitter(e.ParentPanel.Orientation));
+        SetPanelRowsCols(e.ParentPanel);
+        SetSplittersRowsCols(e.ParentPanel);
     }
 
     private void OnParentChanged(object? sender, ParentChangedEventArgs e)
@@ -117,7 +121,7 @@ public class FlexWindowsEnvironmentView : Control
         var parentGrid = new Grid { Name = e.ParentPanel.Name };
         parentGrid.RowDefinitions.Add(new());
         parentGrid.ColumnDefinitions.Add(new());
-        var childGrid = _masterGrid.FindChild<Grid>(e.ChildPanel.Name);
+        var childGrid = _masterGrid.FindChildRec<Grid>(e.ChildPanel.Name);
         var oldParent = (Grid)childGrid.Parent;
         oldParent.Children.Remove(childGrid);
         oldParent.Children.Add(parentGrid);
@@ -126,34 +130,87 @@ public class FlexWindowsEnvironmentView : Control
         Grid.SetColumn(parentGrid, Grid.GetColumn(childGrid));
     }
 
-    private void OnTabAdded(object? sender, TabAddedEventArgs e)
-    {
-        var parentGrid = _masterGrid.FindChild<Grid>(e.ParentPanel.Name);
-        var tabControl = (TabControl)parentGrid.Children[0];
-        AddNewTab(tabControl, e.ParentPanel.Name, e.Tab);
-    }
-
     private void OnPanelRemoved(RemovedPanel removedPanel)
     {
-        var parentGrid = _masterGrid.FindChild<Grid>(removedPanel.Parent.Name);
-        var removedGrid = _masterGrid.FindChild<Grid>(removedPanel.Removed.Name);
+        var parentGrid = _masterGrid.FindChildRec<Grid>(removedPanel.Parent.Name);
+        var removedGrid = _masterGrid.FindChildRec<Grid>(removedPanel.Removed.Name);
+        var removedSplitter = parentGrid.FindChildren<GridSplitter>().First();
         if (removedPanel.Parent.Orientation == SplitOrientation.ByRows)
         {
-            int rowIndex = Grid.GetRow(removedGrid);
-            parentGrid.RowDefinitions.RemoveAt(rowIndex);
+            var removedGridRow = parentGrid.RowDefinitions[Grid.GetRow(removedGrid)];
+            var removedSplitterRow = parentGrid.RowDefinitions[Grid.GetRow(removedSplitter)];
+            parentGrid.RowDefinitions.Remove(removedGridRow);
+            parentGrid.RowDefinitions.Remove(removedSplitterRow);
         }
         else if (removedPanel.Parent.Orientation == SplitOrientation.ByCols)
         {
-            int colIndex = Grid.GetColumn(removedGrid);
-            parentGrid.ColumnDefinitions.RemoveAt(colIndex);
+            var removedGridCol = parentGrid.ColumnDefinitions[Grid.GetColumn(removedGrid)];
+            var removedSplitterCol = parentGrid.ColumnDefinitions[Grid.GetColumn(removedSplitter)];
+            parentGrid.ColumnDefinitions.Remove(removedGridCol);
+            parentGrid.ColumnDefinitions.Remove(removedSplitterCol);
         }
-        parentGrid.Children.RemoveByName(removedGrid.Name);
-        SetPanelRowsAndCols(removedPanel.Parent);
+        parentGrid.Children.Remove(removedGrid);
+        parentGrid.Children.Remove(removedSplitter);
+        SetPanelRowsCols(removedPanel.Parent);
+        SetSplittersRowsCols(removedPanel.Parent);
+    }
+
+    private void SetPanelRowsCols(Model.Panel parentPanel)
+    {
+        var parentGrid = _masterGrid.FindChildRec<Grid>(parentPanel.Name);
+        for (int childPanelIndex = 0; childPanelIndex < parentPanel.Children.Count; childPanelIndex++)
+        {
+            var rowColumnIndex = 2 * childPanelIndex;
+            var childPanel = parentPanel.Children[childPanelIndex];
+            var childGrid = _masterGrid.FindChildRec<Grid>(childPanel.Name);
+            if (parentPanel.Orientation == SplitOrientation.ByRows)
+            {
+                var row = parentGrid.RowDefinitions[rowColumnIndex];
+                row.MinHeight = Constants.RowColMinHeight;
+                Grid.SetRow(childGrid, rowColumnIndex);
+            }
+            else if (parentPanel.Orientation == SplitOrientation.ByCols)
+            {
+                var col = parentGrid.ColumnDefinitions[rowColumnIndex];
+                col.MinWidth = Constants.RowColMinHeight;
+                Grid.SetColumn(childGrid, rowColumnIndex);
+            }
+        }
+    }
+
+    private void SetSplittersRowsCols(Model.Panel parentPanel)
+    {
+        var parentGrid = _masterGrid.FindChildRec<Grid>(parentPanel.Name);
+        var splitters = parentGrid.FindChildren<GridSplitter>().ToList();
+        for (int splitterIndex = 0; splitterIndex < splitters.Count; splitterIndex++)
+        {
+            var splitter = splitters[splitterIndex];
+            var rowColumnIndex = 2 * splitterIndex + 1;
+            if (parentPanel.Orientation == SplitOrientation.ByRows)
+            {
+                var row = parentGrid.RowDefinitions[rowColumnIndex];
+                row.Height = new(0, GridUnitType.Auto);
+                Grid.SetRow(splitter, rowColumnIndex);
+            }
+            else if (parentPanel.Orientation == SplitOrientation.ByCols)
+            {
+                var col = parentGrid.ColumnDefinitions[rowColumnIndex];
+                col.Width = new(0, GridUnitType.Auto);
+                Grid.SetColumn(splitter, rowColumnIndex);
+            }
+        }
+    }
+
+    private void OnTabAdded(object? sender, TabAddedEventArgs e)
+    {
+        var parentGrid = _masterGrid.FindChildRec<Grid>(e.ParentPanel.Name);
+        var tabControl = (TabControl)parentGrid.Children[0];
+        MakeNewTab(tabControl, e.ParentPanel.Name, e.Tab);
     }
 
     private void OnTabRemoved(object? sender, TabRemovedEventArgs e)
     {
-        var tabPanelGrid = _masterGrid.FindChild<Grid>(e.TabPanel.Name);
+        var tabPanelGrid = _masterGrid.FindChildRec<Grid>(e.TabPanel.Name);
         var tabControl = (TabControl)tabPanelGrid.Children[0];
         var tab = tabControl.Items.GetByName(e.Tab.Name)!;
         tab.Content = null;
@@ -187,7 +244,7 @@ public class FlexWindowsEnvironmentView : Control
                     var tabPanels = Model.AllPanels.Where(x => x.AllowTabs).ToList();
                     foreach (var tabPanel in tabPanels)
                     {
-                        var tabPanelGrid = _masterGrid.FindChild<Grid>(tabPanel.Name);
+                        var tabPanelGrid = _masterGrid.FindChildRec<Grid>(tabPanel.Name);
                         var tabPanelGridPosition = tabPanelGrid.GetPositionWithinParent(this);
                         _marksWindow.AddMarksFor(tabPanel.Name, tabPanelGrid, tabPanelGridPosition);
                     }
@@ -210,24 +267,7 @@ public class FlexWindowsEnvironmentView : Control
         }
     }
 
-    private void SetPanelRowsAndCols(Model.Panel parentPanel)
-    {
-        foreach (var childPanel in parentPanel.Children)
-        {
-            var index = Model.GetChildPanelIndex(parentPanel.Name, childPanel.Name);
-            var childGrid = _masterGrid.FindChild<Grid>(childPanel.Name);
-            if (parentPanel.Orientation == SplitOrientation.ByRows)
-            {
-                Grid.SetRow(childGrid, index);
-            }
-            else if (parentPanel.Orientation == SplitOrientation.ByCols)
-            {
-                Grid.SetColumn(childGrid, index);
-            }
-        }
-    }
-
-    private void AddNewTab(TabControl tabControl, string panelName, ContentTab contentTab)
+    private void MakeNewTab(TabControl tabControl, string panelName, ContentTab contentTab)
     {
         var header = new Grid();
         header.Children.Add(new TextBlock { Text = contentTab.Name });
