@@ -22,6 +22,26 @@ internal class SelectedPositionResult
 
 internal partial class PositionMarksView : UserControl
 {
+    #region Styles
+    public Brush PositionMarksBackground
+    {
+        get { return (Brush)GetValue(PositionMarksBackgroundProperty); }
+        set { SetValue(PositionMarksBackgroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty PositionMarksBackgroundProperty =
+        DependencyProperty.Register("PositionMarksBackground", typeof(Brush), typeof(PositionMarksView), new PropertyMetadata(Brushes.LightBlue));
+
+    public Brush HighlightedPositionBackground
+    {
+        get { return (Brush)GetValue(HighlightedPositionBackgroundProperty); }
+        set { SetValue(HighlightedPositionBackgroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty HighlightedPositionBackgroundProperty =
+        DependencyProperty.Register("HighlightedPositionBackground", typeof(Brush), typeof(PositionMarksView), new PropertyMetadata(Brushes.LightBlue));
+    #endregion
+
     public string PanelName { get; }
 
     public PositionMarksView(string panelName = "")

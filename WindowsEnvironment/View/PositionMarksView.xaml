@@ -12,7 +12,7 @@
             x:Shared="False"
             Data="M42.6987,213C26.1987,213,19.5187,201.349,27.8537,187.109L115.1947,37.891C123.5307,23.651,137.1687,23.651,145.5047,37.891L232.8457,187.109C241.1807,201.349,234.4997,213,217.9997,213L42.6987,213z"
             Stretch="Fill"
-            Fill="LightBlue"
+            Fill="{Binding PositionMarksBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
             Stroke="#111"
             StrokeStartLineCap="Flat"
             StrokeEndLineCap="Flat"
@@ -30,7 +30,7 @@
             CornerRadius="3 3 3 3"
             BorderThickness="1"
             BorderBrush="#111"
-            Background="LightBlue" />
+            Background="{Binding PositionMarksBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
         <DropShadowEffect
             x:Key="shadow"
             ShadowDepth="4"
@@ -55,17 +55,17 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Rectangle Name="_topMark" Grid.Row="1" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
-        <Rectangle Name="_leftMark" Grid.Row="2" Grid.Column="1" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
-        <Rectangle Name="_middleMark" Grid.Row="2" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
-        <Rectangle Name="_rightMark" Grid.Row="2" Grid.Column="3" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
-        <Rectangle Name="_bottomMark" Grid.Row="3" Grid.Column="2" Stroke="Black" Fill="AliceBlue" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_topMark" Grid.Row="1" Grid.Column="2" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_leftMark" Grid.Row="2" Grid.Column="1" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_middleMark" Grid.Row="2" Grid.Column="2" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_rightMark" Grid.Row="2" Grid.Column="3" Width="40" Height="40" Visibility="Hidden" />
+        <Rectangle Name="_bottomMark" Grid.Row="3" Grid.Column="2" Width="40" Height="40" Visibility="Hidden" />
 
-        <Grid Name="_topPanel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
-        <Grid Name="_leftPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
-        <Grid Name="_middlePanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
-        <Grid Name="_rightPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="4" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
-        <Grid Name="_bottomPanel" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Background="LightBlue" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_topPanel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Background="{Binding HighlightedPositionBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_leftPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Background="{Binding HighlightedPositionBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_middlePanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5" Background="{Binding HighlightedPositionBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_rightPanel" Grid.Row="0" Grid.RowSpan="5" Grid.Column="4" Background="{Binding HighlightedPositionBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.5" Visibility="Hidden" />
+        <Grid Name="_bottomPanel" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Background="{Binding HighlightedPositionBackground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.5" Visibility="Hidden" />
 
         <Grid Grid.Row="1" Grid.Column="2" Effect="{StaticResource shadow}">
             <ContentControl Content="{Binding Source={StaticResource upTriangle}}" />

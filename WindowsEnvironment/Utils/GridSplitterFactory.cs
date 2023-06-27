@@ -6,35 +6,37 @@ namespace WindowsEnvironment.Utils;
 
 internal static class GridSplitterFactory
 {
-    public static GridSplitter MakeSplitter(SplitOrientation orientation)
+    public static GridSplitter MakeSplitter(SplitOrientation orientation, Style horizontalSplitterStyle, Style verticalSplitterStyle)
     {
         if (orientation == SplitOrientation.ByRows)
         {
-            return MakeHorizontal();
+            return MakeHorizontal(horizontalSplitterStyle);
         }
         else
         {
-            return MakeVertical();
+            return MakeVertical(verticalSplitterStyle);
         }
     }
 
-    public static GridSplitter MakeHorizontal()
+    public static GridSplitter MakeHorizontal(Style style)
     {
         return new()
         {
-            Height = Constants.SplitterWidthHeight,
+            MinHeight = Constants.SplitterWidthHeight,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Center,
+            Style = style
         };
     }
 
-    public static GridSplitter MakeVertical()
+    public static GridSplitter MakeVertical(Style style)
     {
         return new()
         {
-            Width = Constants.SplitterWidthHeight,
+            MinWidth = Constants.SplitterWidthHeight,
             HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Stretch
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Style = style
         };
     }
 }

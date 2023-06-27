@@ -8,7 +8,7 @@ using WindowsEnvironment.Utils;
 
 namespace WindowsEnvironment.View;
 
-public class FlexWindowsEnvironmentView : Control
+public partial class FlexWindowsEnvironmentView : Control
 {
     #region Model
     public IFlexWindowsEnvironment Model
@@ -48,7 +48,7 @@ public class FlexWindowsEnvironmentView : Control
         Application.Current.MainWindow.StateChanged += OnWindowStateChanged;
         Application.Current.MainWindow.MouseMove += OnWindowMouseMove;
         Application.Current.MainWindow.MouseUp += OnWindowMouseUp;
-        Application.Current.MainWindow.Closed += OnWindowClosed;
+        Application.Current.MainWindow.Closed += OnMainWindowClosed;
     }
 
     private void OnWindowStateChanged(object? sender, EventArgs e)
@@ -74,7 +74,7 @@ public class FlexWindowsEnvironmentView : Control
         _mouseController!.OnWindowButtonUp();
     }
 
-    private void OnWindowClosed(object? sender, EventArgs e)
+    private void OnMainWindowClosed(object? sender, EventArgs e)
     {
         Application.Current.Windows.EachFlexWindow(x => x.Close());
     }
@@ -87,7 +87,7 @@ public class FlexWindowsEnvironmentView : Control
         rootGrid.Name = WindowsEnvironment.Model.Panel.MainPanelName;
         rootGrid.RowDefinitions.Add(new());
         rootGrid.ColumnDefinitions.Add(new());
-        rootGrid.Children.Add(new TabControl());
+        rootGrid.Children.Add(new TabControl { Style = MainPanelTabControlStyle });
         _masterGrid.Children.Add(rootGrid);
     }
 
@@ -107,11 +107,11 @@ public class FlexWindowsEnvironmentView : Control
         var childGrid = new Grid { Name = e.ChildPanel.Name };
         childGrid.RowDefinitions.Add(new());
         childGrid.ColumnDefinitions.Add(new());
-        var tabControl = new TabControl();
+        var tabControl = new TabControl { Style = PanelTabControlStyle };
         MakeNewTab(tabControl, e.ChildPanel.Name, e.Tab);
         childGrid.Children.Add(tabControl);
         parentGrid.Children.Add(childGrid);
-        parentGrid.Children.Add(GridSplitterFactory.MakeSplitter(e.ParentPanel.Orientation));
+        parentGrid.Children.Add(GridSplitterFactory.MakeSplitter(e.ParentPanel.Orientation, HorizontalSplitterStyle, VerticalSplitterStyle));
         SetPanelRowsCols(e.ParentPanel);
         SetSplittersRowsCols(e.ParentPanel);
     }
@@ -214,6 +214,7 @@ public class FlexWindowsEnvironmentView : Control
         var tabControl = (TabControl)tabPanelGrid.Children[0];
         var tab = tabControl.Items.GetByName(e.Tab.Name)!;
         tab.Content = null;
+        tab.Template = null;
         tabControl.Items.Remove(tab);
         if (e.RemovedPanel != null)
         {
@@ -224,6 +225,8 @@ public class FlexWindowsEnvironmentView : Control
             var parentPosition = PointToScreen(new());
             var mousePosition = Mouse.GetPosition(this);
             var flexWindow = new FlexWindow(this, e.Tab, tabControl, parentPosition, mousePosition);
+            flexWindow.HeaderBackground = FlexWindowHeaderBackground;
+            flexWindow.HeaderForeground = FlexWindowHeaderForeground;
             flexWindow.HeaderMouseUp += (s, e) =>
             {
                 if (_marksWindow == null) return;
@@ -241,6 +244,8 @@ public class FlexWindowsEnvironmentView : Control
                 if (_marksWindow == null)
                 {
                     _marksWindow = new PositionMarksWindow(this);
+                    _marksWindow.PositionMarksBackground = PositionMarksBackground;
+                    _marksWindow.HighlightedPositionBackground = HighlightedMarkPositionBackground;
                     var tabPanels = Model.AllPanels.Where(x => x.AllowTabs).ToList();
                     foreach (var tabPanel in tabPanels)
                     {

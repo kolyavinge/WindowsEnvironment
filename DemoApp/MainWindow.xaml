@@ -8,6 +8,9 @@
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
         Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -16,6 +19,18 @@
         <Grid Grid.Row="0" VerticalAlignment="Top">
             <Button Width="75" Content="Add new tab" HorizontalAlignment="Left" Click="AddNewTabClick" />
         </Grid>
-        <view:FlexWindowsEnvironmentView Grid.Row="1" Name="flex" Model="{Binding Model}" ModelInitialized="OnModelInitialized" />
+        <view:FlexWindowsEnvironmentView
+            Grid.Row="1"
+            Name="flex"
+            Model="{Binding Model}"
+            MainPanelTabControlStyle="{StaticResource MainPanelTabControlStyle}"
+            PanelTabControlStyle="{StaticResource PanelTabControlStyle}"
+            HorizontalSplitterStyle="{StaticResource HorizontalSplitterStyle}"
+            VerticalSplitterStyle="{StaticResource VerticalSplitterStyle}"
+            FlexWindowHeaderBackground="CornflowerBlue"
+            FlexWindowHeaderForeground="White"
+            PositionMarksBackground="Gray"
+            HighlightedMarkPositionBackground="LightGray"
+            ModelInitialized="OnModelInitialized" />
     </Grid>
 </Window>

@@ -1,13 +1,34 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WindowsEnvironment.Model;
 
 namespace WindowsEnvironment.View;
 
 internal partial class FlexWindow : Window
 {
-    private IInputElement? _flexEnvironment;
+    #region Styles
+    public Brush HeaderBackground
+    {
+        get { return (Brush)GetValue(HeaderBackgroundProperty); }
+        set { SetValue(HeaderBackgroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty HeaderBackgroundProperty =
+        DependencyProperty.Register("HeaderBackground", typeof(Brush), typeof(FlexWindow), new PropertyMetadata(Brushes.Gray));
+
+    public Brush HeaderForeground
+    {
+        get { return (Brush)GetValue(HeaderForegroundProperty); }
+        set { SetValue(HeaderForegroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty HeaderForegroundProperty =
+        DependencyProperty.Register("HeaderForeground", typeof(Brush), typeof(FlexWindow), new PropertyMetadata(Brushes.Black));
+    #endregion
+
+    private readonly IInputElement? _flexEnvironment;
     private bool _needToCapture;
     private Point? _lastMousePosition;
 

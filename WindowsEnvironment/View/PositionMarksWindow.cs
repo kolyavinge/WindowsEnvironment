@@ -2,11 +2,32 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WindowsEnvironment.View;
 
 internal class PositionMarksWindow : Window
 {
+    #region Styles
+    public Brush PositionMarksBackground
+    {
+        get { return (Brush)GetValue(PositionMarksBackgroundProperty); }
+        set { SetValue(PositionMarksBackgroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty PositionMarksBackgroundProperty =
+        DependencyProperty.Register("PositionMarksBackground", typeof(Brush), typeof(PositionMarksWindow));
+
+    public Brush HighlightedPositionBackground
+    {
+        get { return (Brush)GetValue(HighlightedPositionBackgroundProperty); }
+        set { SetValue(HighlightedPositionBackgroundProperty, value); }
+    }
+
+    public static readonly DependencyProperty HighlightedPositionBackgroundProperty =
+        DependencyProperty.Register("HighlightedPositionBackground", typeof(Brush), typeof(PositionMarksWindow));
+    #endregion
+
     private readonly Grid _contentGrid;
 
     public IEnumerable<PositionMarksView> Marks => _contentGrid.Children.Cast<PositionMarksView>();
@@ -42,6 +63,8 @@ internal class PositionMarksWindow : Window
         marks.Margin = new(gridPosition.X, gridPosition.Y, 0, 0);
         marks.Width = grid.ActualWidth;
         marks.Height = grid.ActualHeight;
+        marks.PositionMarksBackground = PositionMarksBackground;
+        marks.HighlightedPositionBackground = HighlightedPositionBackground;
         _contentGrid.Children.Add(marks);
     }
 

@@ -34,15 +34,23 @@
         <Grid
             Grid.Row="0"
             Name="_headerGrid"
-            Background="#4a9bc7"
+            Background="{Binding HeaderBackground, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
             VerticalAlignment="Top"
             Height="30"
             MouseDown="OnHeaderMouseDown"
             MouseMove="OnHeaderMouseMove"
             MouseUp="OnHeaderMouseUp">
-            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="4,1,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBlock
+                Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                Foreground="{Binding HeaderForeground, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                Margin="4,1,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />
             <Button Style="{StaticResource CloseButtonStyle}" Margin="0,2,2,0" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Click="OnCloseButtonClick">
-                <TextBlock Text="🗙" Margin="0,-2,0,0" />
+                <TextBlock
+                    Text="🗙"
+                    Foreground="{Binding HeaderForeground, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Margin="0,-2,0,0" />
             </Button>
         </Grid>
         <Grid Grid.Row="1" x:Name="_contentGrid"></Grid>
