@@ -29,7 +29,7 @@ internal class RemoveTabAction : IRemoveTabAction
     public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
     {
         var tabPanel = _panels.GetPanelByName(panelName);
-        var tab = tabPanel.Tabs.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain tab '{tabName}'.");
+        var tab = tabPanel.Tabs.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
         tabPanel.Tabs.Remove(tab);
         RemovedPanel? removedPanel = null;
         if (!tabPanel.IsMain && !tabPanel.Tabs.Any())

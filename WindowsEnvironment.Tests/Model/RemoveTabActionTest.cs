@@ -37,7 +37,7 @@ internal class RemoveTabActionTest
         }
         catch (Exception e)
         {
-            Assert.That(e.Message, Is.EqualTo("'panel_0' does not contain tab 'wrong name'."));
+            Assert.That(e.Message, Is.EqualTo("'panel_0' does not contain 'wrong name'."));
         }
     }
 

@@ -22,14 +22,14 @@ public partial class FlexWindowsEnvironmentView : Control
 
     private static void OnModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var control = (FlexWindowsEnvironmentView)d;
+        var view = (FlexWindowsEnvironmentView)d;
         var model = (IFlexWindowsEnvironment)e.NewValue;
-        model.Events.PanelAdded += control.OnPanelAdded;
-        model.Events.ParentChanged += control.OnParentChanged;
-        model.Events.TabAdded += control.OnTabAdded;
-        model.Events.TabRemoved += control.OnTabRemoved;
-        control._mouseController = MouseControllerFactory.Make(model);
-        control.ModelInitialized?.Invoke(control, EventArgs.Empty);
+        model.Events.PanelAdded += view.OnPanelAdded;
+        model.Events.ParentChanged += view.OnParentChanged;
+        model.Events.TabAdded += view.OnTabAdded;
+        model.Events.TabRemoved += view.OnTabRemoved;
+        view._mouseController = MouseControllerFactory.Make(model);
+        view.ModelInitialized?.Invoke(view, EventArgs.Empty);
     }
     #endregion
 
@@ -46,8 +46,6 @@ public partial class FlexWindowsEnvironmentView : Control
         template.VisualTree = new FrameworkElementFactory(typeof(Grid), "master");
         Template = template;
         Application.Current.MainWindow.StateChanged += OnWindowStateChanged;
-        Application.Current.MainWindow.MouseMove += OnWindowMouseMove;
-        Application.Current.MainWindow.MouseUp += OnWindowMouseUp;
         Application.Current.MainWindow.Closed += OnMainWindowClosed;
     }
 
@@ -61,17 +59,6 @@ public partial class FlexWindowsEnvironmentView : Control
         {
             Application.Current.Windows.EachFlexWindow(x => x.Show());
         }
-    }
-
-    private void OnWindowMouseMove(object sender, MouseEventArgs e)
-    {
-        var mousePosition = Mouse.GetPosition(this);
-        _mouseController!.OnWindowMouseMove(mousePosition.X, mousePosition.Y);
-    }
-
-    private void OnWindowMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        _mouseController!.OnWindowButtonUp();
     }
 
     private void OnMainWindowClosed(object? sender, EventArgs e)
@@ -281,12 +268,23 @@ public partial class FlexWindowsEnvironmentView : Control
             if (me.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
-                _mouseController!.OnTabButtonDown(panelName, contentTab.Name, mouse.X, mouse.Y);
+                _mouseController!.OnTabHeaderButtonDown(panelName, contentTab.Name, mouse.X, mouse.Y);
+                Mouse.Capture(header);
             }
             else if (me.MiddleButton == MouseButtonState.Pressed)
             {
-                _mouseController!.OnTabMiddleButtonPress(panelName, contentTab.Name);
+                _mouseController!.OnTabHeaderMiddleButtonPress(panelName, contentTab.Name);
             }
+        };
+        header.MouseMove += (_, _) =>
+        {
+            var mouse = Mouse.GetPosition(this);
+            _mouseController!.OnTabHeaderMouseMove(mouse.X, mouse.Y);
+        };
+        header.MouseUp += (_, _) =>
+        {
+            _mouseController!.OnTabHeaderButtonUp();
+            Mouse.Capture(null);
         };
         var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content, Header = header };
         tabControl.Items.Add(tabItem);
