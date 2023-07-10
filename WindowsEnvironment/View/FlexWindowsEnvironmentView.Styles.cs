@@ -3,7 +3,19 @@ using System.Windows.Media;
 
 namespace WindowsEnvironment.View;
 
-public partial class FlexWindowsEnvironmentView
+public interface IFlexWindowsEnvironmentStyles
+{
+    Style MainPanelTabControlStyle { get; }
+    Style PanelTabControlStyle { get; }
+    Style HorizontalSplitterStyle { get; }
+    Style VerticalSplitterStyle { get; }
+    Brush FlexWindowHeaderBackground { get; }
+    Brush FlexWindowHeaderForeground { get; }
+    Brush PositionMarksBackground { get; }
+    Brush HighlightedMarkPositionBackground { get; }
+}
+
+public partial class FlexWindowsEnvironmentView : IFlexWindowsEnvironmentStyles
 {
     public Style MainPanelTabControlStyle
     {
