@@ -11,6 +11,7 @@ public interface IFlexWindowsEnvironment
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
     void SetPanelPosition(string panelName, PanelPosition position, object content);
     void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
+    IFlexWindowsEnvironmentReader MakeReader();
 }
 
 internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
@@ -56,5 +57,10 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
     public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
     {
         _removeTabAction.RemoveTab(panelName, tabName, mode);
+    }
+
+    public IFlexWindowsEnvironmentReader MakeReader()
+    {
+        return new FlexWindowsEnvironmentReader(this);
     }
 }

@@ -19,6 +19,8 @@ public class Panel
 
     public bool IsMain => Name == MainPanelName;
 
+    public bool IsRoot => Parent == null;
+
     public bool AllowTabs => !Children.Any();
 
     public Panel(string name, ContentTabCollection tabs)

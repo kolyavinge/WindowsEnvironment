@@ -25,7 +25,9 @@ public partial class FlexWindowsEnvironmentView : Control
         var masterGrid = view._masterGrid ?? throw new InvalidOperationException();
         masterGrid.InitModel(model);
         masterGrid.InitMouseController(mouseController);
-        model.Events.PanelAdded += (_, e) => masterGrid.AddPanel(e.ParentPanel, e.ChildPanel, e.Tab);
+        var masterGridInitializer = new MasterGridInitializer(model.MakeReader(), masterGrid);
+        masterGridInitializer.Init();
+        model.Events.PanelAdded += (_, e) => masterGrid.AddPanelWithTab(e.ParentPanel, e.ChildPanel, e.Tab);
         model.Events.ParentChanged += (_, e) => masterGrid.ChangeParent(e.ParentPanel, e.ChildPanel);
         model.Events.TabAdded += (_, e) => masterGrid.AddTab(e.ParentPanel, e.Tab);
         model.Events.TabRemoved += (_, e) => masterGrid.RemoveTab(e.RemovedPanel, e.TabPanel, e.Tab, e.Mode);
@@ -68,6 +70,5 @@ public partial class FlexWindowsEnvironmentView : Control
         _masterGrid = (MasterGrid)Template.FindName("master", this);
         _masterGrid.Name = "master";
         _masterGrid.InitStyles(this);
-        _masterGrid.MakeRootGrid();
     }
 }

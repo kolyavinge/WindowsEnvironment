@@ -30,7 +30,6 @@
             FlexWindowHeaderBackground="CornflowerBlue"
             FlexWindowHeaderForeground="White"
             PositionMarksBackground="Gray"
-            HighlightedMarkPositionBackground="LightGray"
-            ModelInitialized="OnModelInitialized" />
+            HighlightedMarkPositionBackground="LightGray" />
     </Grid>
 </Window>
