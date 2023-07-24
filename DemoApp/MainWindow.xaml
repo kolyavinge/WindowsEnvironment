@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="16" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
             <Button Width="75" Content="Add new tab" HorizontalAlignment="Left" Click="AddNewTabClick" />
@@ -31,5 +32,8 @@
             FlexWindowHeaderForeground="White"
             PositionMarksBackground="Gray"
             HighlightedMarkPositionBackground="LightGray" />
+        <Grid Grid.Row="2">
+            <TextBlock Text="{Binding StatusText}" />
+        </Grid>
     </Grid>
 </Window>

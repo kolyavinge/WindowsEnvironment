@@ -108,6 +108,7 @@ internal partial class FlexWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _contentGrid.Children.Clear();
+        Content!.CloseCallback?.Invoke();
         base.OnClosed(e);
     }
 

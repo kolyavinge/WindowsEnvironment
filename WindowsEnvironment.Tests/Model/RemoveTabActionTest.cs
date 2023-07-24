@@ -103,4 +103,28 @@ internal class RemoveTabActionTest
         Assert.That(panel1.Children.First(), Is.EqualTo(panel2));
         _events.Verify(x => x.RaiseTabRemoved(new(panel1, panel3), panel3, tab, RemoveTabMode.Close));
     }
+
+    [Test]
+    public void TabClose_CloseCallbackInvoke()
+    {
+        var invoke = false;
+        _content.CloseCallback = () => invoke = true;
+        var tab = _rootPanel.Tabs.Add(_content);
+
+        _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Close);
+
+        Assert.That(invoke, Is.True);
+    }
+
+    [Test]
+    public void TabUnset_CloseCallbackNotInvoke()
+    {
+        var invoke = false;
+        _content.CloseCallback = () => invoke = true;
+        var tab = _rootPanel.Tabs.Add(_content);
+
+        _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Unset);
+
+        Assert.That(invoke, Is.False);
+    }
 }

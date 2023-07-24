@@ -44,5 +44,9 @@ internal class RemoveTabAction : IRemoveTabAction
             }
         }
         _events.RaiseTabRemoved(removedPanel, tabPanel, tab, mode);
+        if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
+        {
+            tab.Content.CloseCallback();
+        }
     }
 }
