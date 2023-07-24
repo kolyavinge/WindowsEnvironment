@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    void SetPanelPosition(string panelName, PanelPosition position, object content);
+    void SetPanelPosition(string panelName, PanelPosition position, Content configuration);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,7 +23,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public void SetPanelPosition(string panelName, PanelPosition position, object content)
+    public void SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)

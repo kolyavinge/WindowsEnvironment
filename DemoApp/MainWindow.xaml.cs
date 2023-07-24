@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using WindowsEnvironment.Model;
 
 namespace DemoApp;
@@ -18,6 +19,14 @@ public partial class MainWindow : Window
 
     private void AddNewTab()
     {
-        flex.Model.SetPanelPosition(Panel.MainPanelName, PanelPosition.Middle, new TestTabContent());
+        flex.Model.SetPanelPosition(Panel.MainPanelName, PanelPosition.Middle, new()
+        {
+            Header = new()
+            {
+                SourceObject = new TestTabContentHeader($"Header {DateTime.Now.Second}"),
+                PropertyName = "Text"
+            },
+            View = new TestTabContent()
+        });
     }
 }

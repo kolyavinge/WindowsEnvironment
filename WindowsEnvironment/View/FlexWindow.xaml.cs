@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using WindowsEnvironment.Model;
@@ -37,18 +38,26 @@ internal partial class FlexWindow : Window
 
     public UIElement MainContent => _contentGrid.Children[0];
 
+    public new Content? Content { get; }
+
     public FlexWindow()
     {
         InitializeComponent();
     }
 
     public FlexWindow(
-        IInputElement flexEnvironment, ContentTab contentTab, TabControl tabControl, Point parentPosition, Point mousePosition)
+        IInputElement flexEnvironment,
+        ContentTab contentTab,
+        TabControl tabControl,
+        Point parentPosition,
+        Point mousePosition)
         : this()
     {
         _flexEnvironment = flexEnvironment;
-        _contentGrid.Children.Add((UIElement)contentTab.Content);
-        Title = contentTab.Name;
+        Content = contentTab.Content;
+        DataContext = contentTab.Content;
+        _contentGrid.Children.Add((UIElement)contentTab.Content.View);
+        SetBinding(TitleProperty, $"Header.SourceObject.{Content.Header.PropertyName}");
         Width = tabControl.ActualWidth;
         Height = tabControl.ActualHeight;
         Left = parentPosition.X + mousePosition.X - Width / 2.0;

@@ -4,6 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class FlexWindowsEnvironmentReaderTest
 {
+    private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Mock<IFlexWindowsEnvironment> _model;
     private FlexWindowsEnvironmentReader _reader;
@@ -11,6 +12,7 @@ internal class FlexWindowsEnvironmentReaderTest
     [SetUp]
     public void Setup()
     {
+        _content = new Content();
         _nameGenerator = new Mock<INameGenerator>();
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab1");
         _model = new Mock<IFlexWindowsEnvironment>();
@@ -23,7 +25,7 @@ internal class FlexWindowsEnvironmentReaderTest
         var root = new Panel("panel_0", new(_nameGenerator.Object));
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var content = new object();
-        panel1.Tabs.Add(content);
+        panel1.Tabs.Add(_content);
         root.Children.AddBegin(panel1);
         _model.SetupGet(x => x.RootPanel).Returns(root);
         var beginReadPanels = new List<Panel>();
@@ -46,7 +48,7 @@ internal class FlexWindowsEnvironmentReaderTest
 
         Assert.That(beginReadPanels[0], Is.EqualTo(root));
         Assert.That(beginReadPanels[1], Is.EqualTo(panel1));
-        Assert.That(readTabs[0], Is.EqualTo(new ContentTab("tab1", content)));
+        Assert.That(readTabs[0], Is.EqualTo(new ContentTab("tab1", _content)));
         Assert.That(endReadPanels[0], Is.EqualTo(panel1));
         Assert.That(endReadPanels[1], Is.EqualTo(root));
     }
@@ -57,7 +59,7 @@ internal class FlexWindowsEnvironmentReaderTest
         var root = new Panel("panel_0", new(_nameGenerator.Object));
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var content = new object();
-        panel1.Tabs.Add(content);
+        panel1.Tabs.Add(_content);
         root.Children.AddBegin(panel1);
         _model.SetupGet(x => x.RootPanel).Returns(root);
 

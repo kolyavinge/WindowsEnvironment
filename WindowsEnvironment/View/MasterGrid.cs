@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using WindowsEnvironment.Controllers;
 using WindowsEnvironment.Model;
@@ -211,7 +212,7 @@ internal class MasterGrid : Grid
                 var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
                 if (marks != null)
                 {
-                    _model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.MainContent);
+                    _model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
                     flexWindow.Close();
                 }
                 _marksWindow.Close();
@@ -252,32 +253,34 @@ internal class MasterGrid : Grid
 
     private void MakeNewTab(TabControl tabControl, string panelName, ContentTab contentTab)
     {
-        var header = new Grid();
-        header.Children.Add(new TextBlock { Text = contentTab.Name });
-        header.MouseDown += (_, me) =>
+        var headerText = new TextBlock { DataContext = contentTab.Content.Header.SourceObject };
+        headerText.SetBinding(TextBlock.TextProperty, contentTab.Content.Header.PropertyName);
+        var headerGrid = new Grid();
+        headerGrid.Children.Add(headerText);
+        headerGrid.MouseDown += (_, me) =>
         {
             if (me.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
                 _mouseController!.OnTabHeaderButtonDown(panelName, contentTab.Name, mouse.X, mouse.Y);
-                Mouse.Capture(header);
+                Mouse.Capture(headerGrid);
             }
             else if (me.MiddleButton == MouseButtonState.Pressed)
             {
                 _mouseController!.OnTabHeaderMiddleButtonPress(panelName, contentTab.Name);
             }
         };
-        header.MouseMove += (_, _) =>
+        headerGrid.MouseMove += (_, _) =>
         {
             var mouse = Mouse.GetPosition(this);
             _mouseController!.OnTabHeaderMouseMove(mouse.X, mouse.Y);
         };
-        header.MouseUp += (_, _) =>
+        headerGrid.MouseUp += (_, _) =>
         {
             _mouseController!.OnTabHeaderButtonUp();
             Mouse.Capture(null);
         };
-        var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content, Header = header };
+        var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content.View, Header = headerGrid };
         tabControl.Items.Add(tabItem);
         tabControl.SelectedItem = tabItem;
     }

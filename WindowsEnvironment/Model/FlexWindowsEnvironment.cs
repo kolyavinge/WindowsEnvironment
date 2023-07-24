@@ -9,7 +9,7 @@ public interface IFlexWindowsEnvironment
     IEnumerable<Panel> AllPanels { get; }
     Panel GetPanelByName(string name);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
-    void SetPanelPosition(string panelName, PanelPosition position, object content);
+    void SetPanelPosition(string panelName, PanelPosition position, Content configuration);
     void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
     IFlexWindowsEnvironmentReader MakeReader();
 }
@@ -49,9 +49,9 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
         return _panels.GetChildPanelIndex(parentPanelName, childPanelName);
     }
 
-    public void SetPanelPosition(string panelName, PanelPosition position, object content)
+    public void SetPanelPosition(string panelName, PanelPosition position, Content configuration)
     {
-        _setPanelPositionAction.SetPanelPosition(panelName, position, content);
+        _setPanelPositionAction.SetPanelPosition(panelName, position, configuration);
     }
 
     public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
