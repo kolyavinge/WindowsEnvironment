@@ -19,6 +19,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
             <Button Width="75" Content="Add new tab" HorizontalAlignment="Left" Click="AddNewTabClick" />
+            <Button Width="75" Content="Select tab" Margin="75,0,0,0" HorizontalAlignment="Left" Click="SelectTabClick" />
         </Grid>
         <view:FlexWindowsEnvironmentView
             Grid.Row="1"

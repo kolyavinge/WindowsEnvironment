@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using WindowsEnvironment;
 using WindowsEnvironment.Model;
 
@@ -39,7 +38,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Updateable closed"
         });
 
-        Model.SetPanelPosition(Panel.MainPanelName, PanelPosition.Middle, new()
+        var (panel, tab) = Model.SetPanelPosition(Panel.MainPanelName, PanelPosition.Middle, new()
         {
             Header = new()
             {
@@ -104,5 +103,7 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 6 closed"
         });
+
+        Model.SelectTab(panel.Name, tab.Name);
     }
 }

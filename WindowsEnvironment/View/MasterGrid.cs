@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using WindowsEnvironment.Controllers;
 using WindowsEnvironment.Model;
@@ -178,11 +177,14 @@ internal class MasterGrid : Grid
         {
             tabControl = new TabControl
             {
-                Style = parentPanel.Name == Model.Panel.MainPanelName ? _styles.MainPanelTabControlStyle : _styles.PanelTabControlStyle
+                DataContext = parentPanel,
+                SelectedValuePath = "Name", // bind to ContentTab.Name
+                Style = parentPanel.IsMain ? _styles.MainPanelTabControlStyle : _styles.PanelTabControlStyle,
             };
+            tabControl.SetBinding(TabControl.SelectedValueProperty, "SelectedTabName"); // bind to Panel.SelectedTabName
             parentGrid.Children.Add(tabControl);
         }
-        MakeNewTab(tabControl, parentPanel.Name, tab);
+        MakeNewTab(tabControl, parentPanel, tab);
     }
 
     public void RemoveTab(RemovedPanel? removedPanel, Model.Panel tabPanel, ContentTab tab, RemoveTabMode mode)
@@ -251,7 +253,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    private void MakeNewTab(TabControl tabControl, string panelName, ContentTab contentTab)
+    private void MakeNewTab(TabControl tabControl, Model.Panel panel, ContentTab contentTab)
     {
         var headerText = new TextBlock { DataContext = contentTab.Content.Header.SourceObject };
         headerText.SetBinding(TextBlock.TextProperty, contentTab.Content.Header.PropertyName);
@@ -262,12 +264,12 @@ internal class MasterGrid : Grid
             if (me.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
-                _mouseController!.OnTabHeaderButtonDown(panelName, contentTab.Name, mouse.X, mouse.Y);
+                _mouseController!.OnTabHeaderButtonDown(panel.Name, contentTab.Name, mouse.X, mouse.Y);
                 Mouse.Capture(headerGrid);
             }
             else if (me.MiddleButton == MouseButtonState.Pressed)
             {
-                _mouseController!.OnTabHeaderMiddleButtonPress(panelName, contentTab.Name);
+                _mouseController!.OnTabHeaderMiddleButtonPress(panel.Name, contentTab.Name);
             }
         };
         headerGrid.MouseMove += (_, _) =>
@@ -282,6 +284,5 @@ internal class MasterGrid : Grid
         };
         var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content.View, Header = headerGrid };
         tabControl.Items.Add(tabItem);
-        tabControl.SelectedItem = tabItem;
     }
 }

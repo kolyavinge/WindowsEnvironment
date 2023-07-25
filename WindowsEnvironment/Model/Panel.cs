@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace WindowsEnvironment.Model;
 
-public class Panel
+public class Panel : INotifyPropertyChanged
 {
     public static readonly string MainPanelName = "panel_0";
+    private string? _selectedTabName;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public string Name { get; }
 
@@ -16,6 +20,12 @@ public class Panel
     public PanelChildrenCollection Children { get; private set; }
 
     public ContentTabCollection Tabs { get; private set; }
+
+    public string? SelectedTabName
+    {
+        get => _selectedTabName;
+        set { _selectedTabName = value; PropertyChanged?.Invoke(this, new("SelectedTabName")); }
+    }
 
     public bool IsMain => Name == MainPanelName;
 

@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    void SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,9 +23,10 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public void SetPanelPosition(string panelName, PanelPosition position, Content content)
+    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         var panel = _panels.GetPanelByName(panelName);
+        ContentTab tab;
         if (position != PanelPosition.Middle)
         {
             if (panel.IsMain || panel.Tabs.Any())
@@ -45,7 +46,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             }
             var childPanel = _panelFactory.MakeNew();
             childPanel.Parent = panel;
-            var tab = childPanel.Tabs.Add(content);
+            tab = childPanel.Tabs.Add(content);
             if (position == PanelPosition.Left)
             {
                 panel.Children.AddBegin(childPanel);
@@ -67,9 +68,11 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         else
         {
             if (!panel.AllowTabs) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = panel.Tabs.Add(content);
+            tab = panel.Tabs.Add(content);
             _events.RaiseTabAdded(panel, tab);
         }
+
+        return (panel, tab);
     }
 
     private void ChangeSplitOrientationIfNeeded(ref Panel panel, PanelPosition position)

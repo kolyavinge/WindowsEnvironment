@@ -49,4 +49,10 @@ internal class PanelTest
         Assert.That(result[0], Is.EqualTo(panel1));
         Assert.That(result[1], Is.EqualTo(panel2));
     }
+
+    [Test]
+    public void SelectedTabNameIsNull()
+    {
+        Assert.That(_panel.SelectedTabName, Is.Null);
+    }
 }

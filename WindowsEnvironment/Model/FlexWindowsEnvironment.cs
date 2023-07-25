@@ -9,7 +9,8 @@ public interface IFlexWindowsEnvironment
     IEnumerable<Panel> AllPanels { get; }
     Panel GetPanelByName(string name);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
-    void SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    void SelectTab(string panelName, string tabName);
     void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
     IFlexWindowsEnvironmentReader MakeReader();
 }
@@ -18,6 +19,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 {
     private readonly IPanelCollectionInternal _panels;
     private readonly ISetPanelPositionAction _setPanelPositionAction;
+    private readonly ISelectTabAction _selectTabAction;
     private readonly IRemoveTabAction _removeTabAction;
     private readonly IEventsInternal _events;
 
@@ -30,11 +32,13 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
     public FlexWindowsEnvironment(
         IPanelCollectionInternal panels,
         ISetPanelPositionAction setPanelPositionAction,
+        ISelectTabAction selectTabAction,
         IRemoveTabAction removeTabAction,
         IEventsInternal events)
     {
         _panels = panels;
         _setPanelPositionAction = setPanelPositionAction;
+        _selectTabAction = selectTabAction;
         _removeTabAction = removeTabAction;
         _events = events;
     }
@@ -49,9 +53,14 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
         return _panels.GetChildPanelIndex(parentPanelName, childPanelName);
     }
 
-    public void SetPanelPosition(string panelName, PanelPosition position, Content configuration)
+    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration)
     {
-        _setPanelPositionAction.SetPanelPosition(panelName, position, configuration);
+        return _setPanelPositionAction.SetPanelPosition(panelName, position, configuration);
+    }
+
+    public void SelectTab(string panelName, string tabName)
+    {
+        _selectTabAction.SelectTab(panelName, tabName);
     }
 
     public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)

@@ -29,4 +29,9 @@ public partial class MainWindow : Window
             View = new TestTabContent()
         });
     }
+
+    private void SelectTabClick(object sender, RoutedEventArgs e)
+    {
+        flex.Model.SelectTab(Panel.MainPanelName, "tab_1");
+    }
 }
