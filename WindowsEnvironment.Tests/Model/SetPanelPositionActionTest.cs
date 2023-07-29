@@ -36,6 +36,24 @@ internal class SetPanelPositionActionTest
     }
 
     [Test]
+    public void SetPanelPositionLeft_ReturnValue()
+    {
+        var (panel, tab) = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
+
+        Assert.That(panel, Is.EqualTo(_panel2));
+        Assert.That(tab.Name, Is.EqualTo("tab_0"));
+    }
+
+    [Test]
+    public void SetPanelPositionMiddle_ReturnValue()
+    {
+        var (panel, tab) = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Middle, _content);
+
+        Assert.That(panel, Is.EqualTo(_mainPanel));
+        Assert.That(tab.Name, Is.EqualTo("tab_0"));
+    }
+
+    [Test]
     public void SetPanelPositionLeft()
     {
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
