@@ -27,11 +27,29 @@ public partial class FlexWindowsEnvironmentView : Control
         masterGrid.InitMouseController(mouseController);
         var masterGridInitializer = new MasterGridInitializer(model.MakeReader(), masterGrid);
         masterGridInitializer.Init();
+        masterGrid.SetBackgroundView(view.BackgroundView);
         model.Events.PanelAdded += (_, e) => masterGrid.AddPanelWithTab(e.ParentPanel, e.ChildPanel, e.Tab);
         model.Events.ParentChanged += (_, e) => masterGrid.ChangeParent(e.ParentPanel, e.ChildPanel);
         model.Events.TabAdded += (_, e) => masterGrid.AddTab(e.ParentPanel, e.Tab);
         model.Events.TabRemoved += (_, e) => masterGrid.RemoveTab(e.RemovedPanel, e.TabPanel, e.Tab, e.Mode);
         view.ModelInitialized?.Invoke(view, EventArgs.Empty);
+    }
+    #endregion
+
+    #region BackgroundView
+    public UIElement BackgroundView
+    {
+        get { return (UIElement)GetValue(BackgroundViewProperty); }
+        set { SetValue(BackgroundViewProperty, value); }
+    }
+
+    public static readonly DependencyProperty BackgroundViewProperty =
+        DependencyProperty.Register("BackgroundView", typeof(UIElement), typeof(FlexWindowsEnvironmentView), new(OnBackgroundViewChangedCallback));
+
+    private static void OnBackgroundViewChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var view = (FlexWindowsEnvironmentView)d;
+        view._masterGrid?.SetBackgroundView((UIElement)e.NewValue);
     }
     #endregion
 

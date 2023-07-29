@@ -171,7 +171,7 @@ internal class MasterGrid : Grid
         TabControl tabControl;
         if (parentGrid.FindChildren<TabControl>().Any())
         {
-            tabControl = (TabControl)parentGrid.Children[0];
+            tabControl = parentGrid.FindChildren<TabControl>().First();
         }
         else
         {
@@ -192,11 +192,15 @@ internal class MasterGrid : Grid
         if (_model == null) throw new InvalidOperationException();
         if (_styles == null) throw new InvalidOperationException();
         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
-        var tabControl = (TabControl)tabPanelGrid.Children[0];
+        var tabControl = tabPanelGrid.FindChildren<TabControl>().First();
         var tabItem = tabControl.Items.GetByName(tab.Name)!;
         tabItem.Content = null;
         tabItem.Template = null;
         tabControl.Items.Remove(tabItem);
+        if (tabControl.Items.Count == 0)
+        {
+            tabPanelGrid.Children.Remove(tabControl);
+        }
         if (removedPanel != null)
         {
             RemovePanel(removedPanel);
@@ -284,5 +288,11 @@ internal class MasterGrid : Grid
         };
         var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content.View, Header = headerGrid };
         tabControl.Items.Add(tabItem);
+    }
+
+    public void SetBackgroundView(UIElement view)
+    {
+        var mainPanelGrid = this.FindChildRec<Grid>(Model.Panel.MainPanelName);
+        mainPanelGrid.Children.Insert(0, view);
     }
 }

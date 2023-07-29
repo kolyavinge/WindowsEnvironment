@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:WindowsEnvironment.View;assembly=WindowsEnvironment"
+        xmlns:demoapp="clr-namespace:DemoApp"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -32,7 +33,11 @@
             FlexWindowHeaderBackground="CornflowerBlue"
             FlexWindowHeaderForeground="White"
             PositionMarksBackground="Gray"
-            HighlightedMarkPositionBackground="LightGray" />
+            HighlightedMarkPositionBackground="LightGray">
+            <view:FlexWindowsEnvironmentView.BackgroundView>
+                <demoapp:TestBackgroundView VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </view:FlexWindowsEnvironmentView.BackgroundView>
+        </view:FlexWindowsEnvironmentView>
         <Grid Grid.Row="2">
             <TextBlock Text="{Binding StatusText}" />
         </Grid>
