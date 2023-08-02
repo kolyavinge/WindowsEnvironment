@@ -27,6 +27,13 @@ public class Panel : INotifyPropertyChanged
         set { _selectedTabName = value; PropertyChanged?.Invoke(this, new("SelectedTabName")); }
     }
 
+    private double? _size;
+    public double? Size
+    {
+        get { return _size; }
+        set { _size = value; PropertyChanged?.Invoke(this, new("Size")); }
+    }
+
     public bool IsMain => Name == MainPanelName;
 
     public bool IsRoot => Parent == null;

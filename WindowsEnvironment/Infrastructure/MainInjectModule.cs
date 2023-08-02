@@ -11,6 +11,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ISetPanelPositionAction, SetPanelPositionAction>().ToSingleton();
         bindingProvider.Bind<IRemoveTabAction, RemoveTabAction>().ToSingleton();
         bindingProvider.Bind<ISelectTabAction, SelectTabAction>().ToSingleton();
+        bindingProvider.Bind<IChangeSizePanelAction, ChangeSizePanelAction>().ToSingleton();
         bindingProvider.Bind<IEventsInternal, Events>().ToSingleton();
         bindingProvider.Bind<IPanelFactory, PanelFactory>().ToSingleton();
         bindingProvider.Bind<INameGenerator, NameGenerator>().ToSingleton();

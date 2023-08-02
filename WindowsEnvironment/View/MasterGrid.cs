@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using WindowsEnvironment.Controllers;
 using WindowsEnvironment.Model;
@@ -130,12 +131,18 @@ internal class MasterGrid : Grid
             {
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
                 row.MinHeight = Constants.RowColMinHeight;
+                row.DataContext = childPanel;
+                var bind = new Binding("Size") { Mode = BindingMode.TwoWay, Converter = PanelSizeConverter.Instance };
+                row.SetBinding(RowDefinition.HeightProperty, bind);
                 Grid.SetRow(childGrid, rowColumnIndex);
             }
             else if (parentPanel.Orientation == SplitOrientation.ByCols)
             {
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
                 col.MinWidth = Constants.RowColMinHeight;
+                col.DataContext = childPanel;
+                var bind = new Binding("Size") { Mode = BindingMode.TwoWay, Converter = PanelSizeConverter.Instance };
+                col.SetBinding(ColumnDefinition.WidthProperty, bind);
                 Grid.SetColumn(childGrid, rowColumnIndex);
             }
         }
@@ -152,12 +159,14 @@ internal class MasterGrid : Grid
             if (parentPanel.Orientation == SplitOrientation.ByRows)
             {
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
+                row.DataContext = null;
                 row.Height = new(0, GridUnitType.Auto);
                 Grid.SetRow(splitter, rowColumnIndex);
             }
             else if (parentPanel.Orientation == SplitOrientation.ByCols)
             {
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
+                col.DataContext = null;
                 col.Width = new(0, GridUnitType.Auto);
                 Grid.SetColumn(splitter, rowColumnIndex);
             }

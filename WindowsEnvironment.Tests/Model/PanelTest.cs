@@ -55,4 +55,10 @@ internal class PanelTest
     {
         Assert.That(_panel.SelectedTabName, Is.Null);
     }
+
+    [Test]
+    public void SizeIsNull()
+    {
+        Assert.That(_panel.Size, Is.Null);
+    }
 }
