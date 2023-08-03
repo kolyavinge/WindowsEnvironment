@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WindowsEnvironment.Model;
 
-public class ContentTabCollection : IReadOnlyCollection<ContentTab>
+internal class ContentTabCollection : IReadOnlyCollection<ContentTab>
 {
     private readonly List<ContentTab> _tabs;
     private readonly INameGenerator _nameGenerator;

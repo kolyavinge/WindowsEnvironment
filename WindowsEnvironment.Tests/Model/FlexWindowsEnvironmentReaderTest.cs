@@ -25,12 +25,12 @@ internal class FlexWindowsEnvironmentReaderTest
         var root = new Panel("panel_0", new(_nameGenerator.Object));
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var content = new object();
-        panel1.Tabs.Add(_content);
-        root.Children.AddBegin(panel1);
+        panel1.ContentTabCollection.Add(_content);
+        root.ChildrenCollection.AddBegin(panel1);
         _model.SetupGet(x => x.RootPanel).Returns(root);
-        var beginReadPanels = new List<Panel>();
-        var endReadPanels = new List<Panel>();
-        var readTabs = new List<ContentTab>();
+        var beginReadPanels = new List<IPanel>();
+        var endReadPanels = new List<IPanel>();
+        var readTabs = new List<IContentTab>();
         _reader.BeginPanelRead += (s, e) =>
         {
             beginReadPanels.Add(e.Panel);
@@ -59,8 +59,8 @@ internal class FlexWindowsEnvironmentReaderTest
         var root = new Panel("panel_0", new(_nameGenerator.Object));
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var content = new object();
-        panel1.Tabs.Add(_content);
-        root.Children.AddBegin(panel1);
+        panel1.ContentTabCollection.Add(_content);
+        root.ChildrenCollection.AddBegin(panel1);
         _model.SetupGet(x => x.RootPanel).Returns(root);
 
         _reader.Read();

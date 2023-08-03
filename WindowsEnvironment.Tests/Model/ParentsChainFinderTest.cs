@@ -13,7 +13,7 @@ internal class ParentsChainFinderTest
     public void Setup()
     {
         _nameGenerator = new Mock<INameGenerator>();
-        _rootPanel = new Panel(Panel.MainPanelName, new(_nameGenerator.Object));
+        _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
         _panels = new Mock<IPanelCollectionInternal>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _finder = new ParentsChainFinder(_panels.Object);
@@ -22,7 +22,7 @@ internal class ParentsChainFinderTest
     [Test]
     public void FindChainRootOnly()
     {
-        var result = _finder.FindChain(Panel.MainPanelName);
+        var result = _finder.FindChain(MainPanel.Name);
 
         Assert.That(result, Has.Count.EqualTo(1));
         Assert.That(result.First(), Is.EqualTo(_rootPanel));
@@ -32,7 +32,7 @@ internal class ParentsChainFinderTest
     public void FindChainOneChild()
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        _rootPanel.Children.AddBegin(panel1);
+        _rootPanel.ChildrenCollection.AddBegin(panel1);
         var result = _finder.FindChain(panel1.Name);
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -45,8 +45,8 @@ internal class ParentsChainFinderTest
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
-        _rootPanel.Children.AddBegin(panel1);
-        _rootPanel.Children.AddBegin(panel2);
+        _rootPanel.ChildrenCollection.AddBegin(panel1);
+        _rootPanel.ChildrenCollection.AddBegin(panel2);
         var result = _finder.FindChain(panel1.Name);
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -59,8 +59,8 @@ internal class ParentsChainFinderTest
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
-        _rootPanel.Children.AddBegin(panel1);
-        _rootPanel.Children.AddBegin(panel2);
+        _rootPanel.ChildrenCollection.AddBegin(panel1);
+        _rootPanel.ChildrenCollection.AddBegin(panel2);
         var result = _finder.FindChain("wrong panel");
 
         Assert.That(result, Has.Count.EqualTo(0));

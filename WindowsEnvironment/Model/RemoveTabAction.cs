@@ -29,17 +29,17 @@ internal class RemoveTabAction : IRemoveTabAction
     public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
     {
         var tabPanel = _panels.GetPanelByName(panelName);
-        var tab = tabPanel.Tabs.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
-        tabPanel.Tabs.Remove(tab);
+        var tab = tabPanel.ContentTabCollection.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
+        tabPanel.ContentTabCollection.Remove(tab);
         RemovedPanel? removedPanel = null;
-        if (!tabPanel.IsMain && !tabPanel.Tabs.Any())
+        if (!tabPanel.IsMain && !tabPanel.ContentTabCollection.Any())
         {
             var parentsChain = _parentsChainFinder.FindChain(panelName);
-            var parentPanel = parentsChain.FirstOrDefault(x => x.Children.Count > 1) ?? _panels.RootPanel;
+            var parentPanel = parentsChain.FirstOrDefault(x => x.ChildrenCollection.Count > 1) ?? _panels.RootPanel;
             if (parentPanel != null)
             {
                 var removed = parentsChain.GetBefore(parentPanel)!;
-                parentPanel.Children.Remove(removed);
+                parentPanel.ChildrenCollection.Remove(removed);
                 removedPanel = new RemovedPanel(parentPanel, removed);
             }
         }

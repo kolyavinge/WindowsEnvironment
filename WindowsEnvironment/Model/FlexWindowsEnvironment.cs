@@ -5,11 +5,11 @@ namespace WindowsEnvironment.Model;
 public interface IFlexWindowsEnvironment
 {
     IEvents Events { get; }
-    Panel RootPanel { get; }
-    IEnumerable<Panel> AllPanels { get; }
-    Panel GetPanelByName(string name);
+    IPanel RootPanel { get; }
+    IEnumerable<IPanel> AllPanels { get; }
+    IPanel GetPanelByName(string name);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
-    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
     void SelectTab(string panelName, string tabName);
     void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
     double? GetPanelSize(string panelName);
@@ -28,9 +28,9 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 
     public IEvents Events => _events;
 
-    public Panel RootPanel => _panels.RootPanel;
+    public IPanel RootPanel => _panels.RootPanel;
 
-    public IEnumerable<Panel> AllPanels => _panels;
+    public IEnumerable<IPanel> AllPanels => _panels;
 
     public FlexWindowsEnvironment(
         IPanelCollectionInternal panels,
@@ -48,7 +48,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
         _events = events;
     }
 
-    public Panel GetPanelByName(string name)
+    public IPanel GetPanelByName(string name)
     {
         return _panels.GetPanelByName(name);
     }
@@ -58,7 +58,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
         return _panels.GetChildPanelIndex(parentPanelName, childPanelName);
     }
 
-    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration)
+    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration)
     {
         return _setPanelPositionAction.SetPanelPosition(panelName, position, configuration);
     }

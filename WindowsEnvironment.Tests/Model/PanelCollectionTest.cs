@@ -13,7 +13,7 @@ internal class PanelCollectionTest
     public void Setup()
     {
         _nameGenerator = new Mock<INameGenerator>();
-        _rootPanel = new Panel(Panel.MainPanelName, new(_nameGenerator.Object));
+        _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
         _panelFactory = new Mock<IPanelFactory>();
         _panelFactory.Setup(x => x.MakeNew()).Returns(_rootPanel);
         _panels = new PanelCollection(_panelFactory.Object);
@@ -22,7 +22,7 @@ internal class PanelCollectionTest
     [Test]
     public void Constructor()
     {
-        Assert.That(_panels.GetPanelByName(Panel.MainPanelName), Is.EqualTo(_rootPanel));
+        Assert.That(_panels.GetPanelByName(MainPanel.Name), Is.EqualTo(_rootPanel));
         _panelFactory.Verify(x => x.MakeNew(), Times.Once);
     }
 }

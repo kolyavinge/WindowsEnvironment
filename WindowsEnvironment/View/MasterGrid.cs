@@ -31,7 +31,7 @@ internal class MasterGrid : Grid
         _styles = styles;
     }
 
-    public Grid AddPanel(Model.Panel? parentPanel, Model.Panel childPanel)
+    public Grid AddPanel(IPanel? parentPanel, IPanel childPanel)
     {
         var parentGrid = parentPanel != null ? this.FindChildRec<Grid>(parentPanel.Name) : this;
         if (parentPanel?.Orientation == SplitOrientation.ByRows)
@@ -48,7 +48,7 @@ internal class MasterGrid : Grid
         return childGrid;
     }
 
-    public Grid AddPanelWithTab(Model.Panel parentPanel, Model.Panel childPanel, ContentTab tab)
+    public Grid AddPanelWithTab(IPanel parentPanel, IPanel childPanel, IContentTab tab)
     {
         if (_styles == null) throw new InvalidOperationException();
         var childGrid = AddPanel(parentPanel, childPanel);
@@ -60,7 +60,7 @@ internal class MasterGrid : Grid
         return childGrid;
     }
 
-    public void ChangeParent(Model.Panel parentPanel, Model.Panel childPanel)
+    public void ChangeParent(IPanel parentPanel, IPanel childPanel)
     {
         var parentGrid = new Grid { Name = parentPanel.Name };
         parentGrid.RowDefinitions.Add(new());
@@ -99,7 +99,7 @@ internal class MasterGrid : Grid
         SetSplittersRowsCols(removedPanel.Parent);
     }
 
-    public void MakeSplitters(Model.Panel parentPanel)
+    public void MakeSplitters(IPanel parentPanel)
     {
         if (_styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
@@ -119,7 +119,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void SetPanelRowsCols(Model.Panel parentPanel)
+    public void SetPanelRowsCols(IPanel parentPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         for (int childPanelIndex = 0; childPanelIndex < parentPanel.Children.Count; childPanelIndex++)
@@ -148,7 +148,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void SetSplittersRowsCols(Model.Panel parentPanel)
+    public void SetSplittersRowsCols(IPanel parentPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         var splitters = parentGrid.FindChildren<GridSplitter>().ToList();
@@ -173,7 +173,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void AddTab(Model.Panel parentPanel, ContentTab tab)
+    public void AddTab(IPanel parentPanel, IContentTab tab)
     {
         if (_styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
@@ -196,7 +196,7 @@ internal class MasterGrid : Grid
         MakeNewTab(tabControl, parentPanel, tab);
     }
 
-    public void RemoveTab(RemovedPanel? removedPanel, Model.Panel tabPanel, ContentTab tab, RemoveTabMode mode)
+    public void RemoveTab(RemovedPanel? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (_model == null) throw new InvalidOperationException();
         if (_styles == null) throw new InvalidOperationException();
@@ -266,7 +266,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    private void MakeNewTab(TabControl tabControl, Model.Panel panel, ContentTab contentTab)
+    private void MakeNewTab(TabControl tabControl, IPanel panel, IContentTab contentTab)
     {
         var headerText = new TextBlock { DataContext = contentTab.Content.Header.SourceObject };
         headerText.SetBinding(TextBlock.TextProperty, contentTab.Content.Header.PropertyName);
@@ -301,7 +301,7 @@ internal class MasterGrid : Grid
 
     public void SetBackgroundView(UIElement view)
     {
-        var mainPanelGrid = this.FindChildRec<Grid>(Model.Panel.MainPanelName);
+        var mainPanelGrid = this.FindChildRec<Grid>(MainPanel.Name);
         mainPanelGrid.Children.Insert(0, view);
     }
 }

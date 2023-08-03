@@ -17,10 +17,10 @@ internal class SelectTabActionTest
         _content = new Content();
         _nameGenerator = new Mock<INameGenerator>();
         _nameGenerator.SetupSequence(x => x.GetContentTabName()).Returns("tab_1").Returns("tab_2").Returns("tab_3");
-        _rootPanel = new Panel(Panel.MainPanelName, new(_nameGenerator.Object));
+        _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
         _panels = new Mock<IPanelCollectionInternal>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
-        _panels.Setup(x => x.GetPanelByName(Panel.MainPanelName)).Returns(_rootPanel);
+        _panels.Setup(x => x.GetPanelByName(MainPanel.Name)).Returns(_rootPanel);
         _events = new Mock<IEventsInternal>();
         _action = new SelectTabAction(_panels.Object, _events.Object);
     }
@@ -28,9 +28,9 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTab()
     {
-        _rootPanel.Tabs.Add(_content);
-        _rootPanel.Tabs.Add(_content);
-        _rootPanel.Tabs.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
 
         Assert.That(_rootPanel.SelectedTabName, Is.Null);
         _action.SelectTab(_rootPanel.Name, "tab_2");
@@ -40,9 +40,9 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTabTwice()
     {
-        _rootPanel.Tabs.Add(_content);
-        _rootPanel.Tabs.Add(_content);
-        _rootPanel.Tabs.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.ContentTabCollection.Add(_content);
 
         _action.SelectTab(_rootPanel.Name, "tab_2");
         _action.SelectTab(_rootPanel.Name, "tab_2");
@@ -52,7 +52,7 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTab_RaiseEvent()
     {
-        var tab = _rootPanel.Tabs.Add(_content);
+        var tab = _rootPanel.ContentTabCollection.Add(_content);
 
         _action.SelectTab(_rootPanel.Name, "tab_1");
         _events.Verify(x => x.RaiseTabSelected(_rootPanel, tab));

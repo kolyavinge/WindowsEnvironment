@@ -4,22 +4,32 @@ using System.Linq;
 
 namespace WindowsEnvironment.Model;
 
-public class Panel : INotifyPropertyChanged
+public static class MainPanel
 {
-    public static readonly string MainPanelName = "panel_0";
+    public static readonly string Name = "panel_0";
+}
+
+internal class Panel : IPanel, INotifyPropertyChanged
+{
     private string? _selectedTabName;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string Name { get; }
 
-    public Panel? Parent { get; internal set; }
+    public IPanel? Parent => ParentPanel;
+
+    public Panel? ParentPanel { get; internal set; }
 
     public SplitOrientation Orientation { get; private set; }
 
-    public PanelChildrenCollection Children { get; private set; }
+    public PanelChildrenCollection ChildrenCollection { get; private set; }
 
-    public ContentTabCollection Tabs { get; private set; }
+    public IReadOnlyList<IPanel> Children => ChildrenCollection;
+
+    public IReadOnlyCollection<IContentTab> Tabs => ContentTabCollection;
+
+    public ContentTabCollection ContentTabCollection { get; private set; }
 
     public string? SelectedTabName
     {
@@ -34,21 +44,21 @@ public class Panel : INotifyPropertyChanged
         set { _size = value; PropertyChanged?.Invoke(this, new("Size")); }
     }
 
-    public bool IsMain => Name == MainPanelName;
+    public bool IsMain => Name == MainPanel.Name;
 
     public bool IsRoot => Parent == null;
 
-    public bool AllowTabs => !Children.Any();
+    public bool AllowTabs => !ChildrenCollection.Any();
 
     public Panel(string name, ContentTabCollection tabs)
     {
         Name = name;
         Orientation = SplitOrientation.Unspecified;
-        Children = new PanelChildrenCollection();
-        Tabs = tabs;
+        ChildrenCollection = new PanelChildrenCollection();
+        ContentTabCollection = tabs;
     }
 
-    internal void SetOrientation(PanelPosition position)
+    public void SetOrientation(PanelPosition position)
     {
         if (position is PanelPosition.Middle)
         {
@@ -60,11 +70,11 @@ public class Panel : INotifyPropertyChanged
             : SplitOrientation.ByRows;
     }
 
-    internal IEnumerable<Panel> GetAllChildren()
+    public IEnumerable<Panel> GetAllChildren()
     {
-        if (!Children.Any()) return Enumerable.Empty<Panel>();
+        if (!ChildrenCollection.Any()) return Enumerable.Empty<Panel>();
         var result = new List<Panel>();
-        foreach (var child in Children)
+        foreach (var child in ChildrenCollection)
         {
             result.Add(child);
             result.AddRange(child.GetAllChildren());

@@ -33,7 +33,7 @@ internal class ParentsChainFinder : IParentsChainFinder
         }
         else
         {
-            foreach (var child in parentPanel.Children)
+            foreach (var child in parentPanel.ChildrenCollection)
             {
                 if (FindParentsChain(child, findPanelName, parentChain))
                 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WindowsEnvironment.Model;
 
-public class PanelChildrenCollection : IReadOnlyList<Panel>
+internal class PanelChildrenCollection : IReadOnlyList<Panel>
 {
     private readonly List<Panel> _children;
 

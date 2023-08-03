@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,12 +23,12 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
+    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)
         {
-            if (panel.IsMain || panel.Tabs.Any())
+            if (panel.IsMain || panel.ContentTabCollection.Any())
             {
                 var newParent = _panelFactory.MakeNew();
                 ChangeParent(newParent, panel);
@@ -44,23 +44,23 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
                 ChangeSplitOrientationIfNeeded(ref panel, position);
             }
             var childPanel = _panelFactory.MakeNew();
-            childPanel.Parent = panel;
-            var tab = childPanel.Tabs.Add(content);
+            childPanel.ParentPanel = panel;
+            var tab = childPanel.ContentTabCollection.Add(content);
             if (position == PanelPosition.Left)
             {
-                panel.Children.AddBegin(childPanel);
+                panel.ChildrenCollection.AddBegin(childPanel);
             }
             else if (position == PanelPosition.Right)
             {
-                panel.Children.AddEnd(childPanel);
+                panel.ChildrenCollection.AddEnd(childPanel);
             }
             else if (position == PanelPosition.Top)
             {
-                panel.Children.AddBegin(childPanel);
+                panel.ChildrenCollection.AddBegin(childPanel);
             }
             else if (position == PanelPosition.Bottom)
             {
-                panel.Children.AddEnd(childPanel);
+                panel.ChildrenCollection.AddEnd(childPanel);
             }
             _events.RaisePanelAdded(panel, childPanel, tab);
 
@@ -69,7 +69,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         else
         {
             if (!panel.AllowTabs) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = panel.Tabs.Add(content);
+            var tab = panel.ContentTabCollection.Add(content);
             _events.RaiseTabAdded(panel, tab);
 
             return (panel, tab);
@@ -90,18 +90,18 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
 
     private void ChangeParent(Panel parent, Panel child)
     {
-        var oldParent = child.Parent;
+        var oldParent = child.ParentPanel;
         if (oldParent != null)
         {
-            oldParent.Children.Remove(child);
-            oldParent.Children.AddEnd(parent);
+            oldParent.ChildrenCollection.Remove(child);
+            oldParent.ChildrenCollection.AddEnd(parent);
         }
         else
         {
             _panels.SetRoot(parent);
         }
-        child.Parent = parent;
-        parent.Parent = oldParent;
-        parent.Children.AddEnd(child);
+        child.ParentPanel = parent;
+        parent.ParentPanel = oldParent;
+        parent.ChildrenCollection.AddEnd(child);
     }
 }

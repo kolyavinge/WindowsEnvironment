@@ -21,7 +21,7 @@ internal class SelectTabAction : ISelectTabAction
     public void SelectTab(string panelName, string tabName)
     {
         var tabPanel = _panels.GetPanelByName(panelName);
-        var tab = tabPanel.Tabs.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
+        var tab = tabPanel.ContentTabCollection.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
         tabPanel.SelectedTabName = tab.Name;
         _events.RaiseTabSelected(tabPanel, tab);
     }

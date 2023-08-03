@@ -46,7 +46,7 @@ internal partial class FlexWindow : Window
 
     public FlexWindow(
         IInputElement flexEnvironment,
-        ContentTab contentTab,
+        IContentTab contentTab,
         TabControl tabControl,
         Point parentPosition,
         Point mousePosition)

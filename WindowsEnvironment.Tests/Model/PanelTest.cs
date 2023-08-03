@@ -27,8 +27,8 @@ internal class PanelTest
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
-        _panel.Children.AddBegin(panel1);
-        _panel.Children.AddBegin(panel2);
+        _panel.ChildrenCollection.AddBegin(panel1);
+        _panel.ChildrenCollection.AddBegin(panel2);
         var result = _panel.GetAllChildren().ToList();
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -41,8 +41,8 @@ internal class PanelTest
     {
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
-        _panel.Children.AddBegin(panel1);
-        panel1.Children.AddBegin(panel2);
+        _panel.ChildrenCollection.AddBegin(panel1);
+        panel1.ChildrenCollection.AddBegin(panel2);
         var result = _panel.GetAllChildren().ToList();
 
         Assert.That(result, Has.Count.EqualTo(2));

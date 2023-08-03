@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace WindowsEnvironment.Model;
 
-public interface IPanelCollection : IEnumerable<Panel>
+internal interface IPanelCollection : IEnumerable<Panel>
 {
     Panel RootPanel { get; }
     Panel GetPanelByName(string name);
@@ -35,7 +35,7 @@ internal class PanelCollection : IPanelCollectionInternal
         var parentPanel = GetPanelByName(parentPanelName);
         var childPanel = GetPanelByName(childPanelName);
 
-        return parentPanel.Children.IndexOf(childPanel);
+        return parentPanel.ChildrenCollection.IndexOf(childPanel);
     }
 
     public void SetRoot(Panel root)
