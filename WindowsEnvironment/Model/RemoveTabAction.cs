@@ -43,6 +43,11 @@ internal class RemoveTabAction : IRemoveTabAction
                 removedPanel = new RemovedPanel(parentPanel, removed);
             }
         }
+        if (removedPanel != null)
+        {
+            var lastChild = removedPanel.Parent.Children.LastOrDefault();
+            if (lastChild != null) lastChild.Size = null;
+        }
         _events.RaiseTabRemoved(removedPanel, tabPanel, tab, mode);
         if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
         {
