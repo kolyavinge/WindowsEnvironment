@@ -7,7 +7,7 @@ internal class RemoveTabActionTest
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Panel _rootPanel;
-    private Mock<IPanelCollectionInternal> _panels;
+    private Mock<IPanelCollection> _panels;
     private Mock<IParentsChainFinder> _parentsChainFinder;
     private Mock<IEventsInternal> _events;
     private RemoveTabAction _action;
@@ -18,7 +18,7 @@ internal class RemoveTabActionTest
         _content = new Content();
         _nameGenerator = new Mock<INameGenerator>();
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
-        _panels = new Mock<IPanelCollectionInternal>();
+        _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _panels.Setup(x => x.GetPanelByName(MainPanel.Name)).Returns(_rootPanel);
         _parentsChainFinder = new Mock<IParentsChainFinder>();

@@ -7,7 +7,7 @@ internal class MainInjectModule : InjectModule
 {
     public override void Init(IBindingProvider bindingProvider)
     {
-        bindingProvider.Bind<IPanelCollectionInternal, PanelCollection>().ToSingleton();
+        bindingProvider.Bind<IPanelCollection, PanelCollection>().ToSingleton();
         bindingProvider.Bind<ISetPanelPositionAction, SetPanelPositionAction>().ToSingleton();
         bindingProvider.Bind<IRemoveTabAction, RemoveTabAction>().ToSingleton();
         bindingProvider.Bind<ISelectTabAction, SelectTabAction>().ToSingleton();

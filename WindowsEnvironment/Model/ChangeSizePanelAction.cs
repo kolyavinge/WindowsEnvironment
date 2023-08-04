@@ -8,9 +8,9 @@ internal interface IChangeSizePanelAction
 
 internal class ChangeSizePanelAction : IChangeSizePanelAction
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
 
-    public ChangeSizePanelAction(IPanelCollectionInternal panels)
+    public ChangeSizePanelAction(IPanelCollection panels)
     {
         _panels = panels;
     }

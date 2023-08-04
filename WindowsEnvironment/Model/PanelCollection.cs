@@ -9,14 +9,10 @@ internal interface IPanelCollection : IEnumerable<Panel>
     Panel RootPanel { get; }
     Panel GetPanelByName(string name);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
-}
-
-internal interface IPanelCollectionInternal : IPanelCollection
-{
     void SetRoot(Panel root);
 }
 
-internal class PanelCollection : IPanelCollectionInternal
+internal class PanelCollection : IPanelCollection
 {
     public Panel RootPanel { get; private set; }
 

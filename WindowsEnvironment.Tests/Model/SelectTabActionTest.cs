@@ -7,7 +7,7 @@ internal class SelectTabActionTest
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Panel _rootPanel;
-    private Mock<IPanelCollectionInternal> _panels;
+    private Mock<IPanelCollection> _panels;
     private Mock<IEventsInternal> _events;
     private SelectTabAction _action;
 
@@ -18,7 +18,7 @@ internal class SelectTabActionTest
         _nameGenerator = new Mock<INameGenerator>();
         _nameGenerator.SetupSequence(x => x.GetContentTabName()).Returns("tab_1").Returns("tab_2").Returns("tab_3");
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
-        _panels = new Mock<IPanelCollectionInternal>();
+        _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _panels.Setup(x => x.GetPanelByName(MainPanel.Name)).Returns(_rootPanel);
         _events = new Mock<IEventsInternal>();

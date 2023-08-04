@@ -9,12 +9,12 @@ internal interface ISetPanelPositionAction
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
     private readonly IPanelFactory _panelFactory;
     private readonly IEventsInternal _events;
 
     public SetPanelPositionAction(
-        IPanelCollectionInternal panels,
+        IPanelCollection panels,
         IPanelFactory panelFactory,
         IEventsInternal events)
     {

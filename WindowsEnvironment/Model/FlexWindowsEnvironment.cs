@@ -19,7 +19,7 @@ public interface IFlexWindowsEnvironment
 
 internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
     private readonly ISetPanelPositionAction _setPanelPositionAction;
     private readonly ISelectTabAction _selectTabAction;
     private readonly IRemoveTabAction _removeTabAction;
@@ -33,7 +33,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
     public IEnumerable<IPanel> AllPanels => _panels;
 
     public FlexWindowsEnvironment(
-        IPanelCollectionInternal panels,
+        IPanelCollection panels,
         ISetPanelPositionAction setPanelPositionAction,
         ISelectTabAction selectTabAction,
         IRemoveTabAction removeTabAction,

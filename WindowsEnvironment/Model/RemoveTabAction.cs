@@ -12,12 +12,12 @@ internal interface IRemoveTabAction
 
 internal class RemoveTabAction : IRemoveTabAction
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
     private readonly IParentsChainFinder _parentsChainFinder;
     private readonly IEventsInternal _events;
 
     public RemoveTabAction(
-        IPanelCollectionInternal panels,
+        IPanelCollection panels,
         IParentsChainFinder parentsChainFinder,
         IEventsInternal events)
     {

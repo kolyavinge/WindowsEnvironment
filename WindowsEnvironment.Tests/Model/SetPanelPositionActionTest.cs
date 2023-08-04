@@ -6,7 +6,7 @@ internal class SetPanelPositionActionTest
 {
     private Content _content;
     private Panel _mainPanel, _panel1, _panel2, _panel3, _panel4;
-    private Mock<IPanelCollectionInternal> _panels;
+    private Mock<IPanelCollection> _panels;
     private Mock<IPanelFactory> _panelFactory;
     private Mock<IEventsInternal> _events;
     private Mock<INameGenerator> _nameGenerator;
@@ -16,7 +16,7 @@ internal class SetPanelPositionActionTest
     public void Setup()
     {
         _content = new Content();
-        _panels = new Mock<IPanelCollectionInternal>();
+        _panels = new Mock<IPanelCollection>();
         _panelFactory = new Mock<IPanelFactory>();
         _events = new Mock<IEventsInternal>();
         _nameGenerator = new Mock<INameGenerator>();

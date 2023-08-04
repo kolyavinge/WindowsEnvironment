@@ -5,7 +5,7 @@ namespace WindowsEnvironment.Tests.Model;
 internal class ParentsChainFinderTest
 {
     private Panel _rootPanel;
-    private Mock<IPanelCollectionInternal> _panels;
+    private Mock<IPanelCollection> _panels;
     private Mock<INameGenerator> _nameGenerator;
     private ParentsChainFinder _finder;
 
@@ -14,7 +14,7 @@ internal class ParentsChainFinderTest
     {
         _nameGenerator = new Mock<INameGenerator>();
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
-        _panels = new Mock<IPanelCollectionInternal>();
+        _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _finder = new ParentsChainFinder(_panels.Object);
     }

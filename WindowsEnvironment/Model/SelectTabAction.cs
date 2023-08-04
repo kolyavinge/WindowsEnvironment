@@ -9,10 +9,10 @@ internal interface ISelectTabAction
 
 internal class SelectTabAction : ISelectTabAction
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
     private readonly IEventsInternal _events;
 
-    public SelectTabAction(IPanelCollectionInternal panels, IEventsInternal events)
+    public SelectTabAction(IPanelCollection panels, IEventsInternal events)
     {
         _panels = panels;
         _events = events;

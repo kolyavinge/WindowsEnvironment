@@ -9,9 +9,9 @@ internal interface IParentsChainFinder
 
 internal class ParentsChainFinder : IParentsChainFinder
 {
-    private readonly IPanelCollectionInternal _panels;
+    private readonly IPanelCollection _panels;
 
-    public ParentsChainFinder(IPanelCollectionInternal panels)
+    public ParentsChainFinder(IPanelCollection panels)
     {
         _panels = panels;
     }
