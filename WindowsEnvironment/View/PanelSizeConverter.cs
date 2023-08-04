@@ -18,7 +18,6 @@ internal class PanelSizeConverter : IValueConverter
 
     public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var length = (GridLength)value;
-        return !length.IsStar ? length.Value : null;
+        throw new NotImplementedException();
     }
 }

@@ -132,7 +132,7 @@ internal class MasterGrid : Grid
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
                 row.MinHeight = Constants.RowColMinHeight;
                 row.DataContext = childPanel;
-                var bind = new Binding("Size") { Mode = BindingMode.TwoWay, Converter = PanelSizeConverter.Instance };
+                var bind = new Binding("Size") { Converter = PanelSizeConverter.Instance };
                 row.SetBinding(RowDefinition.HeightProperty, bind);
                 Grid.SetRow(childGrid, rowColumnIndex);
             }
@@ -141,7 +141,7 @@ internal class MasterGrid : Grid
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
                 col.MinWidth = Constants.RowColMinHeight;
                 col.DataContext = childPanel;
-                var bind = new Binding("Size") { Mode = BindingMode.TwoWay, Converter = PanelSizeConverter.Instance };
+                var bind = new Binding("Size") { Converter = PanelSizeConverter.Instance };
                 col.SetBinding(ColumnDefinition.WidthProperty, bind);
                 Grid.SetColumn(childGrid, rowColumnIndex);
             }
