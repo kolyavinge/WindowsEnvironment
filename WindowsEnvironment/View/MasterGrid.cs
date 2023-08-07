@@ -203,6 +203,7 @@ internal class MasterGrid : Grid
         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
         var tabControl = tabPanelGrid.FindChildren<TabControl>().First();
         var tabItem = tabControl.Items.GetByName(tab.Name)!;
+        if (tabItem.Content is IDisposable d) d.Dispose();
         tabItem.Content = null;
         tabItem.Template = null;
         tabControl.Items.Remove(tabItem);
@@ -227,8 +228,8 @@ internal class MasterGrid : Grid
                 var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
                 if (marks != null)
                 {
-                    _model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
                     flexWindow.Close();
+                    _model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
                 }
                 _marksWindow.Close();
                 _marksWindow = null;
@@ -268,34 +269,67 @@ internal class MasterGrid : Grid
 
     private void MakeNewTab(TabControl tabControl, IPanel panel, IContentTab contentTab)
     {
+        if (_model == null) throw new InvalidOperationException();
+        if (_styles == null) throw new InvalidOperationException();
+        if (_mouseController == null) throw new InvalidOperationException();
+        // tab header
         var headerText = new TextBlock { DataContext = contentTab.Content.Header.SourceObject };
         headerText.SetBinding(TextBlock.TextProperty, contentTab.Content.Header.PropertyName);
         var headerGrid = new Grid();
         headerGrid.Children.Add(headerText);
-        headerGrid.MouseDown += (_, me) =>
+        // handlers
+        void MouseDownHandler(object sender, MouseButtonEventArgs e)
         {
-            if (me.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
-                _mouseController!.OnTabHeaderButtonDown(panel.Name, contentTab.Name, mouse.X, mouse.Y);
+                _mouseController.OnTabHeaderButtonDown(panel.Name, contentTab.Name, mouse.X, mouse.Y);
                 Mouse.Capture(headerGrid);
             }
-            else if (me.MiddleButton == MouseButtonState.Pressed)
+            else if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                _mouseController!.OnTabHeaderMiddleButtonPress(panel.Name, contentTab.Name);
+                _mouseController.OnTabHeaderMiddleButtonPress(panel.Name, contentTab.Name);
             }
-        };
-        headerGrid.MouseMove += (_, _) =>
+        }
+        void MouseMoveHandler(object sender, MouseEventArgs e)
         {
             var mouse = Mouse.GetPosition(this);
-            _mouseController!.OnTabHeaderMouseMove(mouse.X, mouse.Y);
-        };
-        headerGrid.MouseUp += (_, _) =>
+            _mouseController.OnTabHeaderMouseMove(mouse.X, mouse.Y);
+        }
+        void MouseUpHandler(object sender, MouseButtonEventArgs e)
         {
-            _mouseController!.OnTabHeaderButtonUp();
+            _mouseController.OnTabHeaderButtonUp();
             Mouse.Capture(null);
-        };
-        var tabItem = new TabItem { Name = contentTab.Name, Content = contentTab.Content.View, Header = headerGrid };
+        }
+        headerGrid.MouseDown += MouseDownHandler;
+        headerGrid.MouseMove += MouseMoveHandler;
+        headerGrid.MouseUp += MouseUpHandler;
+        // tab content
+        object tabContent;
+        if (panel.IsMain)
+        {
+            tabContent = contentTab.Content.View;
+        }
+        else
+        {
+            var contentView = new ContentView
+            {
+                DataContext = contentTab.Content.Header.SourceObject,
+                ContentElement = (UIElement)contentTab.Content.View,
+                HeaderBackground = _styles.FlexWindowHeaderBackground, // FlexWindowHeaderBackground rename
+                HeaderForeground = _styles.FlexWindowHeaderForeground  // rename
+            };
+            contentView.SetBinding(ContentView.HeaderTextProperty, contentTab.Content.Header.PropertyName);
+            contentView.HeaderMouseDown += MouseDownHandler;
+            contentView.HeaderMouseMove += MouseMoveHandler;
+            contentView.HeaderMouseUp += MouseUpHandler;
+            contentView.CloseButtonClick += (_, _) =>
+            {
+                _model.RemoveTab(panel.Name, contentTab.Name, RemoveTabMode.Close);
+            };
+            tabContent = contentView;
+        }
+        var tabItem = new TabItem { Name = contentTab.Name, Content = tabContent, Header = headerGrid };
         tabControl.Items.Add(tabItem);
     }
 

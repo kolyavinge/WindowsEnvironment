@@ -35,8 +35,6 @@ internal partial class FlexWindow : Window
     public event EventHandler<MouseButtonEventArgs>? HeaderMouseUp;
     public event EventHandler<EventArgs>? WindowMoved;
 
-    public UIElement MainContent => _contentGrid.Children[0];
-
     public new Content? Content { get; }
 
     public FlexWindow()
@@ -55,7 +53,6 @@ internal partial class FlexWindow : Window
         _flexEnvironment = flexEnvironment;
         Content = contentTab.Content;
         DataContext = contentTab.Content;
-        _contentGrid.Children.Add((UIElement)contentTab.Content.View);
         SetBinding(TitleProperty, $"Header.SourceObject.{Content.Header.PropertyName}");
         Width = tabControl.ActualWidth;
         Height = tabControl.ActualHeight;
@@ -66,7 +63,7 @@ internal partial class FlexWindow : Window
     private void OnHeaderMouseDown(object sender, MouseButtonEventArgs e)
     {
         CaptureHeader();
-        Mouse.Capture(_headerGrid);
+        _content.CaptureHeader();
     }
 
     private void OnHeaderMouseMove(object sender, MouseEventArgs e)
@@ -84,7 +81,7 @@ internal partial class FlexWindow : Window
     private void OnHeaderMouseUp(object sender, MouseButtonEventArgs e)
     {
         _lastMousePosition = null;
-        Mouse.Capture(null);
+        _content.ReleaseHeader();
         HeaderMouseUp?.Invoke(this, e);
     }
 
@@ -99,21 +96,21 @@ internal partial class FlexWindow : Window
         base.OnActivated(e);
         if (_needToCapture)
         {
-            Mouse.Capture(_headerGrid);
+            _content.CaptureHeader();
             _needToCapture = false;
         }
     }
 
     protected override void OnClosed(EventArgs e)
     {
-        _contentGrid.Children.Clear();
+        _content.Dispose();
         Content!.CloseCallback?.Invoke();
         base.OnClosed(e);
     }
 
     private void OnWindowMouseUp(object sender, MouseButtonEventArgs e)
     {
-        Mouse.Capture(null);
+        _content.ReleaseHeader();
     }
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
