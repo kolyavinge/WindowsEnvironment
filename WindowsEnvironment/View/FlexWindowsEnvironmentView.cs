@@ -62,8 +62,20 @@ public partial class FlexWindowsEnvironmentView : Control
         var template = new ControlTemplate(typeof(FlexWindowsEnvironmentView));
         template.VisualTree = new FrameworkElementFactory(typeof(MasterGrid), "master");
         Template = template;
+        Application.Current.MainWindow.Activated += OnMainWindowActivated;
+        Application.Current.MainWindow.Deactivated += OnMainWindowDeactivated;
         Application.Current.MainWindow.StateChanged += OnWindowStateChanged;
         Application.Current.MainWindow.Closed += OnMainWindowClosed;
+    }
+
+    private void OnMainWindowActivated(object? sender, EventArgs e)
+    {
+        Application.Current.Windows.EachFlexWindow(x => x.Topmost = true);
+    }
+
+    private void OnMainWindowDeactivated(object? sender, EventArgs e)
+    {
+        Application.Current.Windows.EachFlexWindow(x => x.Topmost = false);
     }
 
     private void OnWindowStateChanged(object? sender, EventArgs e)

@@ -12,7 +12,6 @@
         Width="300"
         MinWidth="100"
         MinHeight="100"
-        Topmost="True"
         ShowInTaskbar="False">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
