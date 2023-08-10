@@ -273,10 +273,14 @@ internal class MasterGrid : Grid
         if (_styles == null) throw new InvalidOperationException();
         if (_mouseController == null) throw new InvalidOperationException();
         // tab header
-        var headerText = new TextBlock { DataContext = contentTab.Content.Header.SourceObject };
-        headerText.SetBinding(TextBlock.TextProperty, contentTab.Content.Header.PropertyName);
-        var headerGrid = new Grid();
-        headerGrid.Children.Add(headerText);
+        var headerGrid = new TabItemHeaderView
+        {
+            DataContext = contentTab.Content.Header.SourceObject,
+            Foreground = _styles.FlexWindowHeaderForeground,
+            IsCloseButtonVisible = panel.IsMain
+        };
+        headerGrid.SetBinding(TabItemHeaderView.HeaderTextProperty, contentTab.Content.Header.PropertyName);
+        headerGrid.CloseButtonClick += (_, _) => _model.RemoveTab(panel.Name, contentTab.Name, RemoveTabMode.Close);
         // handlers
         void MouseDownHandler(object sender, MouseButtonEventArgs e)
         {

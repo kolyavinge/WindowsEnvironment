@@ -45,7 +45,7 @@ namespace WindowsEnvironment.View
             DependencyProperty.Register("HeaderText", typeof(string), typeof(ContentView), new PropertyMetadata(""));
         #endregion
 
-        #region
+        #region ContentElement
         public UIElement? ContentElement
         {
             get { return (UIElement?)GetValue(ContentElementProperty); }

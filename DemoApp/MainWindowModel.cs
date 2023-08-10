@@ -71,7 +71,7 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 3 closed"
         });
-        Model.SetPanelSize(panel.Name, 50);
+        Model.SetPanelSize(panel.Name, 100);
 
         Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new()
         {
@@ -105,6 +105,6 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 6 closed"
         });
-        Model.SetPanelSize(panel.Name, 50);
+        Model.SetPanelSize(panel.Name, 100);
     }
 }

@@ -30,8 +30,8 @@
             PanelTabControlStyle="{StaticResource PanelTabControlStyle}"
             HorizontalSplitterStyle="{StaticResource HorizontalSplitterStyle}"
             VerticalSplitterStyle="{StaticResource VerticalSplitterStyle}"
-            FlexWindowHeaderBackground="CornflowerBlue"
-            FlexWindowHeaderForeground="White"
+            FlexWindowHeaderBackground="LightBlue"
+            FlexWindowHeaderForeground="DarkBlue"
             PositionMarksBackground="Gray"
             HighlightedMarkPositionBackground="LightGray">
             <view:FlexWindowsEnvironmentView.BackgroundView>

@@ -32,19 +32,10 @@
                 HorizontalAlignment="Left" />
             <Button
                 Margin="0,0,2,0"
+                Foreground="{Binding HeaderForeground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                Style="{StaticResource CloseButtonStyle}"
                 HorizontalAlignment="Right"
                 Click="OnCloseButtonClick">
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource CloseButtonStyle}">
-                        <Setter Property="Foreground" Value="{Binding HeaderForeground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{Binding HeaderForeground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                                <Setter Property="Foreground" Value="Black" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
             </Button>
         </Grid>
         <Grid Grid.Row="1" Name="_contentGrid" />
