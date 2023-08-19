@@ -4,27 +4,26 @@ namespace WindowsEnvironment.Controllers;
 
 public interface IMouseController
 {
-    void OnTabHeaderButtonDown(string panelName, string tabName, double x, double y);
+    void OnTabHeaderButtonDown(string tabName, double x, double y);
     void OnTabHeaderMouseMove(double x, double y);
     void OnTabHeaderButtonUp();
-    void OnTabHeaderMiddleButtonPress(string panelName, string tabName);
+    void OnTabHeaderMiddleButtonPress(string tabName);
 }
 
 internal class MouseController : IMouseController
 {
     private readonly IFlexWindowsEnvironment _model;
-    private string _panelName, _tabName;
+    private string _tabName;
     private MousePoint? _lastMousePoint;
 
     public MouseController(IFlexWindowsEnvironment model)
     {
-        _panelName = _tabName = "";
+        _tabName = "";
         _model = model;
     }
 
-    public void OnTabHeaderButtonDown(string panelName, string tabName, double x, double y)
+    public void OnTabHeaderButtonDown(string tabName, double x, double y)
     {
-        _panelName = panelName;
         _tabName = tabName;
         _lastMousePoint = new MousePoint(x, y);
     }
@@ -38,7 +37,7 @@ internal class MouseController : IMouseController
         if (distance > 30)
         {
             _lastMousePoint = null;
-            _model.RemoveTab(_panelName, _tabName, RemoveTabMode.Unset);
+            _model.RemoveTab(_tabName, RemoveTabMode.Unset);
         }
     }
 
@@ -47,9 +46,9 @@ internal class MouseController : IMouseController
         _lastMousePoint = null;
     }
 
-    public void OnTabHeaderMiddleButtonPress(string panelName, string tabName)
+    public void OnTabHeaderMiddleButtonPress(string tabName)
     {
-        _model.RemoveTab(panelName, tabName, RemoveTabMode.Close);
+        _model.RemoveTab(tabName, RemoveTabMode.Close);
     }
 }
 

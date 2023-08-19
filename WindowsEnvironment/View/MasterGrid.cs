@@ -74,7 +74,7 @@ internal class MasterGrid : Grid
         Grid.SetColumn(parentGrid, Grid.GetColumn(childGrid));
     }
 
-    private void RemovePanel(RemovedPanel removedPanel)
+    private void RemovePanel(RemovedPanelInfo removedPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(removedPanel.Parent.Name);
         var removedGrid = this.FindChildRec<Grid>(removedPanel.Removed.Name);
@@ -196,7 +196,7 @@ internal class MasterGrid : Grid
         MakeNewTab(tabControl, parentPanel, tab);
     }
 
-    public void RemoveTab(RemovedPanel? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    public void RemoveTab(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (_model == null) throw new InvalidOperationException();
         if (_styles == null) throw new InvalidOperationException();
@@ -280,19 +280,19 @@ internal class MasterGrid : Grid
             IsCloseButtonVisible = panel.IsMain
         };
         headerGrid.SetBinding(TabItemHeaderView.HeaderTextProperty, contentTab.Content.Header.PropertyName);
-        headerGrid.CloseButtonClick += (_, _) => _model.RemoveTab(panel.Name, contentTab.Name, RemoveTabMode.Close);
+        headerGrid.CloseButtonClick += (_, _) => _model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
         // handlers
         void MouseDownHandler(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
-                _mouseController.OnTabHeaderButtonDown(panel.Name, contentTab.Name, mouse.X, mouse.Y);
+                _mouseController.OnTabHeaderButtonDown(contentTab.Name, mouse.X, mouse.Y);
                 Mouse.Capture(headerGrid);
             }
             else if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                _mouseController.OnTabHeaderMiddleButtonPress(panel.Name, contentTab.Name);
+                _mouseController.OnTabHeaderMiddleButtonPress(contentTab.Name);
             }
         }
         void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -329,7 +329,7 @@ internal class MasterGrid : Grid
             contentView.HeaderMouseUp += MouseUpHandler;
             contentView.CloseButtonClick += (_, _) =>
             {
-                _model.RemoveTab(panel.Name, contentTab.Name, RemoveTabMode.Close);
+                _model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
             };
             tabContent = contentView;
         }

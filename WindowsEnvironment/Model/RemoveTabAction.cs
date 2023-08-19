@@ -7,7 +7,7 @@ public enum RemoveTabMode { Close, Unset }
 
 internal interface IRemoveTabAction
 {
-    void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
+    void RemoveTab(string tabName, RemoveTabMode mode);
 }
 
 internal class RemoveTabAction : IRemoveTabAction
@@ -26,29 +26,29 @@ internal class RemoveTabAction : IRemoveTabAction
         _events = events;
     }
 
-    public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
+    public void RemoveTab(string tabName, RemoveTabMode mode)
     {
-        var tabPanel = _panels.GetPanelByName(panelName);
-        var tab = tabPanel.ContentTabCollection.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
-        tabPanel.ContentTabCollection.Remove(tab);
-        RemovedPanel? removedPanel = null;
-        if (!tabPanel.IsMain && !tabPanel.ContentTabCollection.Any())
+        var (panel, tab) = _panels.GetTabByName(tabName);
+        panel.ContentTabCollection.Remove(tab);
+        Panel? removedPanel = null;
+        RemovedPanelInfo? removedPanelInfo = null;
+        if (!panel.IsMain && !panel.ContentTabCollection.Any())
         {
-            var parentsChain = _parentsChainFinder.FindChain(panelName);
+            var parentsChain = _parentsChainFinder.FindChain(panel.Name);
             var parentPanel = parentsChain.FirstOrDefault(x => x.ChildrenCollection.Count > 1) ?? _panels.RootPanel;
             if (parentPanel != null)
             {
-                var removed = parentsChain.GetBefore(parentPanel)!;
-                parentPanel.ChildrenCollection.Remove(removed);
-                removedPanel = new RemovedPanel(parentPanel, removed);
+                removedPanel = parentsChain.GetBefore(parentPanel)!;
+                parentPanel.ChildrenCollection.Remove(removedPanel);
+                removedPanelInfo = new RemovedPanelInfo(parentPanel, removedPanel);
             }
         }
-        if (removedPanel != null)
+        if (removedPanelInfo != null)
         {
-            var lastChild = removedPanel.Parent.Children.LastOrDefault();
+            var lastChild = removedPanelInfo.Parent.Children.LastOrDefault();
             if (lastChild != null) lastChild.Size = null;
         }
-        _events.RaiseTabRemoved(removedPanel, tabPanel, tab, mode);
+        _events.RaiseTabRemoved(removedPanelInfo, panel, tab, mode);
         if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
         {
             tab.Content.CloseCallback();

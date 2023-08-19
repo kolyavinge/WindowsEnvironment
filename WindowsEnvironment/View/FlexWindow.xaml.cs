@@ -104,7 +104,6 @@ internal partial class FlexWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _content.Dispose();
-        Content!.CloseCallback?.Invoke();
         base.OnClosed(e);
     }
 
@@ -115,6 +114,7 @@ internal partial class FlexWindow : Window
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
     {
+        Content!.CloseCallback?.Invoke();
         Close();
     }
 }

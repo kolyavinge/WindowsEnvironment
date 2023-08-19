@@ -4,6 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class SetPanelPositionActionTest
 {
+    private object _contentId;
     private Content _content;
     private Panel _mainPanel, _panel1, _panel2, _panel3, _panel4;
     private Mock<IPanelCollection> _panels;
@@ -15,7 +16,8 @@ internal class SetPanelPositionActionTest
     [SetUp]
     public void Setup()
     {
-        _content = new Content();
+        _contentId = new object();
+        _content = new Content(_contentId);
         _panels = new Mock<IPanelCollection>();
         _panelFactory = new Mock<IPanelFactory>();
         _events = new Mock<IEventsInternal>();

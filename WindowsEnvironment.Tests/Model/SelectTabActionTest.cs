@@ -4,6 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class SelectTabActionTest
 {
+    private object _contentId;
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Panel _rootPanel;
@@ -14,13 +15,12 @@ internal class SelectTabActionTest
     [SetUp]
     public void Setup()
     {
-        _content = new Content();
+        _contentId = new object();
+        _content = new Content(_contentId);
         _nameGenerator = new Mock<INameGenerator>();
         _nameGenerator.SetupSequence(x => x.GetContentTabName()).Returns("tab_1").Returns("tab_2").Returns("tab_3");
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
         _panels = new Mock<IPanelCollection>();
-        _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
-        _panels.Setup(x => x.GetPanelByName(MainPanel.Name)).Returns(_rootPanel);
         _events = new Mock<IEventsInternal>();
         _action = new SelectTabAction(_panels.Object, _events.Object);
     }
@@ -29,11 +29,12 @@ internal class SelectTabActionTest
     public void SelectTab()
     {
         _rootPanel.ContentTabCollection.Add(_content);
+        var tab = _rootPanel.ContentTabCollection.Add(_content);
         _rootPanel.ContentTabCollection.Add(_content);
-        _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName("tab_2")).Returns((_rootPanel, tab));
 
         Assert.That(_rootPanel.SelectedTabName, Is.Null);
-        _action.SelectTab(_rootPanel.Name, "tab_2");
+        _action.SelectTab("tab_2");
         Assert.That(_rootPanel.SelectedTabName, Is.EqualTo("tab_2"));
     }
 
@@ -41,11 +42,12 @@ internal class SelectTabActionTest
     public void SelectTabTwice()
     {
         _rootPanel.ContentTabCollection.Add(_content);
+        var tab = _rootPanel.ContentTabCollection.Add(_content);
         _rootPanel.ContentTabCollection.Add(_content);
-        _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName("tab_2")).Returns((_rootPanel, tab));
 
-        _action.SelectTab(_rootPanel.Name, "tab_2");
-        _action.SelectTab(_rootPanel.Name, "tab_2");
+        _action.SelectTab("tab_2");
+        _action.SelectTab("tab_2");
         Assert.That(_rootPanel.SelectedTabName, Is.EqualTo("tab_2"));
     }
 
@@ -53,8 +55,9 @@ internal class SelectTabActionTest
     public void SelectTab_RaiseEvent()
     {
         var tab = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName("tab_1")).Returns((_rootPanel, tab));
 
-        _action.SelectTab(_rootPanel.Name, "tab_1");
+        _action.SelectTab("tab_1");
         _events.Verify(x => x.RaiseTabSelected(_rootPanel, tab));
     }
 
@@ -63,12 +66,13 @@ internal class SelectTabActionTest
     {
         try
         {
-            _action.SelectTab(_rootPanel.Name, "tab_2");
+            _panels.Setup(x => x.GetTabByName("tab_2")).Throws(new ArgumentException("'tab_2' does not exist."));
+            _action.SelectTab("tab_2");
             Assert.Fail();
         }
         catch (ArgumentException e)
         {
-            Assert.That(e.Message, Is.EqualTo("'panel_0' does not contain 'tab_2'."));
+            Assert.That(e.Message, Is.EqualTo("'tab_2' does not exist."));
         }
     }
 }

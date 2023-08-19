@@ -14,7 +14,7 @@ internal interface IEventsInternal : IEvents
     void RaisePanelAdded(Panel parent, Panel childPanel, ContentTab tab);
     void RaiseParentChanged(Panel parentPanel, Panel childPanel);
     void RaiseTabAdded(Panel parentPanel, ContentTab tab);
-    void RaiseTabRemoved(RemovedPanel? removedPanel, Panel tabPanel, ContentTab tab, RemoveTabMode mode);
+    void RaiseTabRemoved(RemovedPanelInfo? removedPanel, Panel tabPanel, ContentTab tab, RemoveTabMode mode);
     void RaiseTabSelected(Panel tabPanel, ContentTab tab);
 }
 
@@ -41,7 +41,7 @@ internal class Events : IEventsInternal
         TabAdded?.Invoke(this, new(parentPanel, tab));
     }
 
-    public void RaiseTabRemoved(RemovedPanel? removedPanel, Panel tabPanel, ContentTab tab, RemoveTabMode mode)
+    public void RaiseTabRemoved(RemovedPanelInfo? removedPanel, Panel tabPanel, ContentTab tab, RemoveTabMode mode)
     {
         TabRemoved?.Invoke(this, new(removedPanel, tabPanel, tab, mode));
     }
@@ -90,16 +90,16 @@ public class TabAddedEventArgs : EventArgs
     }
 }
 
-public record RemovedPanel(IPanel Parent, IPanel Removed);
+public record RemovedPanelInfo(IPanel Parent, IPanel Removed);
 
 public class TabRemovedEventArgs : EventArgs
 {
-    public RemovedPanel? RemovedPanel { get; }
+    public RemovedPanelInfo? RemovedPanel { get; }
     public IPanel TabPanel { get; }
     public IContentTab Tab { get; }
     public RemoveTabMode Mode { get; }
 
-    public TabRemovedEventArgs(RemovedPanel? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    public TabRemovedEventArgs(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         RemovedPanel = removedPanel;
         TabPanel = tabPanel;

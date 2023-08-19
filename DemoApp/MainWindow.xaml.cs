@@ -19,7 +19,7 @@ public partial class MainWindow : Window
 
     private void AddNewTab()
     {
-        flex.Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new()
+        flex.Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(DateTime.Now.Ticks)
         {
             Header = new()
             {
@@ -32,6 +32,6 @@ public partial class MainWindow : Window
 
     private void SelectTabClick(object sender, RoutedEventArgs e)
     {
-        flex.Model.SelectTab(MainPanel.Name, "tab_1");
+        flex.Model.SelectTab("tab_1");
     }
 }

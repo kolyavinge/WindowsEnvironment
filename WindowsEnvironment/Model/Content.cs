@@ -7,7 +7,7 @@ public record Header
     public string PropertyName { get; set; } = "";
 }
 
-public record Content
+public record Content(object Id)
 {
     public Header Header { get; set; } = new Header();
 

@@ -1,10 +1,8 @@
-﻿using System.Linq;
-
-namespace WindowsEnvironment.Model;
+﻿namespace WindowsEnvironment.Model;
 
 internal interface ISelectTabAction
 {
-    void SelectTab(string panelName, string tabName);
+    void SelectTab(string tabName);
 }
 
 internal class SelectTabAction : ISelectTabAction
@@ -18,11 +16,10 @@ internal class SelectTabAction : ISelectTabAction
         _events = events;
     }
 
-    public void SelectTab(string panelName, string tabName)
+    public void SelectTab(string tabName)
     {
-        var tabPanel = _panels.GetPanelByName(panelName);
-        var tab = tabPanel.ContentTabCollection.FirstOrDefault(x => x.Name == tabName) ?? throw new ArgumentException($"'{panelName}' does not contain '{tabName}'.");
-        tabPanel.SelectedTabName = tab.Name;
-        _events.RaiseTabSelected(tabPanel, tab);
+        var (panel, tab) = _panels.GetTabByName(tabName);
+        panel.SelectedTabName = tab.Name;
+        _events.RaiseTabSelected(panel, tab);
     }
 }

@@ -24,10 +24,11 @@ public class MainWindowModel : INotifyPropertyChanged
 
     public MainWindowModel()
     {
+        int id = 1;
         _statusText = "";
         Model = FlexWindowsEnvironmentFactory.Make();
 
-        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new()
+        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(id++)
         {
             Header = new()
             {
@@ -38,7 +39,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Updateable closed"
         });
 
-        var (panel, tab) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new()
+        var (panel, tab) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(id++)
         {
             Header = new()
             {
@@ -48,9 +49,9 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 1 closed"
         });
-        Model.SelectTab(panel.Name, tab.Name);
+        Model.SelectTab(tab.Name);
 
-        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new()
+        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(id++)
         {
             Header = new()
             {
@@ -61,7 +62,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Header 2 closed"
         });
 
-        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new()
+        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new(id++)
         {
             Header = new()
             {
@@ -73,7 +74,7 @@ public class MainWindowModel : INotifyPropertyChanged
         });
         Model.SetPanelSize(panel.Name, 100);
 
-        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new()
+        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new(id++)
         {
             Header = new()
             {
@@ -84,7 +85,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Header 4 closed"
         });
 
-        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new()
+        Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new(id++)
         {
             Header = new()
             {
@@ -95,7 +96,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Header 5 closed"
         });
 
-        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new()
+        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new(id++)
         {
             Header = new()
             {

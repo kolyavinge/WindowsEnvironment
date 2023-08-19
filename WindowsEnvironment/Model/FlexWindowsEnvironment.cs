@@ -1,90 +1,53 @@
 ﻿using System.Collections.Generic;
+using DependencyInjection;
 
 namespace WindowsEnvironment.Model;
 
-public interface IFlexWindowsEnvironment
-{
-    IEvents Events { get; }
-    IPanel RootPanel { get; }
-    IEnumerable<IPanel> AllPanels { get; }
-    IPanel GetPanelByName(string name);
-    int GetChildPanelIndex(string parentPanelName, string childPanelName);
-    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
-    void SelectTab(string panelName, string tabName);
-    void RemoveTab(string panelName, string tabName, RemoveTabMode mode);
-    double? GetPanelSize(string panelName);
-    void SetPanelSize(string panelName, double? size);
-    IFlexWindowsEnvironmentReader MakeReader();
-}
-
 internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 {
-    private readonly IPanelCollection _panels;
-    private readonly ISetPanelPositionAction _setPanelPositionAction;
-    private readonly ISelectTabAction _selectTabAction;
-    private readonly IRemoveTabAction _removeTabAction;
-    private readonly IChangeSizePanelAction _changeSizePanelAction;
-    private readonly IEventsInternal _events;
+    [Inject]
+    public IPanelCollection? Panels { get; set; }
 
-    public IEvents Events => _events;
+    [Inject]
+    public ISetPanelPositionAction? SetPanelPositionAction { get; set; }
 
-    public IPanel RootPanel => _panels.RootPanel;
+    [Inject]
+    public ISelectTabAction? SelectTabAction { get; set; }
 
-    public IEnumerable<IPanel> AllPanels => _panels;
+    [Inject]
+    public IRemoveTabAction? RemoveTabAction { get; set; }
 
-    public FlexWindowsEnvironment(
-        IPanelCollection panels,
-        ISetPanelPositionAction setPanelPositionAction,
-        ISelectTabAction selectTabAction,
-        IRemoveTabAction removeTabAction,
-        IChangeSizePanelAction changeSizePanelAction,
-        IEventsInternal events)
+    [Inject]
+    public IChangeSizePanelAction? ChangeSizePanelAction { get; set; }
+
+    public IEvents Events { get; private set; }
+
+    public IPanel RootPanel => Panels!.RootPanel;
+
+    public IEnumerable<IPanel> AllPanels => Panels!;
+
+    public FlexWindowsEnvironment(IEventsInternal events)
     {
-        _panels = panels;
-        _setPanelPositionAction = setPanelPositionAction;
-        _selectTabAction = selectTabAction;
-        _removeTabAction = removeTabAction;
-        _changeSizePanelAction = changeSizePanelAction;
-        _events = events;
+        Events = events;
     }
 
-    public IPanel GetPanelByName(string name)
-    {
-        return _panels.GetPanelByName(name);
-    }
+    public IPanel GetPanelByName(string name) => Panels!.GetPanelByName(name);
 
-    public int GetChildPanelIndex(string parentPanelName, string childPanelName)
-    {
-        return _panels.GetChildPanelIndex(parentPanelName, childPanelName);
-    }
+    public (IPanel, IContentTab) GetTabByName(string name) => Panels!.GetTabByName(name);
 
-    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration)
-    {
-        return _setPanelPositionAction.SetPanelPosition(panelName, position, configuration);
-    }
+    public (IPanel, IContentTab) GetTabById(object id) => Panels!.GetTabById(id);
 
-    public void SelectTab(string panelName, string tabName)
-    {
-        _selectTabAction.SelectTab(panelName, tabName);
-    }
+    public int GetChildPanelIndex(string parentPanelName, string childPanelName) => Panels!.GetChildPanelIndex(parentPanelName, childPanelName);
 
-    public void RemoveTab(string panelName, string tabName, RemoveTabMode mode)
-    {
-        _removeTabAction.RemoveTab(panelName, tabName, mode);
-    }
+    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration) => SetPanelPositionAction!.SetPanelPosition(panelName, position, configuration);
 
-    public double? GetPanelSize(string panelName)
-    {
-        return _changeSizePanelAction.GetPanelSize(panelName);
-    }
+    public void SelectTab(string tabName) => SelectTabAction!.SelectTab(tabName);
 
-    public void SetPanelSize(string panelName, double? size)
-    {
-        _changeSizePanelAction.SetPanelSize(panelName, size);
-    }
+    public void RemoveTab(string tabName, RemoveTabMode mode) => RemoveTabAction!.RemoveTab(tabName, mode);
 
-    public IFlexWindowsEnvironmentReader MakeReader()
-    {
-        return new FlexWindowsEnvironmentReader(this);
-    }
+    public double? GetPanelSize(string panelName) => ChangeSizePanelAction!.GetPanelSize(panelName);
+
+    public void SetPanelSize(string panelName, double? size) => ChangeSizePanelAction!.SetPanelSize(panelName, size);
+
+    public IFlexWindowsEnvironmentReader MakeReader() => new FlexWindowsEnvironmentReader(this);
 }

@@ -4,6 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class RemoveTabActionTest
 {
+    private object _contentId;
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Panel _rootPanel;
@@ -15,12 +16,12 @@ internal class RemoveTabActionTest
     [SetUp]
     public void Setup()
     {
-        _content = new Content();
+        _contentId = new object();
+        _content = new Content(_contentId);
         _nameGenerator = new Mock<INameGenerator>();
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
         _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
-        _panels.Setup(x => x.GetPanelByName(MainPanel.Name)).Returns(_rootPanel);
         _parentsChainFinder = new Mock<IParentsChainFinder>();
         _events = new Mock<IEventsInternal>();
         _action = new RemoveTabAction(_panels.Object, _parentsChainFinder.Object, _events.Object);
@@ -30,14 +31,15 @@ internal class RemoveTabActionTest
     public void RemoveWrongTabFromRootPanel()
     {
         _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName("wrong name")).Throws(new ArgumentException("'wrong name' does not exist."));
         try
         {
-            _action.RemoveTab(_rootPanel.Name, "wrong name", RemoveTabMode.Close);
+            _action.RemoveTab("wrong name", RemoveTabMode.Close);
             Assert.Fail();
         }
         catch (Exception e)
         {
-            Assert.That(e.Message, Is.EqualTo("'panel_0' does not contain 'wrong name'."));
+            Assert.That(e.Message, Is.EqualTo("'wrong name' does not exist."));
         }
     }
 
@@ -45,8 +47,9 @@ internal class RemoveTabActionTest
     public void RemoveLastTabFromRootPanel()
     {
         var tab = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_rootPanel, tab));
 
-        _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
         Assert.That(_rootPanel.ContentTabCollection, Has.Count.EqualTo(0));
         _events.Verify(x => x.RaiseTabRemoved(null, _rootPanel, tab, RemoveTabMode.Close));
@@ -57,8 +60,9 @@ internal class RemoveTabActionTest
     {
         var tab1 = _rootPanel.ContentTabCollection.Add(_content);
         var tab2 = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab2.Name)).Returns((_rootPanel, tab2));
 
-        _action.RemoveTab(_rootPanel.Name, tab2.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab2.Name, RemoveTabMode.Close);
 
         Assert.That(_rootPanel.ContentTabCollection, Has.Count.EqualTo(1));
         Assert.That(_rootPanel.ContentTabCollection.First(), Is.EqualTo(tab1));
@@ -73,10 +77,10 @@ internal class RemoveTabActionTest
         var tab = panel2.ContentTabCollection.Add(_content);
         _rootPanel.ChildrenCollection.AddBegin(panel1);
         panel1.ChildrenCollection.AddBegin(panel2);
-        _panels.Setup(x => x.GetPanelByName(panel2.Name)).Returns(panel2);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<Panel> { panel2, panel1, _rootPanel });
 
-        _action.RemoveTab(panel2.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
         Assert.That(_rootPanel.ContentTabCollection, Has.Count.EqualTo(0));
         _events.Verify(x => x.RaiseTabRemoved(new(_rootPanel, panel1), panel2, tab, RemoveTabMode.Close));
@@ -93,10 +97,10 @@ internal class RemoveTabActionTest
         panel1.ChildrenCollection.AddBegin(panel2);
         panel1.ChildrenCollection.AddBegin(panel3);
         var tab = panel3.ContentTabCollection.Add(_content);
-        _panels.Setup(x => x.GetPanelByName(panel3.Name)).Returns(panel3);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel3, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel3.Name)).Returns(new List<Panel> { panel3, panel1, _rootPanel });
 
-        _action.RemoveTab(panel3.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
         Assert.That(_rootPanel.ChildrenCollection, Has.Count.EqualTo(2));
         Assert.That(panel1.ChildrenCollection, Has.Count.EqualTo(1));
@@ -110,8 +114,9 @@ internal class RemoveTabActionTest
         var invoke = false;
         _content.CloseCallback = () => invoke = true;
         var tab = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_rootPanel, tab));
 
-        _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
         Assert.That(invoke, Is.True);
     }
@@ -122,8 +127,9 @@ internal class RemoveTabActionTest
         var invoke = false;
         _content.CloseCallback = () => invoke = true;
         var tab = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_rootPanel, tab));
 
-        _action.RemoveTab(_rootPanel.Name, tab.Name, RemoveTabMode.Unset);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Unset);
 
         Assert.That(invoke, Is.False);
     }
@@ -137,10 +143,11 @@ internal class RemoveTabActionTest
         var tab = panel2.ContentTabCollection.Add(_content);
         _rootPanel.ChildrenCollection.AddEnd(panel1);
         _rootPanel.ChildrenCollection.AddEnd(panel2);
-        _panels.Setup(x => x.GetPanelByName(panel2.Name)).Returns(panel2);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<Panel> { panel2, _rootPanel });
 
-        _action.RemoveTab(panel2.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
+
         Assert.That(panel1.Size, Is.Null);
     }
 
@@ -153,10 +160,11 @@ internal class RemoveTabActionTest
         var tab = panel1.ContentTabCollection.Add(_content);
         _rootPanel.ChildrenCollection.AddEnd(panel1);
         _rootPanel.ChildrenCollection.AddEnd(panel2);
-        _panels.Setup(x => x.GetPanelByName(panel1.Name)).Returns(panel1);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel1, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel1.Name)).Returns(new List<Panel> { panel1, _rootPanel });
 
-        _action.RemoveTab(panel1.Name, tab.Name, RemoveTabMode.Close);
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
+
         Assert.That(panel2.Size, Is.Null);
     }
 }

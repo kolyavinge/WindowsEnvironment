@@ -4,6 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class FlexWindowsEnvironmentReaderTest
 {
+    private object _contentId;
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Mock<IFlexWindowsEnvironment> _model;
@@ -12,7 +13,8 @@ internal class FlexWindowsEnvironmentReaderTest
     [SetUp]
     public void Setup()
     {
-        _content = new Content();
+        _contentId = new object();
+        _content = new Content(_contentId);
         _nameGenerator = new Mock<INameGenerator>();
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab1");
         _model = new Mock<IFlexWindowsEnvironment>();
