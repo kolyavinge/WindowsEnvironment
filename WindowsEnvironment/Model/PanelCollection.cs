@@ -12,14 +12,21 @@ internal interface IPanelCollection : IEnumerable<Panel>
     (Panel, ContentTab) GetTabById(object id);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
     void SetRoot(Panel root);
+    void AddFlexPanel(Panel panel);
+    void RemoveFlexPanelTabById(object id);
 }
 
 internal class PanelCollection : IPanelCollection
 {
+    private readonly List<Panel> _flexPanels;
+
     public Panel RootPanel { get; private set; }
+
+    public IReadOnlyCollection<Panel> FlexPanels => _flexPanels;
 
     public PanelCollection(IPanelFactory panelFactory)
     {
+        _flexPanels = new List<Panel>();
         RootPanel = panelFactory.MakeNew();
     }
 
@@ -73,7 +80,41 @@ internal class PanelCollection : IPanelCollection
         RootPanel = root;
     }
 
-    public IEnumerator<Panel> GetEnumerator() => new[] { RootPanel }.Union(RootPanel.GetAllChildren()).GetEnumerator();
+    public void AddFlexPanel(Panel panel)
+    {
+        _flexPanels.Add(panel);
+    }
+
+    public void RemoveFlexPanelTabById(object id)
+    {
+        var (flexPanel, tab) = GetFlexPanelById(id);
+        if (flexPanel != null)
+        {
+            flexPanel.ContentTabCollection.Remove(tab!);
+            if (!flexPanel.ContentTabCollection.Any())
+            {
+                _flexPanels.Remove(flexPanel);
+            }
+        }
+    }
+
+    public (Panel?, ContentTab?) GetFlexPanelById(object id)
+    {
+        foreach (var flexPanel in _flexPanels)
+        {
+            foreach (var tab in flexPanel.ContentTabCollection)
+            {
+                if (tab.Content.Id == id)
+                {
+                    return (flexPanel, tab);
+                }
+            }
+        }
+
+        return (default, default);
+    }
+
+    public IEnumerator<Panel> GetEnumerator() => new[] { RootPanel }.Union(RootPanel.GetAllChildren()).Union(_flexPanels).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

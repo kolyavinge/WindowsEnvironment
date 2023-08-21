@@ -10,13 +10,13 @@ internal class ContentTabCollection : IReadOnlyCollection<ContentTab>
 
     public int Count => _tabs.Count;
 
-	public ContentTabCollection(INameGenerator nameGenerator)
+    public ContentTabCollection(INameGenerator nameGenerator)
     {
         _tabs = new List<ContentTab>();
         _nameGenerator = nameGenerator;
     }
 
-	public ContentTab Add(Content content)
+    public ContentTab Add(Content content)
     {
         var tab = new ContentTab(_nameGenerator.GetContentTabName(), content);
         _tabs.Add(tab);
@@ -24,7 +24,7 @@ internal class ContentTabCollection : IReadOnlyCollection<ContentTab>
         return tab;
     }
 
-	public void Remove(ContentTab tab)
+    public void Remove(ContentTab tab)
     {
         _tabs.Remove(tab);
     }

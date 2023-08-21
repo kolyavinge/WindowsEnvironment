@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 namespace WindowsEnvironment.Model;
 
+public enum PanelState { Set, Flex }
+
 public interface IPanel
 {
     event PropertyChangedEventHandler? PropertyChanged;
@@ -24,4 +26,6 @@ public interface IPanel
     bool IsMain { get; }
 
     bool AllowTabs { get; }
+
+    PanelState State { get; }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using WindowsEnvironment.Model;
 
@@ -33,5 +34,16 @@ public partial class MainWindow : Window
     private void SelectTabClick(object sender, RoutedEventArgs e)
     {
         flex.Model.SelectTab("tab_1");
+    }
+
+    private void CloseAllClick(object sender, RoutedEventArgs e)
+    {
+        foreach (var panel in flex.Model.AllPanels.ToList())
+        {
+            foreach (var tab in panel.Tabs.ToList())
+            {
+                flex.Model.RemoveTab(tab.Name, RemoveTabMode.Close);
+            }
+        }
     }
 }

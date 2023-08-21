@@ -198,6 +198,15 @@ internal class MasterGrid : Grid
 
     public void RemoveTab(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
+        if (tabPanel.State == PanelState.Flex)
+        {
+            var flexWindow = Application.Current.Windows.GetFlexWindows().FirstOrDefault(x => x.Content == tab.Content);
+            if (flexWindow != null)
+            {
+                flexWindow.Close();
+                return;
+            }
+        }
         if (_model == null) throw new InvalidOperationException();
         if (_styles == null) throw new InvalidOperationException();
         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
@@ -241,7 +250,7 @@ internal class MasterGrid : Grid
                     _marksWindow = new PositionMarksWindow(this);
                     _marksWindow.PositionMarksBackground = _styles.PositionMarksBackground;
                     _marksWindow.HighlightedPositionBackground = _styles.HighlightedMarkPositionBackground;
-                    var tabPanels = _model.AllPanels.Where(x => x.AllowTabs).ToList();
+                    var tabPanels = _model.AllPanels.Where(x => x.State == PanelState.Set && x.AllowTabs).ToList();
                     foreach (var tabPanel in tabPanels)
                     {
                         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);

@@ -70,29 +70,29 @@ public partial class FlexWindowsEnvironmentView : Control
 
     private void OnMainWindowActivated(object? sender, EventArgs e)
     {
-        Application.Current.Windows.EachFlexWindow(x => x.Topmost = true);
+        Application.Current.Windows.GetFlexWindows().Each(x => x.Topmost = true);
     }
 
     private void OnMainWindowDeactivated(object? sender, EventArgs e)
     {
-        Application.Current.Windows.EachFlexWindow(x => x.Topmost = false);
+        Application.Current.Windows.GetFlexWindows().Each(x => x.Topmost = false);
     }
 
     private void OnWindowStateChanged(object? sender, EventArgs e)
     {
         if (Application.Current.MainWindow.WindowState == WindowState.Minimized)
         {
-            Application.Current.Windows.EachFlexWindow(x => x.Hide());
+            Application.Current.Windows.GetFlexWindows().Each(x => x.Hide());
         }
         else
         {
-            Application.Current.Windows.EachFlexWindow(x => x.Show());
+            Application.Current.Windows.GetFlexWindows().Each(x => x.Show());
         }
     }
 
     private void OnMainWindowClosed(object? sender, EventArgs e)
     {
-        Application.Current.Windows.EachFlexWindow(x => x.Close());
+        Application.Current.Windows.GetFlexWindows().Each(x => x.Close());
     }
 
     public override void OnApplyTemplate()

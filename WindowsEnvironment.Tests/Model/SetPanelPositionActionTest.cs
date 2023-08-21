@@ -455,4 +455,12 @@ internal class SetPanelPositionActionTest
 
         _panels.Verify(x => x.SetRoot(_panel1), Times.Once());
     }
+
+    [Test]
+    public void SetPanelPosition_RemoveFlexPanelTabById()
+    {
+        _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Right, _content);
+
+        _panels.Verify(x => x.RemoveFlexPanelTabById(_contentId), Times.Once);
+    }
 }

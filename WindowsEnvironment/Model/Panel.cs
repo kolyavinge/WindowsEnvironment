@@ -48,12 +48,15 @@ internal class Panel : IPanel, INotifyPropertyChanged
 
     public bool AllowTabs => !ChildrenCollection.Any();
 
+    public PanelState State { get; internal set; }
+
     public Panel(string name, ContentTabCollection tabs)
     {
         Name = name;
         Orientation = SplitOrientation.Unspecified;
         ChildrenCollection = new PanelChildrenCollection();
         ContentTabCollection = tabs;
+        State = PanelState.Set;
     }
 
     public void SetOrientation(PanelPosition position)

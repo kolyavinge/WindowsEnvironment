@@ -8,6 +8,7 @@ internal class RemoveTabActionTest
     private Content _content;
     private Mock<INameGenerator> _nameGenerator;
     private Panel _rootPanel;
+    private Mock<IPanelFactory> _panelFactory;
     private Mock<IPanelCollection> _panels;
     private Mock<IParentsChainFinder> _parentsChainFinder;
     private Mock<IEventsInternal> _events;
@@ -20,11 +21,13 @@ internal class RemoveTabActionTest
         _content = new Content(_contentId);
         _nameGenerator = new Mock<INameGenerator>();
         _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
+        _panelFactory = new Mock<IPanelFactory>();
+        _panelFactory.Setup(p => p.MakeNew()).Returns(new Panel("", new(_nameGenerator.Object)));
         _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _parentsChainFinder = new Mock<IParentsChainFinder>();
         _events = new Mock<IEventsInternal>();
-        _action = new RemoveTabAction(_panels.Object, _parentsChainFinder.Object, _events.Object);
+        _action = new RemoveTabAction(_panelFactory.Object, _panels.Object, _parentsChainFinder.Object, _events.Object);
     }
 
     [Test]
@@ -132,6 +135,22 @@ internal class RemoveTabActionTest
         _action.RemoveTab(tab.Name, RemoveTabMode.Unset);
 
         Assert.That(invoke, Is.False);
+    }
+
+    [Test]
+    public void TabUnset_AddFlexPanel()
+    {
+        var tab = _rootPanel.ContentTabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_rootPanel, tab));
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        _panelFactory.Setup(p => p.MakeNew()).Returns(flexPanel);
+
+        _action.RemoveTab(tab.Name, RemoveTabMode.Unset);
+
+        _panelFactory.Verify(x => x.MakeNew(), Times.Once);
+        _panels.Verify(x => x.AddFlexPanel(flexPanel), Times.Once);
+        Assert.That(flexPanel.State, Is.EqualTo(PanelState.Flex));
+        Assert.That(flexPanel.ContentTabCollection, Has.Count.EqualTo(1));
     }
 
     [Test]

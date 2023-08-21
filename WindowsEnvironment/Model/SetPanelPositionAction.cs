@@ -25,6 +25,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
 
     public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
+        _panels.RemoveFlexPanelTabById(content.Id);
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)
         {

@@ -26,6 +26,28 @@ internal class PanelCollectionTest
     }
 
     [Test]
+    public void GetEnumerator()
+    {
+        var panel1 = new Panel("panel1", new(_nameGenerator.Object));
+        var panel2 = new Panel("panel2", new(_nameGenerator.Object));
+        var panel3 = new Panel("panel3", new(_nameGenerator.Object));
+        var flex = new Panel("flex", new(_nameGenerator.Object));
+        _rootPanel.ChildrenCollection.AddEnd(panel1);
+        panel1.ChildrenCollection.AddEnd(panel2);
+        panel2.ChildrenCollection.AddEnd(panel3);
+        _panels.AddFlexPanel(flex);
+
+        var result = new List<Panel>(_panels);
+
+        Assert.That(result, Has.Count.EqualTo(5));
+        Assert.That(result.Contains(_rootPanel), Is.True);
+        Assert.That(result.Contains(panel1), Is.True);
+        Assert.That(result.Contains(panel2), Is.True);
+        Assert.That(result.Contains(panel3), Is.True);
+        Assert.That(result.Contains(flex), Is.True);
+    }
+
+    [Test]
     public void GetPanelByName()
     {
         Assert.That(_panels.GetPanelByName(MainPanel.Name), Is.EqualTo(_rootPanel));
@@ -96,5 +118,83 @@ internal class PanelCollectionTest
         {
             Assert.That(ex.Message, Is.EqualTo("Tab with id 'wrong_id' does not exist."));
         }
+    }
+
+    [Test]
+    public void GetFlexPanelById()
+    {
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        flexPanel.ContentTabCollection.Add(new("id"));
+        _panels.AddFlexPanel(flexPanel);
+
+        var (resultPanel, resultTab) = _panels.GetFlexPanelById("id");
+
+        Assert.That(resultPanel, Is.EqualTo(flexPanel));
+        Assert.That(resultTab, Is.EqualTo(flexPanel.ContentTabCollection.First()));
+    }
+
+    [Test]
+    public void GetTabById_FlexPanel()
+    {
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        flexPanel.ContentTabCollection.Add(new("flex_id"));
+        _panels.AddFlexPanel(flexPanel);
+
+        var (resultPanel, resultTab) = _panels.GetTabById("flex_id");
+
+        Assert.That(resultPanel, Is.EqualTo(flexPanel));
+        Assert.That(resultTab, Is.EqualTo(flexPanel.ContentTabCollection.First()));
+    }
+
+    [Test]
+    public void GetFlexPanelById_WrongId_Default()
+    {
+        var (resultPanel, resultTab) = _panels.GetFlexPanelById("wrong_id");
+
+        Assert.That(resultPanel, Is.Null);
+        Assert.That(resultTab, Is.Null);
+    }
+
+    [Test]
+    public void RemoveFlexPanelTabById_OneTab()
+    {
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        flexPanel.ContentTabCollection.Add(new("id"));
+        _panels.AddFlexPanel(flexPanel);
+
+        _panels.RemoveFlexPanelTabById("id");
+
+        Assert.That(_panels.FlexPanels, Has.Count.EqualTo(0));
+    }
+
+    [Test]
+    public void RemoveFlexPanelTabById_TwoTabs()
+    {
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        flexPanel.ContentTabCollection.Add(new("id_1"));
+        flexPanel.ContentTabCollection.Add(new("id_2"));
+        _panels.AddFlexPanel(flexPanel);
+
+        _panels.RemoveFlexPanelTabById("id_1");
+
+        Assert.That(_panels.FlexPanels, Has.Count.EqualTo(1));
+        Assert.That(_panels.FlexPanels.First().ContentTabCollection, Has.Count.EqualTo(1));
+        Assert.That(_panels.FlexPanels.First().ContentTabCollection.First().Content.Id, Is.EqualTo("id_2"));
+    }
+
+    [Test]
+    public void RemoveFlexPanelTabById_WrongId()
+    {
+        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        flexPanel.ContentTabCollection.Add(new("id_1"));
+        flexPanel.ContentTabCollection.Add(new("id_2"));
+        _panels.AddFlexPanel(flexPanel);
+
+        _panels.RemoveFlexPanelTabById("wrong_id");
+
+        Assert.That(_panels.FlexPanels, Has.Count.EqualTo(1));
+        Assert.That(_panels.FlexPanels.First().ContentTabCollection, Has.Count.EqualTo(2));
+        Assert.That(_panels.FlexPanels.First().ContentTabCollection.First().Content.Id, Is.EqualTo("id_1"));
+        Assert.That(_panels.FlexPanels.First().ContentTabCollection.Last().Content.Id, Is.EqualTo("id_2"));
     }
 }
