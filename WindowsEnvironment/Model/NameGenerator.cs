@@ -8,8 +8,8 @@ internal interface INameGenerator
 
 internal class NameGenerator : INameGenerator
 {
-    private int _panelsCounter = 0;
-    private int _tabsCounter = 0;
+    private int _panelsCounter;
+    private int _tabsCounter;
 
     public string GetPanelName()
     {

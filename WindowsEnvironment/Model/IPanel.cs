@@ -23,7 +23,5 @@ public interface IPanel
 
     bool IsMain { get; }
 
-    bool IsRoot { get; }
-
     bool AllowTabs { get; }
 }

@@ -23,30 +23,28 @@ internal class Panel : IPanel, INotifyPropertyChanged
 
     public SplitOrientation Orientation { get; private set; }
 
-    public PanelChildrenCollection ChildrenCollection { get; private set; }
+    public PanelChildrenCollection ChildrenCollection { get; }
 
     public IReadOnlyList<IPanel> Children => ChildrenCollection;
 
     public IReadOnlyCollection<IContentTab> Tabs => ContentTabCollection;
 
-    public ContentTabCollection ContentTabCollection { get; private set; }
+    public ContentTabCollection ContentTabCollection { get; }
 
     public string? SelectedTabName
     {
         get => _selectedTabName;
-        set { _selectedTabName = value; PropertyChanged?.Invoke(this, new("SelectedTabName")); }
+        set { _selectedTabName = value; PropertyChanged?.Invoke(this, new(nameof(SelectedTabName))); }
     }
 
     private double? _size;
     public double? Size
     {
         get { return _size; }
-        set { _size = value; PropertyChanged?.Invoke(this, new("Size")); }
+        set { _size = value; PropertyChanged?.Invoke(this, new(nameof(Size))); }
     }
 
     public bool IsMain => Name == MainPanel.Name;
-
-    public bool IsRoot => Parent == null;
 
     public bool AllowTabs => !ChildrenCollection.Any();
 

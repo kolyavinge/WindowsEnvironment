@@ -20,7 +20,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
     [Inject]
     public IChangeSizePanelAction? ChangeSizePanelAction { get; set; }
 
-    public IEvents Events { get; private set; }
+    public IEvents Events { get; }
 
     public IPanel RootPanel => Panels!.RootPanel;
 

@@ -52,70 +52,38 @@ internal class Events : IEventsInternal
     }
 }
 
-public class PanelAddedEventArgs : EventArgs
+public class PanelAddedEventArgs(IPanel parent, IPanel childPanel, IContentTab tab) : EventArgs
 {
-    public IPanel ParentPanel { get; }
-    public IPanel ChildPanel { get; }
-    public IContentTab Tab { get; }
-
-    public PanelAddedEventArgs(IPanel parent, IPanel childPanel, IContentTab tab)
-    {
-        ParentPanel = parent;
-        ChildPanel = childPanel;
-        Tab = tab;
-    }
+    public IPanel ParentPanel { get; } = parent;
+    public IPanel ChildPanel { get; } = childPanel;
+    public IContentTab Tab { get; } = tab;
 }
 
-public class ParentChangedEventArgs : EventArgs
+public class ParentChangedEventArgs(IPanel parentPanel, IPanel childPanel) : EventArgs
 {
-    public IPanel ParentPanel { get; }
-    public IPanel ChildPanel { get; }
-
-    public ParentChangedEventArgs(IPanel parentPanel, IPanel childPanel)
-    {
-        ParentPanel = parentPanel;
-        ChildPanel = childPanel;
-    }
+    public IPanel ParentPanel { get; } = parentPanel;
+    public IPanel ChildPanel { get; } = childPanel;
 }
 
-public class TabAddedEventArgs : EventArgs
+public class TabAddedEventArgs(IPanel parentPanel, IContentTab tab) : EventArgs
 {
-    public IPanel ParentPanel { get; }
-    public IContentTab Tab { get; }
-
-    public TabAddedEventArgs(IPanel parentPanel, IContentTab tab)
-    {
-        ParentPanel = parentPanel;
-        Tab = tab;
-    }
+    public IPanel ParentPanel { get; } = parentPanel;
+    public IContentTab Tab { get; } = tab;
 }
 
 public record RemovedPanelInfo(IPanel Parent, IPanel Removed);
 
-public class TabRemovedEventArgs : EventArgs
+public class TabRemovedEventArgs(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    : EventArgs
 {
-    public RemovedPanelInfo? RemovedPanel { get; }
-    public IPanel TabPanel { get; }
-    public IContentTab Tab { get; }
-    public RemoveTabMode Mode { get; }
-
-    public TabRemovedEventArgs(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
-    {
-        RemovedPanel = removedPanel;
-        TabPanel = tabPanel;
-        Tab = tab;
-        Mode = mode;
-    }
+    public RemovedPanelInfo? RemovedPanel { get; } = removedPanel;
+    public IPanel TabPanel { get; } = tabPanel;
+    public IContentTab Tab { get; } = tab;
+    public RemoveTabMode Mode { get; } = mode;
 }
 
-public class TabSelectedEventArgs : EventArgs
+public class TabSelectedEventArgs(IPanel tabPanel, IContentTab tab) : EventArgs
 {
-    public IPanel TabPanel { get; }
-    public IContentTab Tab { get; }
-
-    public TabSelectedEventArgs(IPanel tabPanel, IContentTab tab)
-    {
-        TabPanel = tabPanel;
-        Tab = tab;
-    }
+    public IPanel TabPanel { get; } = tabPanel;
+    public IContentTab Tab { get; } = tab;
 }

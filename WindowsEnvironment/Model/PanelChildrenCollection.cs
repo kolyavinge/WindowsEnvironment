@@ -16,32 +16,32 @@ internal class PanelChildrenCollection : IReadOnlyList<Panel>
         _children = new List<Panel>();
     }
 
-    internal void AddBegin(Panel child)
+	public void AddBegin(Panel child)
     {
         _children.Insert(0, child);
     }
 
-    internal void AddEnd(Panel child)
+	public void AddEnd(Panel child)
     {
         _children.Add(child);
     }
 
-    internal void Remove(Panel child)
+	public void Remove(Panel child)
     {
         _children.Remove(child);
     }
 
-    internal void Clear()
+	public void Clear()
     {
         _children.Clear();
     }
 
-    internal int IndexOf(Panel child)
+	public int IndexOf(Panel child)
     {
         return _children.IndexOf(child);
     }
 
-    internal PanelChildrenCollection GetCopy()
+	public PanelChildrenCollection GetCopy()
     {
         var copy = new PanelChildrenCollection();
         foreach (var ch in _children)
