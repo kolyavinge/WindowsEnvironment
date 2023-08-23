@@ -3,8 +3,9 @@ using DependencyInjection;
 
 namespace WindowsEnvironment.Model;
 
-internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
+internal class FlexWindowsEnvironment(IEventsInternal events) : IFlexWindowsEnvironment
 {
+    #region Injected
     [Inject]
     public IPanelCollection? Panels { get; set; }
 
@@ -19,17 +20,13 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 
     [Inject]
     public IChangeSizePanelAction? ChangeSizePanelAction { get; set; }
+    #endregion
 
-    public IEvents Events { get; }
+    public IEvents Events { get; } = events;
 
     public IPanel RootPanel => Panels!.RootPanel;
 
     public IEnumerable<IPanel> AllPanels => Panels!;
-
-    public FlexWindowsEnvironment(IEventsInternal events)
-    {
-        Events = events;
-    }
 
     public IPanel GetPanelByName(string name) => Panels!.GetPanelByName(name);
 
@@ -39,7 +36,7 @@ internal class FlexWindowsEnvironment : IFlexWindowsEnvironment
 
     public int GetChildPanelIndex(string parentPanelName, string childPanelName) => Panels!.GetChildPanelIndex(parentPanelName, childPanelName);
 
-    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration) => SetPanelPositionAction!.SetPanelPosition(panelName, position, configuration);
+    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content) => SetPanelPositionAction!.SetPanelPosition(panelName, position, content);
 
     public void SelectTab(string tabName) => SelectTabAction!.SelectTab(tabName);
 

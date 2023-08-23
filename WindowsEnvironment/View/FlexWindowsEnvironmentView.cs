@@ -22,9 +22,10 @@ public partial class FlexWindowsEnvironmentView : Control
         var view = (FlexWindowsEnvironmentView)d;
         var model = (IFlexWindowsEnvironment)e.NewValue;
         var mouseController = MouseControllerFactory.Make(model);
-        var masterGrid = view._masterGrid ?? throw new InvalidOperationException();
-        masterGrid.InitModel(model);
-        masterGrid.InitMouseController(mouseController);
+        var masterGrid = view.MasterGrid ?? throw new InvalidOperationException();
+        masterGrid.Model = model;
+        masterGrid.MouseController = mouseController;
+        masterGrid.FlexWindows = new FlexWindowCollection(Application.Current);
         var masterGridInitializer = new MasterGridInitializer(model.MakeReader(), masterGrid);
         masterGridInitializer.Init();
         masterGrid.SetBackgroundView(view.BackgroundView);
@@ -49,13 +50,13 @@ public partial class FlexWindowsEnvironmentView : Control
     private static void OnBackgroundViewChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var view = (FlexWindowsEnvironmentView)d;
-        view._masterGrid?.SetBackgroundView((UIElement)e.NewValue);
+        view.MasterGrid?.SetBackgroundView((UIElement)e.NewValue);
     }
     #endregion
 
-    private MasterGrid? _masterGrid;
-
     public event EventHandler? ModelInitialized;
+
+    internal MasterGrid? MasterGrid => (MasterGrid?)Template.FindName("master", this);
 
     public FlexWindowsEnvironmentView()
     {
@@ -97,8 +98,7 @@ public partial class FlexWindowsEnvironmentView : Control
 
     public override void OnApplyTemplate()
     {
-        _masterGrid = (MasterGrid)Template.FindName("master", this);
-        _masterGrid.Name = "master";
-        _masterGrid.InitStyles(this);
+        MasterGrid!.Name = "master";
+        MasterGrid.Styles = this;
     }
 }

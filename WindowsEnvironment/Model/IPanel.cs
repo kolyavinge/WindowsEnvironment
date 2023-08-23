@@ -5,10 +5,8 @@ namespace WindowsEnvironment.Model;
 
 public enum PanelState { Set, Flex }
 
-public interface IPanel
+public interface IPanel : INotifyPropertyChanged
 {
-    event PropertyChangedEventHandler? PropertyChanged;
-
     string Name { get; }
 
     IPanel? Parent { get; }

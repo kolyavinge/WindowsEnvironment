@@ -18,7 +18,7 @@ public interface IFlexWindowsEnvironment
 
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
 
-    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
 
     void SelectTab(string tabName);
 

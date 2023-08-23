@@ -28,9 +28,9 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTab()
     {
-        _rootPanel.ContentTabCollection.Add(_content);
-        var tab = _rootPanel.ContentTabCollection.Add(_content);
-        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.TabCollection.Add(_content);
+        var tab = _rootPanel.TabCollection.Add(_content);
+        _rootPanel.TabCollection.Add(_content);
         _panels.Setup(x => x.GetTabByName("tab_2")).Returns((_rootPanel, tab));
 
         Assert.That(_rootPanel.SelectedTabName, Is.Null);
@@ -41,9 +41,9 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTabTwice()
     {
-        _rootPanel.ContentTabCollection.Add(_content);
-        var tab = _rootPanel.ContentTabCollection.Add(_content);
-        _rootPanel.ContentTabCollection.Add(_content);
+        _rootPanel.TabCollection.Add(_content);
+        var tab = _rootPanel.TabCollection.Add(_content);
+        _rootPanel.TabCollection.Add(_content);
         _panels.Setup(x => x.GetTabByName("tab_2")).Returns((_rootPanel, tab));
 
         _action.SelectTab("tab_2");
@@ -54,7 +54,7 @@ internal class SelectTabActionTest
     [Test]
     public void SelectTab_RaiseEvent()
     {
-        var tab = _rootPanel.ContentTabCollection.Add(_content);
+        var tab = _rootPanel.TabCollection.Add(_content);
         _panels.Setup(x => x.GetTabByName("tab_1")).Returns((_rootPanel, tab));
 
         _action.SelectTab("tab_1");

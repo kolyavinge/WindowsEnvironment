@@ -3,7 +3,7 @@
 public class PanelReadEventArgs : EventArgs
 {
     public IPanel Panel { get; }
-    public PanelReadEventArgs(IPanel panel)
+    internal PanelReadEventArgs(IPanel panel)
     {
         Panel = panel;
     }
@@ -13,7 +13,7 @@ public class TabReadEventArgs : EventArgs
 {
     public IPanel Panel { get; }
     public IContentTab Tab { get; }
-    public TabReadEventArgs(IPanel panel, IContentTab tab)
+    internal TabReadEventArgs(IPanel panel, IContentTab tab)
     {
         Panel = panel;
         Tab = tab;

@@ -71,10 +71,9 @@ public class TabAddedEventArgs(IPanel parentPanel, IContentTab tab) : EventArgs
     public IContentTab Tab { get; } = tab;
 }
 
-public record RemovedPanelInfo(IPanel Parent, IPanel Removed);
+public record RemovedPanelInfo(IPanel Parent, IPanel? Removed);
 
-public class TabRemovedEventArgs(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
-    : EventArgs
+public class TabRemovedEventArgs(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode) : EventArgs
 {
     public RemovedPanelInfo? RemovedPanel { get; } = removedPanel;
     public IPanel TabPanel { get; } = tabPanel;

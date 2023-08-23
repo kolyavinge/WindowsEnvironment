@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,25 +12,12 @@ namespace WindowsEnvironment.View;
 
 internal class MasterGrid : Grid
 {
-    private IFlexWindowsEnvironment? _model;
-    private IMouseController? _mouseController;
-    private IFlexWindowsEnvironmentStyles? _styles;
     private PositionMarksWindow? _marksWindow;
 
-    public void InitModel(IFlexWindowsEnvironment model)
-    {
-        _model = model;
-    }
-
-    public void InitMouseController(IMouseController mouseController)
-    {
-        _mouseController = mouseController;
-    }
-
-    public void InitStyles(IFlexWindowsEnvironmentStyles styles)
-    {
-        _styles = styles;
-    }
+    public IFlexWindowsEnvironment? Model;
+    public IMouseController? MouseController;
+    public IFlexWindowsEnvironmentStyles? Styles;
+    public IEnumerable<FlexWindow>? FlexWindows;
 
     public Grid AddPanel(IPanel? parentPanel, IPanel childPanel)
     {
@@ -50,7 +38,7 @@ internal class MasterGrid : Grid
 
     public Grid AddPanelWithTab(IPanel parentPanel, IPanel childPanel, IContentTab tab)
     {
-        if (_styles == null) throw new InvalidOperationException();
+        if (Styles == null) throw new InvalidOperationException();
         var childGrid = AddPanel(parentPanel, childPanel);
         AddTab(childPanel, tab);
         MakeSplitters(parentPanel);
@@ -77,7 +65,7 @@ internal class MasterGrid : Grid
     private void RemovePanel(RemovedPanelInfo removedPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(removedPanel.Parent.Name);
-        var removedGrid = this.FindChildRec<Grid>(removedPanel.Removed.Name);
+        var removedGrid = this.FindChildRec<Grid>(removedPanel.Removed!.Name);
         var removedSplitter = parentGrid.FindChildren<GridSplitter>().First();
         if (removedPanel.Parent.Orientation == SplitOrientation.ByRows)
         {
@@ -101,7 +89,7 @@ internal class MasterGrid : Grid
 
     public void MakeSplitters(IPanel parentPanel)
     {
-        if (_styles == null) throw new InvalidOperationException();
+        if (Styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         var needSplittersCount = parentGrid.Children.OfType<Grid>().Count() - 1;
         var currentSplittersCount = parentGrid.Children.OfType<GridSplitter>().Count();
@@ -115,7 +103,7 @@ internal class MasterGrid : Grid
             {
                 parentGrid.ColumnDefinitions.Add(new());
             }
-            parentGrid.Children.Add(GridSplitterFactory.MakeSplitter(parentPanel.Orientation, _styles.HorizontalSplitterStyle, _styles.VerticalSplitterStyle));
+            parentGrid.Children.Add(GridSplitterFactory.MakeSplitter(parentPanel.Orientation, Styles.HorizontalSplitterStyle, Styles.VerticalSplitterStyle));
         }
     }
 
@@ -175,7 +163,7 @@ internal class MasterGrid : Grid
 
     public void AddTab(IPanel parentPanel, IContentTab tab)
     {
-        if (_styles == null) throw new InvalidOperationException();
+        if (Styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         TabControl tabControl;
         if (parentGrid.FindChildren<TabControl>().Any())
@@ -188,7 +176,7 @@ internal class MasterGrid : Grid
             {
                 DataContext = parentPanel,
                 SelectedValuePath = "Name", // bind to ContentTab.Name
-                Style = parentPanel.IsMain ? _styles.MainPanelTabControlStyle : _styles.PanelTabControlStyle,
+                Style = parentPanel.IsMain ? Styles.MainPanelTabControlStyle : Styles.PanelTabControlStyle,
             };
             tabControl.SetBinding(TabControl.SelectedValueProperty, "SelectedTabName"); // bind to Panel.SelectedTabName
             parentGrid.Children.Add(tabControl);
@@ -200,15 +188,23 @@ internal class MasterGrid : Grid
     {
         if (tabPanel.State == PanelState.Flex)
         {
-            var flexWindow = Application.Current.Windows.GetFlexWindows().FirstOrDefault(x => x.Content == tab.Content);
-            if (flexWindow != null)
-            {
-                flexWindow.Close();
-                return;
-            }
+            RemoveTabForFlexPanel(tab);
         }
-        if (_model == null) throw new InvalidOperationException();
-        if (_styles == null) throw new InvalidOperationException();
+        else
+        {
+            RemoveTabForSetPanel(removedPanel, tabPanel, tab, mode);
+        }
+    }
+
+    private void RemoveTabForFlexPanel(IContentTab tab)
+    {
+        FlexWindows!.First(x => x.Content == tab.Content).Close();
+    }
+
+    private void RemoveTabForSetPanel(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    {
+        if (Model == null) throw new InvalidOperationException();
+        if (Styles == null) throw new InvalidOperationException();
         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
         var tabControl = tabPanelGrid.FindChildren<TabControl>().First();
         var tabItem = tabControl.Items.GetByName(tab.Name)!;
@@ -229,8 +225,8 @@ internal class MasterGrid : Grid
             var parentPosition = PointToScreen(new());
             var mousePosition = Mouse.GetPosition(this);
             var flexWindow = new FlexWindow(this, tab, tabControl, parentPosition, mousePosition);
-            flexWindow.HeaderBackground = _styles.FlexWindowHeaderBackground;
-            flexWindow.HeaderForeground = _styles.FlexWindowHeaderForeground;
+            flexWindow.HeaderBackground = Styles.FlexWindowHeaderBackground;
+            flexWindow.HeaderForeground = Styles.FlexWindowHeaderForeground;
             flexWindow.HeaderMouseUp += (s, e) =>
             {
                 if (_marksWindow == null) return;
@@ -238,7 +234,7 @@ internal class MasterGrid : Grid
                 if (marks != null)
                 {
                     flexWindow.Close();
-                    _model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
+                    Model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
                 }
                 _marksWindow.Close();
                 _marksWindow = null;
@@ -248,9 +244,9 @@ internal class MasterGrid : Grid
                 if (_marksWindow == null)
                 {
                     _marksWindow = new PositionMarksWindow(this);
-                    _marksWindow.PositionMarksBackground = _styles.PositionMarksBackground;
-                    _marksWindow.HighlightedPositionBackground = _styles.HighlightedMarkPositionBackground;
-                    var tabPanels = _model.AllPanels.Where(x => x.State == PanelState.Set && x.AllowTabs).ToList();
+                    _marksWindow.PositionMarksBackground = Styles.PositionMarksBackground;
+                    _marksWindow.HighlightedPositionBackground = Styles.HighlightedMarkPositionBackground;
+                    var tabPanels = Model.AllPanels.Where(x => x.State == PanelState.Set && x.AllowTabs).ToList();
                     foreach (var tabPanel in tabPanels)
                     {
                         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
@@ -278,40 +274,40 @@ internal class MasterGrid : Grid
 
     private void MakeNewTab(TabControl tabControl, IPanel panel, IContentTab contentTab)
     {
-        if (_model == null) throw new InvalidOperationException();
-        if (_styles == null) throw new InvalidOperationException();
-        if (_mouseController == null) throw new InvalidOperationException();
+        if (Model == null) throw new InvalidOperationException();
+        if (Styles == null) throw new InvalidOperationException();
+        if (MouseController == null) throw new InvalidOperationException();
         // tab header
         var headerGrid = new TabItemHeaderView
         {
             DataContext = contentTab.Content.Header.SourceObject,
-            Foreground = _styles.FlexWindowHeaderForeground,
+            Foreground = Styles.FlexWindowHeaderForeground,
             IsCloseButtonVisible = panel.IsMain
         };
         headerGrid.SetBinding(TabItemHeaderView.HeaderTextProperty, contentTab.Content.Header.PropertyName);
-        headerGrid.CloseButtonClick += (_, _) => _model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
+        headerGrid.CloseButtonClick += (_, _) => Model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
         // handlers
         void MouseDownHandler(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var mouse = Mouse.GetPosition(this);
-                _mouseController.OnTabHeaderButtonDown(contentTab.Name, mouse.X, mouse.Y);
+                MouseController.OnTabHeaderButtonDown(contentTab.Name, mouse.X, mouse.Y);
                 Mouse.Capture(headerGrid);
             }
             else if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                _mouseController.OnTabHeaderMiddleButtonPress(contentTab.Name);
+                MouseController.OnTabHeaderMiddleButtonPress(contentTab.Name);
             }
         }
         void MouseMoveHandler(object sender, MouseEventArgs e)
         {
             var mouse = Mouse.GetPosition(this);
-            _mouseController.OnTabHeaderMouseMove(mouse.X, mouse.Y);
+            MouseController.OnTabHeaderMouseMove(mouse.X, mouse.Y);
         }
         void MouseUpHandler(object sender, MouseButtonEventArgs e)
         {
-            _mouseController.OnTabHeaderButtonUp();
+            MouseController.OnTabHeaderButtonUp();
             Mouse.Capture(null);
         }
         headerGrid.MouseDown += MouseDownHandler;
@@ -329,8 +325,8 @@ internal class MasterGrid : Grid
             {
                 DataContext = contentTab.Content.Header.SourceObject,
                 ContentElement = (UIElement)contentTab.Content.View,
-                HeaderBackground = _styles.FlexWindowHeaderBackground, // FlexWindowHeaderBackground rename
-                HeaderForeground = _styles.FlexWindowHeaderForeground  // rename
+                HeaderBackground = Styles.FlexWindowHeaderBackground, // FlexWindowHeaderBackground rename
+                HeaderForeground = Styles.FlexWindowHeaderForeground  // rename
             };
             contentView.SetBinding(ContentView.HeaderTextProperty, contentTab.Content.Header.PropertyName);
             contentView.HeaderMouseDown += MouseDownHandler;
@@ -338,7 +334,7 @@ internal class MasterGrid : Grid
             contentView.HeaderMouseUp += MouseUpHandler;
             contentView.CloseButtonClick += (_, _) =>
             {
-                _model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
+                Model.RemoveTab(contentTab.Name, RemoveTabMode.Close);
             };
             tabContent = contentView;
         }
@@ -349,6 +345,7 @@ internal class MasterGrid : Grid
     public void SetBackgroundView(UIElement view)
     {
         var mainPanelGrid = this.FindChildRec<Grid>(MainPanel.Name);
+        if (mainPanelGrid.Children.Count == 2) throw new Exception("BackgroundView has already been set.");
         mainPanelGrid.Children.Insert(0, view);
     }
 }

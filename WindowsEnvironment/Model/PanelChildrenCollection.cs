@@ -52,13 +52,7 @@ internal class PanelChildrenCollection : IReadOnlyList<Panel>
         return copy;
     }
 
-    public IEnumerator<Panel> GetEnumerator()
-    {
-        return _children.GetEnumerator();
-    }
+    public IEnumerator<Panel> GetEnumerator() => _children.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return _children.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

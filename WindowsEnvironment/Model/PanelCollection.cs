@@ -39,7 +39,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var panel in this)
         {
-            foreach (var tab in panel.ContentTabCollection)
+            foreach (var tab in panel.TabCollection)
             {
                 if (tab.Name == name)
                 {
@@ -55,7 +55,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var panel in this)
         {
-            foreach (var tab in panel.ContentTabCollection)
+            foreach (var tab in panel.TabCollection)
             {
                 if (tab.Content.Id == id)
                 {
@@ -90,8 +90,8 @@ internal class PanelCollection : IPanelCollection
         var (flexPanel, tab) = GetFlexPanelById(id);
         if (flexPanel != null)
         {
-            flexPanel.ContentTabCollection.Remove(tab!);
-            if (!flexPanel.ContentTabCollection.Any())
+            flexPanel.TabCollection.Remove(tab!);
+            if (!flexPanel.TabCollection.Any())
             {
                 _flexPanels.Remove(flexPanel);
             }
@@ -102,7 +102,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var flexPanel in _flexPanels)
         {
-            foreach (var tab in flexPanel.ContentTabCollection)
+            foreach (var tab in flexPanel.TabCollection)
             {
                 if (tab.Content.Id == id)
                 {

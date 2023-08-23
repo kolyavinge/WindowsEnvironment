@@ -9,10 +9,8 @@ public static class MainPanel
     public static readonly string Name = "panel_0";
 }
 
-internal class Panel : IPanel, INotifyPropertyChanged
+internal class Panel : IPanel
 {
-    private string? _selectedTabName;
-
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string Name { get; }
@@ -23,14 +21,15 @@ internal class Panel : IPanel, INotifyPropertyChanged
 
     public SplitOrientation Orientation { get; private set; }
 
-    public PanelChildrenCollection ChildrenCollection { get; }
-
     public IReadOnlyList<IPanel> Children => ChildrenCollection;
 
-    public IReadOnlyCollection<IContentTab> Tabs => ContentTabCollection;
+    public PanelChildrenCollection ChildrenCollection { get; }
 
-    public ContentTabCollection ContentTabCollection { get; }
+    public IReadOnlyCollection<IContentTab> Tabs => TabCollection;
 
+    public ContentTabCollection TabCollection { get; }
+
+    private string? _selectedTabName;
     public string? SelectedTabName
     {
         get => _selectedTabName;
@@ -55,7 +54,7 @@ internal class Panel : IPanel, INotifyPropertyChanged
         Name = name;
         Orientation = SplitOrientation.Unspecified;
         ChildrenCollection = new PanelChildrenCollection();
-        ContentTabCollection = tabs;
+        TabCollection = tabs;
         State = PanelState.Set;
     }
 
@@ -84,8 +83,5 @@ internal class Panel : IPanel, INotifyPropertyChanged
         return result;
     }
 
-    public override string ToString()
-    {
-        return Name;
-    }
+    public override string ToString() => Name;
 }

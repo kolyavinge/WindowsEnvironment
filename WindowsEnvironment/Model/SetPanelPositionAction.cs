@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,13 +23,13 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
+    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         _panels.RemoveFlexPanelTabById(content.Id);
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)
         {
-            if (panel.IsMain || panel.ContentTabCollection.Any())
+            if (panel.IsMain || panel.TabCollection.Any())
             {
                 var newParent = _panelFactory.MakeNew();
                 ChangeParent(newParent, panel);
@@ -46,7 +46,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             }
             var childPanel = _panelFactory.MakeNew();
             childPanel.ParentPanel = panel;
-            var tab = childPanel.ContentTabCollection.Add(content);
+            var tab = childPanel.TabCollection.Add(content);
             if (position == PanelPosition.Left)
             {
                 panel.ChildrenCollection.AddBegin(childPanel);
@@ -70,7 +70,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         else
         {
             if (!panel.AllowTabs) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = panel.ContentTabCollection.Add(content);
+            var tab = panel.TabCollection.Add(content);
             _events.RaiseTabAdded(panel, tab);
 
             return (panel, tab);

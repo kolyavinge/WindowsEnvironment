@@ -4,19 +4,12 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class FlexWindowsEnvironmentReaderTest
 {
-    private object _contentId;
-    private Content _content;
-    private Mock<INameGenerator> _nameGenerator;
     private Mock<IFlexWindowsEnvironment> _model;
     private FlexWindowsEnvironmentReader _reader;
 
     [SetUp]
     public void Setup()
     {
-        _contentId = new object();
-        _content = new Content(_contentId);
-        _nameGenerator = new Mock<INameGenerator>();
-        _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab1");
         _model = new Mock<IFlexWindowsEnvironment>();
         _reader = new FlexWindowsEnvironmentReader(_model.Object);
     }
@@ -24,12 +17,16 @@ internal class FlexWindowsEnvironmentReaderTest
     [Test]
     public void Read()
     {
-        var root = new Panel("panel_0", new(_nameGenerator.Object));
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var content = new object();
-        panel1.ContentTabCollection.Add(_content);
-        root.ChildrenCollection.AddBegin(panel1);
-        _model.SetupGet(x => x.RootPanel).Returns(root);
+        var tab1 = new Mock<IContentTab>();
+        var panel1 = new Mock<IPanel>();
+        var root = new Mock<IPanel>();
+        panel1.SetupGet(x => x.Name).Returns("panel_1");
+        panel1.SetupGet(x => x.Tabs).Returns(new[] { tab1.Object });
+        panel1.SetupGet(x => x.Children).Returns(new IPanel[0]);
+        root.SetupGet(x => x.Name).Returns("panel_0");
+        root.SetupGet(x => x.Tabs).Returns(new IContentTab[0]);
+        root.SetupGet(x => x.Children).Returns(new[] { panel1.Object });
+        _model.SetupGet(x => x.RootPanel).Returns(root.Object);
         var beginReadPanels = new List<IPanel>();
         var endReadPanels = new List<IPanel>();
         var readTabs = new List<IContentTab>();
@@ -48,22 +45,26 @@ internal class FlexWindowsEnvironmentReaderTest
 
         _reader.Read();
 
-        Assert.That(beginReadPanels[0], Is.EqualTo(root));
-        Assert.That(beginReadPanels[1], Is.EqualTo(panel1));
-        Assert.That(readTabs[0], Is.EqualTo(new ContentTab("tab1", _content)));
-        Assert.That(endReadPanels[0], Is.EqualTo(panel1));
-        Assert.That(endReadPanels[1], Is.EqualTo(root));
+        Assert.That(beginReadPanels[0], Is.EqualTo(root.Object));
+        Assert.That(beginReadPanels[1], Is.EqualTo(panel1.Object));
+        Assert.That(readTabs[0], Is.EqualTo(tab1.Object));
+        Assert.That(endReadPanels[0], Is.EqualTo(panel1.Object));
+        Assert.That(endReadPanels[1], Is.EqualTo(root.Object));
     }
 
     [Test]
     public void ReadNoEvents()
     {
-        var root = new Panel("panel_0", new(_nameGenerator.Object));
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var content = new object();
-        panel1.ContentTabCollection.Add(_content);
-        root.ChildrenCollection.AddBegin(panel1);
-        _model.SetupGet(x => x.RootPanel).Returns(root);
+        var tab1 = new Mock<IContentTab>();
+        var panel1 = new Mock<IPanel>();
+        var root = new Mock<IPanel>();
+        panel1.SetupGet(x => x.Name).Returns("panel_1");
+        panel1.SetupGet(x => x.Tabs).Returns(new[] { tab1.Object });
+        panel1.SetupGet(x => x.Children).Returns(new IPanel[0]);
+        root.SetupGet(x => x.Name).Returns("panel_0");
+        root.SetupGet(x => x.Tabs).Returns(new IContentTab[0]);
+        root.SetupGet(x => x.Children).Returns(new[] { panel1.Object });
+        _model.SetupGet(x => x.RootPanel).Returns(root.Object);
 
         _reader.Read();
     }
