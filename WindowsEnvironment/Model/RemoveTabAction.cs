@@ -37,11 +37,11 @@ internal class RemoveTabAction : IRemoveTabAction
         if (!panel.IsMain && !panel.TabCollection.Any())
         {
             var parentsChain = _parentsChainFinder.FindChain(panel.Name);
-            var parentPanel = parentsChain.FirstOrDefault(x => x.ChildrenCollection.Count > 1) ?? _panels.RootPanel;
+            var parentPanel = parentsChain.FirstOrDefault(x => x.ChildrenList.Count > 1) ?? _panels.RootPanel;
             if (parentPanel != null)
             {
                 var removedPanel = parentsChain.GetBefore(parentPanel);
-                if (removedPanel != null) parentPanel.ChildrenCollection.Remove(removedPanel);
+                if (removedPanel != null) parentPanel.ChildrenList.Remove(removedPanel);
                 removedPanelInfo = new RemovedPanelInfo(parentPanel, removedPanel);
             }
         }

@@ -61,20 +61,20 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
     }
 
@@ -84,20 +84,20 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Right, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
     }
 
@@ -107,20 +107,20 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Top, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
     }
 
@@ -130,20 +130,20 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Bottom, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
     }
 
@@ -151,30 +151,66 @@ internal class SetPanelPositionActionTest
     public void SetPanelPositionLeftLeft()
     {
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
-        _action.SetPanelPosition(_panel1.Name, PanelPosition.Left, _content);
+        _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(3));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel3));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[2], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(3));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel3));
+        Assert.That(_panel1.ChildrenList[2], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel3.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
+    }
+
+    [Test]
+    public void SetPanelPositionLeftLeft2()
+    {
+        _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
+        _action.SetPanelPosition(_panel1.Name, PanelPosition.Left, _content);
+
+        Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel4));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel1));
+        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
+
+        Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -183,28 +219,34 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Right, _content);
         _action.SetPanelPosition(_panel1.Name, PanelPosition.Right, _content);
 
-        Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(3));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[2], Is.EqualTo(_panel3));
+        Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel1));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel4));
+        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
-        Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(0));
-        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(1));
+        Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -213,28 +255,34 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Top, _content);
         _action.SetPanelPosition(_panel1.Name, PanelPosition.Top, _content);
 
-        Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(3));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel3));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[2], Is.EqualTo(_mainPanel));
+        Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel4));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel1));
+        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
-        Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(0));
-        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(1));
+        Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
-        Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
-        Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -243,28 +291,34 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Bottom, _content);
         _action.SetPanelPosition(_panel1.Name, PanelPosition.Bottom, _content);
 
-        Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(3));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[2], Is.EqualTo(_panel3));
+        Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel1));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel4));
+        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
-        Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(0));
-        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(1));
+        Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -274,32 +328,32 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_panel1.Name, PanelPosition.Top, _content);
 
         Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel3.ChildrenCollection[0], Is.EqualTo(_panel4));
-        Assert.That(_panel3.ChildrenCollection[1], Is.EqualTo(_panel1));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel4));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel1));
         Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel4.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel4.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
     }
 
@@ -310,32 +364,32 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_panel1.Name, PanelPosition.Bottom, _content);
 
         Assert.That(_panel3.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.ByRows));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel3.ChildrenCollection[0], Is.EqualTo(_panel1));
-        Assert.That(_panel3.ChildrenCollection[1], Is.EqualTo(_panel4));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel3.ChildrenList[0], Is.EqualTo(_panel1));
+        Assert.That(_panel3.ChildrenList[1], Is.EqualTo(_panel4));
         Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel2));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel4.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel4.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
     }
 
@@ -346,32 +400,62 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_panel2.Name, PanelPosition.Right, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_mainPanel));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_panel3));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(3));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[2], Is.EqualTo(_panel3));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
+
+        Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(0));
+        Assert.That(_panel3.TabCollection, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void SetPanelPositionRightBottomInChildPanel()
+    {
+        _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Right, _content);
+        _action.SetPanelPosition(_panel2.Name, PanelPosition.Bottom, _content);
+
+        Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel3));
+        Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
+
+        Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel3.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel3.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel3.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel3.ChildrenCollection[0], Is.EqualTo(_panel2));
-        Assert.That(_panel3.ChildrenCollection[1], Is.EqualTo(_panel4));
+        Assert.That(_panel3.Orientation, Is.EqualTo(PanelOrientation.ByRows));
+        Assert.That(_panel3.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_panel3));
         Assert.That(_panel3.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(1));
 
         Assert.That(_panel4.ParentPanel, Is.EqualTo(_panel3));
-        Assert.That(_panel4.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel4.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel4.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel4.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel4.TabCollection, Has.Count.EqualTo(1));
     }
 
@@ -380,8 +464,8 @@ internal class SetPanelPositionActionTest
     {
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Middle, _content);
 
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(1));
     }
 
@@ -392,20 +476,20 @@ internal class SetPanelPositionActionTest
         _action.SetPanelPosition(_panel2.Name, PanelPosition.Middle, _content);
 
         Assert.That(_panel1.ParentPanel, Is.EqualTo(null));
-        Assert.That(_panel1.Orientation, Is.EqualTo(SplitOrientation.ByCols));
-        Assert.That(_panel1.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(_panel1.ChildrenCollection[0], Is.EqualTo(_panel2));
-        Assert.That(_panel1.ChildrenCollection[1], Is.EqualTo(_mainPanel));
+        Assert.That(_panel1.Orientation, Is.EqualTo(PanelOrientation.ByCols));
+        Assert.That(_panel1.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(_panel1.ChildrenList[0], Is.EqualTo(_panel2));
+        Assert.That(_panel1.ChildrenList[1], Is.EqualTo(_mainPanel));
         Assert.That(_panel1.TabCollection, Has.Count.EqualTo(0));
 
         Assert.That(_panel2.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_panel2.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_panel2.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_panel2.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_panel2.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_panel2.TabCollection, Has.Count.EqualTo(2));
 
         Assert.That(_mainPanel.ParentPanel, Is.EqualTo(_panel1));
-        Assert.That(_mainPanel.Orientation, Is.EqualTo(SplitOrientation.Unspecified));
-        Assert.That(_mainPanel.ChildrenCollection, Has.Count.EqualTo(0));
+        Assert.That(_mainPanel.Orientation, Is.EqualTo(PanelOrientation.Unspecified));
+        Assert.That(_mainPanel.ChildrenList, Has.Count.EqualTo(0));
         Assert.That(_mainPanel.TabCollection, Has.Count.EqualTo(0));
     }
 

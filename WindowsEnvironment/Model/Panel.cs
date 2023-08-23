@@ -19,11 +19,11 @@ internal class Panel : IPanel
 
     public Panel? ParentPanel { get; internal set; }
 
-    public SplitOrientation Orientation { get; private set; }
+    public PanelOrientation Orientation { get; private set; }
 
-    public IReadOnlyList<IPanel> Children => ChildrenCollection;
+    public IReadOnlyList<IPanel> Children => ChildrenList;
 
-    public PanelChildrenCollection ChildrenCollection { get; }
+    public List<Panel> ChildrenList { get; }
 
     public IReadOnlyCollection<IContentTab> Tabs => TabCollection;
 
@@ -45,15 +45,15 @@ internal class Panel : IPanel
 
     public bool IsMain => Name == MainPanel.Name;
 
-    public bool AllowTabs => !ChildrenCollection.Any();
+    public bool AllowTabs => !ChildrenList.Any();
 
     public PanelState State { get; internal set; }
 
     public Panel(string name, ContentTabCollection tabs)
     {
         Name = name;
-        Orientation = SplitOrientation.Unspecified;
-        ChildrenCollection = new PanelChildrenCollection();
+        Orientation = PanelOrientation.Unspecified;
+        ChildrenList = new List<Panel>();
         TabCollection = tabs;
         State = PanelState.Set;
     }
@@ -66,15 +66,29 @@ internal class Panel : IPanel
         }
 
         Orientation = position is PanelPosition.Left or PanelPosition.Right
-            ? SplitOrientation.ByCols
-            : SplitOrientation.ByRows;
+            ? PanelOrientation.ByCols
+            : PanelOrientation.ByRows;
+    }
+
+    public bool IsSuitableOrientation(PanelPosition position)
+    {
+        if (position is PanelPosition.Middle)
+        {
+            throw new ArgumentException($"Position must be {PanelPosition.Left}, {PanelPosition.Right}, {PanelPosition.Top} or {PanelPosition.Bottom}.");
+        }
+
+        if (Orientation == PanelOrientation.Unspecified) return true;
+        if (Orientation == PanelOrientation.ByCols && (position is PanelPosition.Left or PanelPosition.Right)) return true;
+        if (Orientation == PanelOrientation.ByRows && (position is PanelPosition.Top or PanelPosition.Bottom)) return true;
+
+        return false;
     }
 
     public IEnumerable<Panel> GetAllChildren()
     {
-        if (!ChildrenCollection.Any()) return Enumerable.Empty<Panel>();
+        if (!ChildrenList.Any()) return Enumerable.Empty<Panel>();
         var result = new List<Panel>();
-        foreach (var child in ChildrenCollection)
+        foreach (var child in ChildrenList)
         {
             result.Add(child);
             result.AddRange(child.GetAllChildren());

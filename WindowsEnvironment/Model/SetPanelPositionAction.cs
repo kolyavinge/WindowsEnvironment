@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using WindowsEnvironment.Utils;
 
 namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content configuration);
+    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -29,41 +29,21 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)
         {
-            if (panel.IsMain || panel.TabCollection.Any())
+            var parent = panel.ParentPanel;
+            if (parent == null || !parent.IsSuitableOrientation(position))
             {
-                var newParent = _panelFactory.MakeNew();
-                ChangeParent(newParent, panel);
-                _events.RaiseParentChanged(newParent, panel);
-                panel = newParent;
-            }
-            if (panel.Orientation == SplitOrientation.Unspecified)
-            {
-                panel.SetOrientation(position);
-            }
-            else
-            {
-                ChangeSplitOrientationIfNeeded(ref panel, position);
+                parent = _panelFactory.MakeNew();
+                parent.SetOrientation(position);
+                ChangeParent(parent, panel);
+                _events.RaiseParentChanged(parent, panel);
             }
             var childPanel = _panelFactory.MakeNew();
-            childPanel.ParentPanel = panel;
+            childPanel.ParentPanel = parent;
+            var childPanelIndex = parent.ChildrenList.IndexOf(panel);
+            if (position is PanelPosition.Right or PanelPosition.Bottom) childPanelIndex++;
+            parent.ChildrenList.Insert(childPanelIndex, childPanel);
             var tab = childPanel.TabCollection.Add(content);
-            if (position == PanelPosition.Left)
-            {
-                panel.ChildrenCollection.AddBegin(childPanel);
-            }
-            else if (position == PanelPosition.Right)
-            {
-                panel.ChildrenCollection.AddEnd(childPanel);
-            }
-            else if (position == PanelPosition.Top)
-            {
-                panel.ChildrenCollection.AddBegin(childPanel);
-            }
-            else if (position == PanelPosition.Bottom)
-            {
-                panel.ChildrenCollection.AddEnd(childPanel);
-            }
-            _events.RaisePanelAdded(panel, childPanel, tab);
+            _events.RaisePanelAdded(parent, childPanel, tab);
 
             return (childPanel, tab);
         }
@@ -77,25 +57,12 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         }
     }
 
-    private void ChangeSplitOrientationIfNeeded(ref Panel panel, PanelPosition position)
-    {
-        if (panel.Orientation == SplitOrientation.Unspecified) return;
-        if (panel.Orientation == SplitOrientation.ByCols && (position is PanelPosition.Left or PanelPosition.Right)) return;
-        if (panel.Orientation == SplitOrientation.ByRows && (position is PanelPosition.Top or PanelPosition.Bottom)) return;
-        var newParent = _panelFactory.MakeNew();
-        ChangeParent(newParent, panel);
-        newParent.SetOrientation(position);
-        _events.RaiseParentChanged(newParent, panel);
-        panel = newParent;
-    }
-
     private void ChangeParent(Panel parent, Panel child)
     {
         var oldParent = child.ParentPanel;
         if (oldParent != null)
         {
-            oldParent.ChildrenCollection.Remove(child);
-            oldParent.ChildrenCollection.AddEnd(parent);
+            oldParent.ChildrenList.Replace(child, parent);
         }
         else
         {
@@ -103,6 +70,6 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         }
         child.ParentPanel = parent;
         parent.ParentPanel = oldParent;
-        parent.ChildrenCollection.AddEnd(child);
+        parent.ChildrenList.Add(child);
     }
 }

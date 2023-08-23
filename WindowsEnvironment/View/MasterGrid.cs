@@ -22,11 +22,11 @@ internal class MasterGrid : Grid
     public Grid AddPanel(IPanel? parentPanel, IPanel childPanel)
     {
         var parentGrid = parentPanel != null ? this.FindChildRec<Grid>(parentPanel.Name) : this;
-        if (parentPanel?.Orientation == SplitOrientation.ByRows)
+        if (parentPanel?.Orientation == PanelOrientation.ByRows)
         {
             parentGrid.RowDefinitions.Add(new());
         }
-        else if (parentPanel?.Orientation == SplitOrientation.ByCols)
+        else if (parentPanel?.Orientation == PanelOrientation.ByCols)
         {
             parentGrid.ColumnDefinitions.Add(new());
         }
@@ -67,14 +67,14 @@ internal class MasterGrid : Grid
         var parentGrid = this.FindChildRec<Grid>(removedPanel.Parent.Name);
         var removedGrid = this.FindChildRec<Grid>(removedPanel.Removed!.Name);
         var removedSplitter = parentGrid.FindChildren<GridSplitter>().First();
-        if (removedPanel.Parent.Orientation == SplitOrientation.ByRows)
+        if (removedPanel.Parent.Orientation == PanelOrientation.ByRows)
         {
             var removedGridRow = parentGrid.RowDefinitions[Grid.GetRow(removedGrid)];
             var removedSplitterRow = parentGrid.RowDefinitions[Grid.GetRow(removedSplitter)];
             parentGrid.RowDefinitions.Remove(removedGridRow);
             parentGrid.RowDefinitions.Remove(removedSplitterRow);
         }
-        else if (removedPanel.Parent.Orientation == SplitOrientation.ByCols)
+        else if (removedPanel.Parent.Orientation == PanelOrientation.ByCols)
         {
             var removedGridCol = parentGrid.ColumnDefinitions[Grid.GetColumn(removedGrid)];
             var removedSplitterCol = parentGrid.ColumnDefinitions[Grid.GetColumn(removedSplitter)];
@@ -95,11 +95,11 @@ internal class MasterGrid : Grid
         var currentSplittersCount = parentGrid.Children.OfType<GridSplitter>().Count();
         for (var i = currentSplittersCount; i < needSplittersCount; i++)
         {
-            if (parentPanel.Orientation == SplitOrientation.ByRows)
+            if (parentPanel.Orientation == PanelOrientation.ByRows)
             {
                 parentGrid.RowDefinitions.Add(new());
             }
-            else if (parentPanel.Orientation == SplitOrientation.ByCols)
+            else if (parentPanel.Orientation == PanelOrientation.ByCols)
             {
                 parentGrid.ColumnDefinitions.Add(new());
             }
@@ -115,7 +115,7 @@ internal class MasterGrid : Grid
             var rowColumnIndex = 2 * childPanelIndex;
             var childPanel = parentPanel.Children[childPanelIndex];
             var childGrid = this.FindChildRec<Grid>(childPanel.Name);
-            if (parentPanel.Orientation == SplitOrientation.ByRows)
+            if (parentPanel.Orientation == PanelOrientation.ByRows)
             {
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
                 row.MinHeight = Constants.RowColMinHeight;
@@ -124,7 +124,7 @@ internal class MasterGrid : Grid
                 row.SetBinding(RowDefinition.HeightProperty, bind);
                 Grid.SetRow(childGrid, rowColumnIndex);
             }
-            else if (parentPanel.Orientation == SplitOrientation.ByCols)
+            else if (parentPanel.Orientation == PanelOrientation.ByCols)
             {
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
                 col.MinWidth = Constants.RowColMinHeight;
@@ -144,14 +144,14 @@ internal class MasterGrid : Grid
         {
             var splitter = splitters[splitterIndex];
             var rowColumnIndex = 2 * splitterIndex + 1;
-            if (parentPanel.Orientation == SplitOrientation.ByRows)
+            if (parentPanel.Orientation == PanelOrientation.ByRows)
             {
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
                 row.DataContext = null;
                 row.Height = new(0, GridUnitType.Auto);
                 Grid.SetRow(splitter, rowColumnIndex);
             }
-            else if (parentPanel.Orientation == SplitOrientation.ByCols)
+            else if (parentPanel.Orientation == PanelOrientation.ByCols)
             {
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
                 col.DataContext = null;

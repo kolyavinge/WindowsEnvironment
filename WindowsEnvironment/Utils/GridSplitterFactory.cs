@@ -6,9 +6,9 @@ namespace WindowsEnvironment.Utils;
 
 internal static class GridSplitterFactory
 {
-    public static GridSplitter MakeSplitter(SplitOrientation orientation, Style horizontalSplitterStyle, Style verticalSplitterStyle)
+    public static GridSplitter MakeSplitter(PanelOrientation orientation, Style horizontalSplitterStyle, Style verticalSplitterStyle)
     {
-        if (orientation == SplitOrientation.ByRows)
+        if (orientation == PanelOrientation.ByRows)
         {
             return MakeHorizontal(horizontalSplitterStyle);
         }

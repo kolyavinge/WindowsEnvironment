@@ -72,7 +72,7 @@ internal class PanelCollection : IPanelCollection
         var parentPanel = GetPanelByName(parentPanelName);
         var childPanel = GetPanelByName(childPanelName);
 
-        return parentPanel.ChildrenCollection.IndexOf(childPanel);
+        return parentPanel.ChildrenList.IndexOf(childPanel);
     }
 
     public void SetRoot(Panel root)

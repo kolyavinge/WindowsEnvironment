@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 namespace WindowsEnvironment.Model;
 
+public enum PanelOrientation { Unspecified, ByRows, ByCols }
+
 public enum PanelState { Set, Flex }
 
 public interface IPanel : INotifyPropertyChanged
@@ -11,7 +13,7 @@ public interface IPanel : INotifyPropertyChanged
 
     IPanel? Parent { get; }
 
-    SplitOrientation Orientation { get; }
+    PanelOrientation Orientation { get; }
 
     IReadOnlyList<IPanel> Children { get; }
 

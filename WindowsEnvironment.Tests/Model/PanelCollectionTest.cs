@@ -32,9 +32,9 @@ internal class PanelCollectionTest
         var panel2 = new Panel("panel2", new(_nameGenerator.Object));
         var panel3 = new Panel("panel3", new(_nameGenerator.Object));
         var flex = new Panel("flex", new(_nameGenerator.Object));
-        _rootPanel.ChildrenCollection.AddEnd(panel1);
-        panel1.ChildrenCollection.AddEnd(panel2);
-        panel2.ChildrenCollection.AddEnd(panel3);
+        _rootPanel.ChildrenList.Add(panel1);
+        panel1.ChildrenList.Add(panel2);
+        panel2.ChildrenList.Add(panel3);
         _panels.AddFlexPanel(flex);
 
         var result = new List<Panel>(_panels);

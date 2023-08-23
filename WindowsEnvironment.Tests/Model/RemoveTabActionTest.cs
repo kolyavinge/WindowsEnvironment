@@ -78,8 +78,8 @@ internal class RemoveTabActionTest
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
         var tab = panel2.TabCollection.Add(_content);
-        _rootPanel.ChildrenCollection.AddBegin(panel1);
-        panel1.ChildrenCollection.AddBegin(panel2);
+        _rootPanel.ChildrenList.Add(panel1);
+        panel1.ChildrenList.Add(panel2);
         _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<Panel> { panel2, panel1, _rootPanel });
 
@@ -95,19 +95,19 @@ internal class RemoveTabActionTest
         var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
         var panel3 = new Panel("panel_3", new(_nameGenerator.Object));
-        _rootPanel.ChildrenCollection.AddBegin(panel1);
-        _rootPanel.ChildrenCollection.AddBegin(new Panel("panel_4", new(_nameGenerator.Object)));
-        panel1.ChildrenCollection.AddBegin(panel2);
-        panel1.ChildrenCollection.AddBegin(panel3);
+        _rootPanel.ChildrenList.Add(panel1);
+        _rootPanel.ChildrenList.Add(new Panel("panel_4", new(_nameGenerator.Object)));
+        panel1.ChildrenList.Add(panel2);
+        panel1.ChildrenList.Add(panel3);
         var tab = panel3.TabCollection.Add(_content);
         _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel3, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel3.Name)).Returns(new List<Panel> { panel3, panel1, _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
-        Assert.That(_rootPanel.ChildrenCollection, Has.Count.EqualTo(2));
-        Assert.That(panel1.ChildrenCollection, Has.Count.EqualTo(1));
-        Assert.That(panel1.ChildrenCollection.First(), Is.EqualTo(panel2));
+        Assert.That(_rootPanel.ChildrenList, Has.Count.EqualTo(2));
+        Assert.That(panel1.ChildrenList, Has.Count.EqualTo(1));
+        Assert.That(panel1.ChildrenList.First(), Is.EqualTo(panel2));
         _events.Verify(x => x.RaiseTabRemoved(new(panel1, panel3), panel3, tab, RemoveTabMode.Close));
     }
 
@@ -160,8 +160,8 @@ internal class RemoveTabActionTest
         panel1.Size = 100;
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
         var tab = panel2.TabCollection.Add(_content);
-        _rootPanel.ChildrenCollection.AddEnd(panel1);
-        _rootPanel.ChildrenCollection.AddEnd(panel2);
+        _rootPanel.ChildrenList.Add(panel1);
+        _rootPanel.ChildrenList.Add(panel2);
         _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<Panel> { panel2, _rootPanel });
 
@@ -177,8 +177,8 @@ internal class RemoveTabActionTest
         var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
         panel2.Size = 100;
         var tab = panel1.TabCollection.Add(_content);
-        _rootPanel.ChildrenCollection.AddEnd(panel1);
-        _rootPanel.ChildrenCollection.AddEnd(panel2);
+        _rootPanel.ChildrenList.Add(panel1);
+        _rootPanel.ChildrenList.Add(panel2);
         _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel1, tab));
         _parentsChainFinder.Setup(x => x.FindChain(panel1.Name)).Returns(new List<Panel> { panel1, _rootPanel });
 
