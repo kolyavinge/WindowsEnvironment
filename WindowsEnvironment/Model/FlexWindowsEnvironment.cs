@@ -30,13 +30,13 @@ internal class FlexWindowsEnvironment(IEventsInternal events) : IFlexWindowsEnvi
 
     public IPanel GetPanelByName(string name) => Panels!.GetPanelByName(name);
 
-    public (IPanel, IContentTab) GetTabByName(string name) => Panels!.GetTabByName(name);
+    public (IContentPanel, IContentTab) GetTabByName(string name) => Panels!.GetTabByName(name);
 
-    public (IPanel, IContentTab) GetTabById(object id) => Panels!.GetTabById(id);
+    public (IContentPanel, IContentTab) GetTabById(object id) => Panels!.GetTabById(id);
 
     public int GetChildPanelIndex(string parentPanelName, string childPanelName) => Panels!.GetChildPanelIndex(parentPanelName, childPanelName);
 
-    public (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content) => SetPanelPositionAction!.SetPanelPosition(panelName, position, content);
+    public (IContentPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content) => SetPanelPositionAction!.SetPanelPosition(panelName, position, content);
 
     public void SelectTab(string tabName) => SelectTabAction!.SelectTab(tabName);
 

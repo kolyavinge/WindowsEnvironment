@@ -6,28 +6,31 @@ namespace WindowsEnvironment.Model;
 
 internal interface IPanelCollection : IEnumerable<Panel>
 {
-    Panel RootPanel { get; }
+    LayoutPanel RootPanel { get; }
+    IReadOnlyCollection<ContentPanel> FlexPanels { get; }
     Panel GetPanelByName(string name);
-    (Panel, ContentTab) GetTabByName(string name);
-    (Panel, ContentTab) GetTabById(object id);
+    (ContentPanel, ContentTab) GetTabByName(string name);
+    (ContentPanel, ContentTab) GetTabById(object id);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
-    void SetRoot(Panel root);
-    void AddFlexPanel(Panel panel);
+    void SetRoot(LayoutPanel root);
+    void AddFlexPanel(ContentPanel panel);
     void RemoveFlexPanelTabById(object id);
 }
 
 internal class PanelCollection : IPanelCollection
 {
-    private readonly List<Panel> _flexPanels;
+    private readonly List<ContentPanel> _flexPanels;
 
-    public Panel RootPanel { get; private set; }
+    public LayoutPanel RootPanel { get; private set; }
 
-    public IReadOnlyCollection<Panel> FlexPanels => _flexPanels;
+    public IReadOnlyCollection<ContentPanel> FlexPanels => _flexPanels;
 
     public PanelCollection(IPanelFactory panelFactory)
     {
-        _flexPanels = new List<Panel>();
-        RootPanel = panelFactory.MakeNew();
+        _flexPanels = new List<ContentPanel>();
+        var mainPanel = panelFactory.MakeNewContentPanel();
+        RootPanel = panelFactory.MakeNewLayoutPanel();
+        RootPanel.ChildrenList.Add(mainPanel);
     }
 
     public Panel GetPanelByName(string name)
@@ -35,9 +38,9 @@ internal class PanelCollection : IPanelCollection
         return this.FirstOrDefault(x => x.Name == name) ?? throw new ArgumentException($"'{name}' does not exist.");
     }
 
-    public (Panel, ContentTab) GetTabByName(string name)
+    public (ContentPanel, ContentTab) GetTabByName(string name)
     {
-        foreach (var panel in this)
+        foreach (var panel in this.OfType<ContentPanel>())
         {
             foreach (var tab in panel.TabCollection)
             {
@@ -51,9 +54,9 @@ internal class PanelCollection : IPanelCollection
         throw new ArgumentException($"'{name}' does not exist.");
     }
 
-    public (Panel, ContentTab) GetTabById(object id)
+    public (ContentPanel, ContentTab) GetTabById(object id)
     {
-        foreach (var panel in this)
+        foreach (var panel in this.OfType<ContentPanel>())
         {
             foreach (var tab in panel.TabCollection)
             {
@@ -69,18 +72,18 @@ internal class PanelCollection : IPanelCollection
 
     public int GetChildPanelIndex(string parentPanelName, string childPanelName)
     {
-        var parentPanel = GetPanelByName(parentPanelName);
+        var parentPanel = (LayoutPanel)GetPanelByName(parentPanelName); // TODO check LayoutPanel, else throw exception
         var childPanel = GetPanelByName(childPanelName);
 
         return parentPanel.ChildrenList.IndexOf(childPanel);
     }
 
-    public void SetRoot(Panel root)
+    public void SetRoot(LayoutPanel root)
     {
         RootPanel = root;
     }
 
-    public void AddFlexPanel(Panel panel)
+    public void AddFlexPanel(ContentPanel panel)
     {
         _flexPanels.Add(panel);
     }
@@ -98,7 +101,7 @@ internal class PanelCollection : IPanelCollection
         }
     }
 
-    public (Panel?, ContentTab?) GetFlexPanelById(object id)
+    public (ContentPanel?, ContentTab?) GetFlexPanelById(object id)
     {
         foreach (var flexPanel in _flexPanels)
         {
@@ -114,7 +117,14 @@ internal class PanelCollection : IPanelCollection
         return (default, default);
     }
 
-    public IEnumerator<Panel> GetEnumerator() => new[] { RootPanel }.Union(RootPanel.GetAllChildren()).Union(_flexPanels).GetEnumerator();
+    public IEnumerator<Panel> GetEnumerator()
+    {
+        var result = new List<Panel> { RootPanel };
+        result.AddRange(RootPanel.GetAllChildren());
+        result.AddRange(_flexPanels);
+
+        return result.GetEnumerator();
+    }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -18,13 +18,11 @@ internal class FlexWindowsEnvironmentReaderTest
     public void Read()
     {
         var tab1 = new Mock<IContentTab>();
-        var panel1 = new Mock<IPanel>();
-        var root = new Mock<IPanel>();
+        var panel1 = new Mock<IContentPanel>();
+        var root = new Mock<ILayoutPanel>();
         panel1.SetupGet(x => x.Name).Returns("panel_1");
         panel1.SetupGet(x => x.Tabs).Returns(new[] { tab1.Object });
-        panel1.SetupGet(x => x.Children).Returns(new IPanel[0]);
         root.SetupGet(x => x.Name).Returns("panel_0");
-        root.SetupGet(x => x.Tabs).Returns(new IContentTab[0]);
         root.SetupGet(x => x.Children).Returns(new[] { panel1.Object });
         _model.SetupGet(x => x.RootPanel).Returns(root.Object);
         var beginReadPanels = new List<IPanel>();
@@ -56,13 +54,11 @@ internal class FlexWindowsEnvironmentReaderTest
     public void ReadNoEvents()
     {
         var tab1 = new Mock<IContentTab>();
-        var panel1 = new Mock<IPanel>();
-        var root = new Mock<IPanel>();
+        var panel1 = new Mock<IContentPanel>();
+        var root = new Mock<ILayoutPanel>();
         panel1.SetupGet(x => x.Name).Returns("panel_1");
         panel1.SetupGet(x => x.Tabs).Returns(new[] { tab1.Object });
-        panel1.SetupGet(x => x.Children).Returns(new IPanel[0]);
         root.SetupGet(x => x.Name).Returns("panel_0");
-        root.SetupGet(x => x.Tabs).Returns(new IContentTab[0]);
         root.SetupGet(x => x.Children).Returns(new[] { panel1.Object });
         _model.SetupGet(x => x.RootPanel).Returns(root.Object);
 

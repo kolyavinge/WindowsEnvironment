@@ -12,13 +12,13 @@ public interface IFlexWindowsEnvironment
 
     IPanel GetPanelByName(string name);
 
-    (IPanel, IContentTab) GetTabByName(string name);
+    (IContentPanel, IContentTab) GetTabByName(string name);
 
-    (IPanel, IContentTab) GetTabById(object id);
+    (IContentPanel, IContentTab) GetTabById(object id);
 
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
 
-    (IPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
+    (IContentPanel, IContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
 
     void SelectTab(string tabName);
 

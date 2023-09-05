@@ -27,9 +27,12 @@ internal class MasterGridInitializer
 
         _reader.EndPanelRead += (s, e) =>
         {
-            _masterGrid.MakeSplitters(e.Panel);
-            _masterGrid.SetPanelRowsCols(e.Panel);
-            _masterGrid.SetSplittersRowsCols(e.Panel);
+            if (e.Panel is ILayoutPanel layoutPanel)
+            {
+                _masterGrid.MakeSplitters(layoutPanel);
+                _masterGrid.SetPanelRowsCols(layoutPanel);
+                _masterGrid.SetSplittersRowsCols(layoutPanel);
+            }
         };
 
         _reader.Read();

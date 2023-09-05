@@ -2,7 +2,9 @@
 
 internal interface IPanelFactory
 {
-    Panel MakeNew();
+    LayoutPanel MakeNewLayoutPanel();
+
+    ContentPanel MakeNewContentPanel();
 }
 
 internal class PanelFactory : IPanelFactory
@@ -14,8 +16,13 @@ internal class PanelFactory : IPanelFactory
         _nameGenerator = nameGenerator;
     }
 
-    public Panel MakeNew()
+    public LayoutPanel MakeNewLayoutPanel()
     {
-        return new Panel(_nameGenerator.GetPanelName(), new(_nameGenerator));
+        return new LayoutPanel(_nameGenerator.GetPanelName());
+    }
+
+    public ContentPanel MakeNewContentPanel()
+    {
+        return new ContentPanel(_nameGenerator.GetPanelName(), new(_nameGenerator));
     }
 }

@@ -4,7 +4,8 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class PanelCollectionTest
 {
-    private Panel _rootPanel;
+    private LayoutPanel _rootPanel;
+    private ContentPanel _mainPanel;
     private Mock<IPanelFactory> _panelFactory;
     private Mock<INameGenerator> _nameGenerator;
     private PanelCollection _panels;
@@ -13,9 +14,11 @@ internal class PanelCollectionTest
     public void Setup()
     {
         _nameGenerator = new Mock<INameGenerator>();
-        _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
+        _rootPanel = new LayoutPanel("panel_1");
+        _mainPanel = new ContentPanel(MainPanel.Name, new(_nameGenerator.Object));
         _panelFactory = new Mock<IPanelFactory>();
-        _panelFactory.Setup(x => x.MakeNew()).Returns(_rootPanel);
+        _panelFactory.Setup(x => x.MakeNewLayoutPanel()).Returns(_rootPanel);
+        _panelFactory.Setup(x => x.MakeNewContentPanel()).Returns(_mainPanel);
         _panels = new PanelCollection(_panelFactory.Object);
     }
 
@@ -23,15 +26,17 @@ internal class PanelCollectionTest
     public void Constructor()
     {
         Assert.That(_panels.RootPanel, Is.Not.Null);
+        Assert.That(_panels.RootPanel.ChildrenList, Has.Count.EqualTo(1));
+        Assert.That(_panels.RootPanel.ChildrenList[0], Is.Not.Null);
     }
 
     [Test]
     public void GetEnumerator()
     {
-        var panel1 = new Panel("panel1", new(_nameGenerator.Object));
-        var panel2 = new Panel("panel2", new(_nameGenerator.Object));
-        var panel3 = new Panel("panel3", new(_nameGenerator.Object));
-        var flex = new Panel("flex", new(_nameGenerator.Object));
+        var panel1 = new LayoutPanel("panel1");
+        var panel2 = new LayoutPanel("panel2");
+        var panel3 = new ContentPanel("panel3", new(_nameGenerator.Object));
+        var flex = new ContentPanel("flex", new(_nameGenerator.Object));
         _rootPanel.ChildrenList.Add(panel1);
         panel1.ChildrenList.Add(panel2);
         panel2.ChildrenList.Add(panel3);
@@ -39,8 +44,9 @@ internal class PanelCollectionTest
 
         var result = new List<Panel>(_panels);
 
-        Assert.That(result, Has.Count.EqualTo(5));
+        Assert.That(result, Has.Count.EqualTo(6));
         Assert.That(result.Contains(_rootPanel), Is.True);
+        Assert.That(result.Contains(_mainPanel), Is.True);
         Assert.That(result.Contains(panel1), Is.True);
         Assert.That(result.Contains(panel2), Is.True);
         Assert.That(result.Contains(panel3), Is.True);
@@ -50,8 +56,9 @@ internal class PanelCollectionTest
     [Test]
     public void GetPanelByName()
     {
-        Assert.That(_panels.GetPanelByName(MainPanel.Name), Is.EqualTo(_rootPanel));
-        _panelFactory.Verify(x => x.MakeNew(), Times.Once);
+        var panel = _panels.GetPanelByName(MainPanel.Name);
+        Assert.That(panel, Is.EqualTo(_mainPanel));
+        _panelFactory.Verify(x => x.MakeNewLayoutPanel(), Times.Once);
     }
 
     [Test]
@@ -71,12 +78,14 @@ internal class PanelCollectionTest
     [Test]
     public void GetTabByName()
     {
+        var panel1 = new ContentPanel("panel1", new(_nameGenerator.Object));
+        _rootPanel.ChildrenList.Add(panel1);
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab_1");
-        var tab = _rootPanel.TabCollection.Add(new("id"));
+        var tab = panel1.TabCollection.Add(new("id"));
 
         var (resultPanel, resultTab) = _panels.GetTabByName("tab_1");
 
-        Assert.That(resultPanel, Is.EqualTo(_rootPanel));
+        Assert.That(resultPanel, Is.EqualTo(panel1));
         Assert.That(tab, Is.EqualTo(resultTab));
     }
 
@@ -97,12 +106,14 @@ internal class PanelCollectionTest
     [Test]
     public void GetTabById()
     {
+        var panel1 = new ContentPanel("panel1", new(_nameGenerator.Object));
+        _rootPanel.ChildrenList.Add(panel1);
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab_1");
-        var tab = _rootPanel.TabCollection.Add(new("id"));
+        var tab = panel1.TabCollection.Add(new("id"));
 
         var (resultPanel, resultTab) = _panels.GetTabById("id");
 
-        Assert.That(resultPanel, Is.EqualTo(_rootPanel));
+        Assert.That(resultPanel, Is.EqualTo(panel1));
         Assert.That(tab, Is.EqualTo(resultTab));
     }
 
@@ -123,7 +134,7 @@ internal class PanelCollectionTest
     [Test]
     public void GetFlexPanelById()
     {
-        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         flexPanel.TabCollection.Add(new("id"));
         _panels.AddFlexPanel(flexPanel);
 
@@ -136,7 +147,7 @@ internal class PanelCollectionTest
     [Test]
     public void GetTabById_FlexPanel()
     {
-        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         flexPanel.TabCollection.Add(new("flex_id"));
         _panels.AddFlexPanel(flexPanel);
 
@@ -158,7 +169,7 @@ internal class PanelCollectionTest
     [Test]
     public void RemoveFlexPanelTabById_OneTab()
     {
-        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         flexPanel.TabCollection.Add(new("id"));
         _panels.AddFlexPanel(flexPanel);
 
@@ -170,7 +181,7 @@ internal class PanelCollectionTest
     [Test]
     public void RemoveFlexPanelTabById_TwoTabs()
     {
-        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         flexPanel.TabCollection.Add(new("id_1"));
         flexPanel.TabCollection.Add(new("id_2"));
         _panels.AddFlexPanel(flexPanel);
@@ -185,7 +196,7 @@ internal class PanelCollectionTest
     [Test]
     public void RemoveFlexPanelTabById_WrongId()
     {
-        var flexPanel = new Panel("", new(_nameGenerator.Object));
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         flexPanel.TabCollection.Add(new("id_1"));
         flexPanel.TabCollection.Add(new("id_2"));
         _panels.AddFlexPanel(flexPanel);

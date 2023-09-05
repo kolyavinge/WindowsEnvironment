@@ -17,13 +17,13 @@ internal class ChangeSizePanelAction : IChangeSizePanelAction
 
     public double? GetPanelSize(string panelName)
     {
-        var panel = _panels.GetPanelByName(panelName);
+        var panel = (ContentPanel)_panels.GetPanelByName(panelName); // check
         return panel.Size;
     }
 
     public void SetPanelSize(string panelName, double? size)
     {
-        var panel = _panels.GetPanelByName(panelName);
+        var panel = (ContentPanel)_panels.GetPanelByName(panelName);
         panel.Size = size;
     }
 }

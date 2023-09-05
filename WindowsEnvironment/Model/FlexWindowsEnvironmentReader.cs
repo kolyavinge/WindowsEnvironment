@@ -11,9 +11,9 @@ public class PanelReadEventArgs : EventArgs
 
 public class TabReadEventArgs : EventArgs
 {
-    public IPanel Panel { get; }
+    public IContentPanel Panel { get; }
     public IContentTab Tab { get; }
-    internal TabReadEventArgs(IPanel panel, IContentTab tab)
+    internal TabReadEventArgs(IContentPanel panel, IContentTab tab)
     {
         Panel = panel;
         Tab = tab;
@@ -49,14 +49,23 @@ internal class FlexWindowsEnvironmentReader : IFlexWindowsEnvironmentReader
     private void Read(IPanel panel)
     {
         BeginPanelRead?.Invoke(this, new(panel));
-        foreach (var child in panel.Children)
+
+        if (panel is ILayoutPanel layoutPanel)
         {
-            Read(child);
+            foreach (var child in layoutPanel.Children)
+            {
+                Read(child);
+            }
         }
-        foreach (var tab in panel.Tabs)
+
+        if (panel is IContentPanel contentPanel)
         {
-            TabRead?.Invoke(this, new(panel, tab));
+            foreach (var tab in contentPanel.Tabs)
+            {
+                TabRead?.Invoke(this, new(contentPanel, tab));
+            }
         }
+
         EndPanelRead?.Invoke(this, new(panel));
     }
 }

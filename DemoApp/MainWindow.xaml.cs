@@ -38,7 +38,7 @@ public partial class MainWindow : Window
 
     private void CloseAllClick(object sender, RoutedEventArgs e)
     {
-        foreach (var panel in flex.Model.AllPanels.ToList())
+        foreach (var panel in flex.Model.AllPanels.OfType<IContentPanel>().ToList())
         {
             foreach (var tab in panel.Tabs.ToList())
             {

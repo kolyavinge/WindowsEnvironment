@@ -19,7 +19,7 @@ internal class MasterGrid : Grid
     public IFlexWindowsEnvironmentStyles? Styles;
     public IEnumerable<FlexWindow>? FlexWindows;
 
-    public Grid AddPanel(IPanel? parentPanel, IPanel childPanel)
+    public Grid AddPanel(ILayoutPanel? parentPanel, IPanel childPanel)
     {
         var parentGrid = parentPanel != null ? this.FindChildRec<Grid>(parentPanel.Name) : this;
         if (parentPanel?.Orientation == PanelOrientation.ByRows)
@@ -36,7 +36,7 @@ internal class MasterGrid : Grid
         return childGrid;
     }
 
-    public Grid AddPanelWithTab(IPanel parentPanel, IPanel childPanel, IContentTab tab)
+    public Grid AddPanelWithTab(ILayoutPanel parentPanel, IContentPanel childPanel, IContentTab tab)
     {
         if (Styles == null) throw new InvalidOperationException();
         var childGrid = AddPanel(parentPanel, childPanel);
@@ -48,7 +48,7 @@ internal class MasterGrid : Grid
         return childGrid;
     }
 
-    public void ChangeParent(IPanel parentPanel, IPanel childPanel)
+    public void ChangeParent(ILayoutPanel parentPanel, IPanel childPanel)
     {
         var parentGrid = new Grid { Name = parentPanel.Name };
         parentGrid.RowDefinitions.Add(new());
@@ -87,7 +87,7 @@ internal class MasterGrid : Grid
         SetSplittersRowsCols(removedPanel.Parent);
     }
 
-    public void MakeSplitters(IPanel parentPanel)
+    public void MakeSplitters(ILayoutPanel parentPanel)
     {
         if (Styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
@@ -107,7 +107,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void SetPanelRowsCols(IPanel parentPanel)
+    public void SetPanelRowsCols(ILayoutPanel parentPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         for (int childPanelIndex = 0; childPanelIndex < parentPanel.Children.Count; childPanelIndex++)
@@ -136,7 +136,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void SetSplittersRowsCols(IPanel parentPanel)
+    public void SetSplittersRowsCols(ILayoutPanel parentPanel)
     {
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         var splitters = parentGrid.FindChildren<GridSplitter>().ToList();
@@ -161,7 +161,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    public void AddTab(IPanel parentPanel, IContentTab tab)
+    public void AddTab(IContentPanel parentPanel, IContentTab tab)
     {
         if (Styles == null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
@@ -184,7 +184,7 @@ internal class MasterGrid : Grid
         MakeNewTab(tabControl, parentPanel, tab);
     }
 
-    public void RemoveTab(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    public void RemoveTab(RemovedPanelInfo? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (tabPanel.State == PanelState.Flex)
         {
@@ -201,7 +201,7 @@ internal class MasterGrid : Grid
         FlexWindows!.First(x => x.Content == tab.Content).Close();
     }
 
-    private void RemoveTabForSetPanel(RemovedPanelInfo? removedPanel, IPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    private void RemoveTabForSetPanel(RemovedPanelInfo? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (Model == null) throw new InvalidOperationException();
         if (Styles == null) throw new InvalidOperationException();
@@ -246,7 +246,7 @@ internal class MasterGrid : Grid
                     _marksWindow = new PositionMarksWindow(this);
                     _marksWindow.PositionMarksBackground = Styles.PositionMarksBackground;
                     _marksWindow.HighlightedPositionBackground = Styles.HighlightedMarkPositionBackground;
-                    var tabPanels = Model.AllPanels.Where(x => x.State == PanelState.Set && x.AllowTabs).ToList();
+                    var tabPanels = Model.AllPanels.OfType<IContentPanel>().Where(x => x.State == PanelState.Set).ToList();
                     foreach (var tabPanel in tabPanels)
                     {
                         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
@@ -272,7 +272,7 @@ internal class MasterGrid : Grid
         }
     }
 
-    private void MakeNewTab(TabControl tabControl, IPanel panel, IContentTab contentTab)
+    private void MakeNewTab(TabControl tabControl, IContentPanel panel, IContentTab contentTab)
     {
         if (Model == null) throw new InvalidOperationException();
         if (Styles == null) throw new InvalidOperationException();

@@ -37,18 +37,15 @@ internal class RemoveTabAction : IRemoveTabAction
         if (!panel.IsMain && !panel.TabCollection.Any())
         {
             var parentsChain = _parentsChainFinder.FindChain(panel.Name);
-            var parentPanel = parentsChain.FirstOrDefault(x => x.ChildrenList.Count > 1) ?? _panels.RootPanel;
-            if (parentPanel != null)
-            {
-                var removedPanel = parentsChain.GetBefore(parentPanel);
-                if (removedPanel != null) parentPanel.ChildrenList.Remove(removedPanel);
-                removedPanelInfo = new RemovedPanelInfo(parentPanel, removedPanel);
-            }
+            var parentPanel = parentsChain.OfType<LayoutPanel>().FirstOrDefault(x => x.ChildrenList.Count > 1) ?? _panels.RootPanel;
+            var removedPanel = parentsChain.GetBefore(parentPanel);
+            if (removedPanel != null) parentPanel.ChildrenList.Remove(removedPanel);
+            removedPanelInfo = new RemovedPanelInfo(parentPanel, removedPanel);
         }
         if (removedPanelInfo != null)
         {
             var lastChild = removedPanelInfo.Parent.Children.LastOrDefault();
-            if (lastChild != null) lastChild.Size = null;
+            if (lastChild is ContentPanel lastChildContentPanel) lastChildContentPanel.Size = null;
         }
         _events.RaiseTabRemoved(removedPanelInfo, panel, tab, mode);
         if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
@@ -57,7 +54,7 @@ internal class RemoveTabAction : IRemoveTabAction
         }
         if (mode == RemoveTabMode.Unset)
         {
-            var flexPanel = _panelFactory.MakeNew();
+            var flexPanel = _panelFactory.MakeNewContentPanel();
             flexPanel.State = PanelState.Flex;
             flexPanel.TabCollection.Add(tab.Content);
             _panels.AddFlexPanel(flexPanel);

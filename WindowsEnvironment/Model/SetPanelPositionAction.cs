@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
+    (ContentPanel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,7 +23,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public (Panel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
+    public (ContentPanel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         _panels.RemoveFlexPanelTabById(content.Id);
         var panel = _panels.GetPanelByName(panelName);
@@ -32,12 +32,12 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             var parent = panel.ParentPanel;
             if (parent == null || !parent.IsSuitableOrientation(position))
             {
-                parent = _panelFactory.MakeNew();
+                parent = _panelFactory.MakeNewLayoutPanel();
                 parent.SetOrientation(position);
                 ChangeParent(parent, panel);
                 _events.RaiseParentChanged(parent, panel);
             }
-            var childPanel = _panelFactory.MakeNew();
+            var childPanel = _panelFactory.MakeNewContentPanel();
             childPanel.ParentPanel = parent;
             var childPanelIndex = parent.ChildrenList.IndexOf(panel);
             if (position is PanelPosition.Right or PanelPosition.Bottom) childPanelIndex++;
@@ -49,15 +49,15 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         }
         else
         {
-            if (!panel.AllowTabs) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = panel.TabCollection.Add(content);
-            _events.RaiseTabAdded(panel, tab);
+            if (panel is not ContentPanel contentPanel) throw new ArgumentException($"{panelName} does not contain tabs.");
+            var tab = contentPanel.TabCollection.Add(content);
+            _events.RaiseTabAdded(contentPanel, tab);
 
-            return (panel, tab);
+            return (contentPanel, tab);
         }
     }
 
-    private void ChangeParent(Panel parent, Panel child)
+    private void ChangeParent(LayoutPanel parent, Panel child)
     {
         var oldParent = child.ParentPanel;
         if (oldParent != null)

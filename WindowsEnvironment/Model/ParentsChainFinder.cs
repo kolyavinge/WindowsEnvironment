@@ -16,6 +16,7 @@ internal class ParentsChainFinder : IParentsChainFinder
         _panels = panels;
     }
 
+    // TODO сделать List<LayoutPanel>, возвращать только список родительских панелей
     public List<Panel> FindChain(string findPanelName)
     {
         var parentChain = new List<Panel>();
@@ -31,13 +32,13 @@ internal class ParentsChainFinder : IParentsChainFinder
             parentChain.Add(parentPanel);
             return true;
         }
-        else
+        else if (parentPanel is LayoutPanel parentLayoutPanel)
         {
-            foreach (var child in parentPanel.ChildrenList)
+            foreach (var child in parentLayoutPanel.ChildrenList)
             {
                 if (FindParentsChain(child, findPanelName, parentChain))
                 {
-                    parentChain.Add(parentPanel);
+                    parentChain.Add(parentLayoutPanel);
                     return true;
                 }
             }

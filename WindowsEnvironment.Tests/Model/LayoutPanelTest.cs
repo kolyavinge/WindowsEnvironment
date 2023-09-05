@@ -2,16 +2,16 @@
 
 namespace WindowsEnvironment.Tests.Model;
 
-internal class PanelTest
+internal class LayoutPanelTest
 {
     private Mock<INameGenerator> _nameGenerator;
-    private Panel _panel;
+    private LayoutPanel _panel;
 
     [SetUp]
     public void Setup()
     {
         _nameGenerator = new Mock<INameGenerator>();
-        _panel = new Panel("panel", new(_nameGenerator.Object));
+        _panel = new LayoutPanel("panel");
     }
 
     [Test]
@@ -31,8 +31,8 @@ internal class PanelTest
     [Test]
     public void GetAllChildren1()
     {
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
+        var panel1 = new LayoutPanel("panel_1");
+        var panel2 = new LayoutPanel("panel_2");
         _panel.ChildrenList.Add(panel1);
         _panel.ChildrenList.Add(panel2);
         var result = _panel.GetAllChildren().ToList();
@@ -45,8 +45,8 @@ internal class PanelTest
     [Test]
     public void GetAllChildren2()
     {
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
+        var panel1 = new LayoutPanel("panel_1");
+        var panel2 = new LayoutPanel("panel_2");
         _panel.ChildrenList.Add(panel1);
         panel1.ChildrenList.Add(panel2);
         var result = _panel.GetAllChildren().ToList();
@@ -57,15 +57,17 @@ internal class PanelTest
     }
 
     [Test]
-    public void SelectedTabNameIsNull()
+    public void GetAllChildren3()
     {
-        Assert.That(_panel.SelectedTabName, Is.Null);
-    }
+        var panel1 = new LayoutPanel("panel_1");
+        var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
+        _panel.ChildrenList.Add(panel1);
+        panel1.ChildrenList.Add(panel2);
+        var result = _panel.GetAllChildren().ToList();
 
-    [Test]
-    public void SizeIsNull()
-    {
-        Assert.That(_panel.Size, Is.Null);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result[0], Is.EqualTo(panel1));
+        Assert.That(result[1], Is.EqualTo(panel2));
     }
 
     [Test]

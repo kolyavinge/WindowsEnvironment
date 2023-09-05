@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Tests.Model;
 
 internal class ParentsChainFinderTest
 {
-    private Panel _rootPanel;
+    private LayoutPanel _rootPanel;
     private Mock<IPanelCollection> _panels;
     private Mock<INameGenerator> _nameGenerator;
     private ParentsChainFinder _finder;
@@ -13,7 +13,7 @@ internal class ParentsChainFinderTest
     public void Setup()
     {
         _nameGenerator = new Mock<INameGenerator>();
-        _rootPanel = new Panel(MainPanel.Name, new(_nameGenerator.Object));
+        _rootPanel = new LayoutPanel(MainPanel.Name);
         _panels = new Mock<IPanelCollection>();
         _panels.SetupGet(x => x.RootPanel).Returns(_rootPanel);
         _finder = new ParentsChainFinder(_panels.Object);
@@ -31,8 +31,9 @@ internal class ParentsChainFinderTest
     [Test]
     public void FindChainOneChild()
     {
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
+        var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
         _rootPanel.ChildrenList.Add(panel1);
+
         var result = _finder.FindChain(panel1.Name);
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -43,10 +44,11 @@ internal class ParentsChainFinderTest
     [Test]
     public void FindChainTwoChildren()
     {
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
+        var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
+        var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
         _rootPanel.ChildrenList.Add(panel1);
         _rootPanel.ChildrenList.Add(panel2);
+
         var result = _finder.FindChain(panel1.Name);
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -57,10 +59,11 @@ internal class ParentsChainFinderTest
     [Test]
     public void FindChainNoResult()
     {
-        var panel1 = new Panel("panel_1", new(_nameGenerator.Object));
-        var panel2 = new Panel("panel_2", new(_nameGenerator.Object));
+        var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
+        var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
         _rootPanel.ChildrenList.Add(panel1);
         _rootPanel.ChildrenList.Add(panel2);
+
         var result = _finder.FindChain("wrong panel");
 
         Assert.That(result, Has.Count.EqualTo(0));
