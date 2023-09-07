@@ -148,6 +148,7 @@ internal class MasterGrid : Grid
             {
                 var row = parentGrid.RowDefinitions[rowColumnIndex];
                 row.DataContext = null;
+                row.MinHeight = 0;
                 row.Height = new(0, GridUnitType.Auto);
                 Grid.SetRow(splitter, rowColumnIndex);
             }
@@ -155,6 +156,7 @@ internal class MasterGrid : Grid
             {
                 var col = parentGrid.ColumnDefinitions[rowColumnIndex];
                 col.DataContext = null;
+                col.MinWidth = 0;
                 col.Width = new(0, GridUnitType.Auto);
                 Grid.SetColumn(splitter, rowColumnIndex);
             }
