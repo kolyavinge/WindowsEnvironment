@@ -52,7 +52,7 @@ internal class RemoveTabActionTest
     public void RemoveLastTabFromRootPanel()
     {
         var tab = _mainPanel.TabCollection.Add(_content);
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_mainPanel, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
@@ -67,7 +67,7 @@ internal class RemoveTabActionTest
     {
         var tab1 = _mainPanel.TabCollection.Add(_content);
         var tab2 = _mainPanel.TabCollection.Add(_content);
-        _panels.Setup(x => x.GetTabByName(tab2.Name)).Returns((_mainPanel, tab2));
+        _panels.Setup(x => x.GetTabByName(tab2.Name)).Returns(tab2);
 
         _action.RemoveTab(tab2.Name, RemoveTabMode.Close);
 
@@ -85,7 +85,7 @@ internal class RemoveTabActionTest
         var tab = panel1.TabCollection.Add(_content);
         _rootPanel.ChildrenList.Add(panel1);
         panel1.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel1, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         _parentsChainFinder.Setup(x => x.FindChain(panel1.Name)).Returns(new List<LayoutPanel> { _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
@@ -103,7 +103,7 @@ internal class RemoveTabActionTest
         var tab2 = panel1.TabCollection.Add(_content);
         _rootPanel.ChildrenList.Add(panel1);
         panel1.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab2.Name)).Returns((panel1, tab2));
+        _panels.Setup(x => x.GetTabByName(tab2.Name)).Returns(tab2);
         _parentsChainFinder.Setup(x => x.FindChain(panel1.Name)).Returns(new List<LayoutPanel> { _rootPanel });
 
         _action.RemoveTab(tab2.Name, RemoveTabMode.Close);
@@ -125,7 +125,7 @@ internal class RemoveTabActionTest
         panel1.ChildrenList.Add(panel2);
         var tab = panel2.TabCollection.Add(_content);
         panel1.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<LayoutPanel> { panel1, _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
@@ -146,7 +146,7 @@ internal class RemoveTabActionTest
         panel2.ChildrenList.Add(panel3);
         var tab = panel3.TabCollection.Add(_content);
         panel1.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel3, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         _parentsChainFinder.Setup(x => x.FindChain(panel3.Name)).Returns(new List<LayoutPanel> { panel2, panel1, _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
@@ -162,7 +162,7 @@ internal class RemoveTabActionTest
         var invoke = false;
         _content.CloseCallback = () => invoke = true;
         var tab = _mainPanel.TabCollection.Add(_content);
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_mainPanel, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
 
@@ -175,7 +175,7 @@ internal class RemoveTabActionTest
         var invoke = false;
         _content.CloseCallback = () => invoke = true;
         var tab = _mainPanel.TabCollection.Add(_content);
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_mainPanel, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Unset);
 
@@ -186,7 +186,7 @@ internal class RemoveTabActionTest
     public void TabUnset_AddFlexPanel()
     {
         var tab = _mainPanel.TabCollection.Add(_content);
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((_mainPanel, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         var flexPanel = new ContentPanel("", new(_nameGenerator.Object));
         _panelFactory.Setup(p => p.MakeNewContentPanel()).Returns(flexPanel);
 
@@ -208,7 +208,7 @@ internal class RemoveTabActionTest
         _rootPanel.ChildrenList.Add(panel1);
         _rootPanel.ChildrenList.Add(panel2);
         panel2.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel2, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         _parentsChainFinder.Setup(x => x.FindChain(panel2.Name)).Returns(new List<LayoutPanel> { _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);
@@ -226,7 +226,7 @@ internal class RemoveTabActionTest
         _rootPanel.ChildrenList.Add(panel1);
         _rootPanel.ChildrenList.Add(panel2);
         panel1.ParentPanel = _rootPanel;
-        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns((panel1, tab));
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
         _parentsChainFinder.Setup(x => x.FindChain(panel1.Name)).Returns(new List<LayoutPanel> { _rootPanel });
 
         _action.RemoveTab(tab.Name, RemoveTabMode.Close);

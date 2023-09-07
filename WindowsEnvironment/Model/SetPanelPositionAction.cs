@@ -4,7 +4,7 @@ namespace WindowsEnvironment.Model;
 
 internal interface ISetPanelPositionAction
 {
-    (ContentPanel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content);
+    ContentTab SetPanelPosition(string panelName, PanelPosition position, Content content);
 }
 
 internal class SetPanelPositionAction : ISetPanelPositionAction
@@ -23,7 +23,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         _events = events;
     }
 
-    public (ContentPanel, ContentTab) SetPanelPosition(string panelName, PanelPosition position, Content content)
+    public ContentTab SetPanelPosition(string panelName, PanelPosition position, Content content)
     {
         _panels.RemoveFlexPanelTabById(content.Id);
         var panel = _panels.GetPanelByName(panelName);
@@ -45,7 +45,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             var tab = childPanel.TabCollection.Add(content);
             _events.RaisePanelAdded(parent, childPanel, tab);
 
-            return (childPanel, tab);
+            return tab;
         }
         else
         {
@@ -53,7 +53,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
             var tab = contentPanel.TabCollection.Add(content);
             _events.RaiseTabAdded(contentPanel, tab);
 
-            return (contentPanel, tab);
+            return tab;
         }
     }
 

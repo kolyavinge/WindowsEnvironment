@@ -18,7 +18,8 @@ internal class SelectTabAction : ISelectTabAction
 
     public void SelectTab(string tabName)
     {
-        var (panel, tab) = _panels.GetTabByName(tabName);
+        var tab = _panels.GetTabByName(tabName);
+        var panel = tab.ParentPanel;
         panel.SelectedTabName = tab.Name;
         _events.RaiseTabSelected(panel, tab);
     }

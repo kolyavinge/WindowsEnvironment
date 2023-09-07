@@ -29,6 +29,7 @@ internal class ContentPanel : Panel, IContentPanel
     public ContentPanel(string name, ContentTabCollection tabs) : base(name)
     {
         TabCollection = tabs;
+        TabCollection.ParentPanel = this;
         State = PanelState.Set;
     }
 }

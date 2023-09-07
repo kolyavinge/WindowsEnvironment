@@ -39,7 +39,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Updateable closed"
         });
 
-        var (panel, tab) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(id++)
+        var tab = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Middle, new(id++)
         {
             Header = new()
             {
@@ -62,7 +62,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Header 2 closed"
         });
 
-        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new(id++)
+        tab = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new(id++)
         {
             Header = new()
             {
@@ -72,7 +72,7 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 3 closed"
         });
-        Model.SetPanelSize(panel.Name, 100);
+        Model.SetPanelSize(tab.Parent.Name, 100);
 
         Model.SetPanelPosition(MainPanel.Name, PanelPosition.Right, new(id++)
         {
@@ -96,7 +96,7 @@ public class MainWindowModel : INotifyPropertyChanged
             CloseCallback = () => StatusText = "Header 5 closed"
         });
 
-        (panel, _) = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new(id++)
+        tab = Model.SetPanelPosition(MainPanel.Name, PanelPosition.Bottom, new(id++)
         {
             Header = new()
             {
@@ -106,6 +106,6 @@ public class MainWindowModel : INotifyPropertyChanged
             View = new TestTabContent(),
             CloseCallback = () => StatusText = "Header 6 closed"
         });
-        Model.SetPanelSize(panel.Name, 100);
+        Model.SetPanelSize(tab.Parent.Name, 100);
     }
 }

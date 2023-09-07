@@ -83,9 +83,8 @@ internal class PanelCollectionTest
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab_1");
         var tab = panel1.TabCollection.Add(new("id"));
 
-        var (resultPanel, resultTab) = _panels.GetTabByName("tab_1");
+        var resultTab = _panels.GetTabByName("tab_1");
 
-        Assert.That(resultPanel, Is.EqualTo(panel1));
         Assert.That(tab, Is.EqualTo(resultTab));
     }
 
@@ -111,9 +110,8 @@ internal class PanelCollectionTest
         _nameGenerator.Setup(x => x.GetContentTabName()).Returns("tab_1");
         var tab = panel1.TabCollection.Add(new("id"));
 
-        var (resultPanel, resultTab) = _panels.GetTabById("id");
+        var resultTab = _panels.GetTabById("id");
 
-        Assert.That(resultPanel, Is.EqualTo(panel1));
         Assert.That(tab, Is.EqualTo(resultTab));
     }
 
@@ -151,9 +149,8 @@ internal class PanelCollectionTest
         flexPanel.TabCollection.Add(new("flex_id"));
         _panels.AddFlexPanel(flexPanel);
 
-        var (resultPanel, resultTab) = _panels.GetTabById("flex_id");
+        var resultTab = _panels.GetTabById("flex_id");
 
-        Assert.That(resultPanel, Is.EqualTo(flexPanel));
         Assert.That(resultTab, Is.EqualTo(flexPanel.TabCollection.First()));
     }
 

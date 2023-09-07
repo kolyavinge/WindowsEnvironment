@@ -9,8 +9,8 @@ internal interface IPanelCollection : IEnumerable<Panel>
     LayoutPanel RootPanel { get; }
     IReadOnlyCollection<ContentPanel> FlexPanels { get; }
     Panel GetPanelByName(string name);
-    (ContentPanel, ContentTab) GetTabByName(string name);
-    (ContentPanel, ContentTab) GetTabById(object id);
+    ContentTab GetTabByName(string name);
+    ContentTab GetTabById(object id);
     int GetChildPanelIndex(string parentPanelName, string childPanelName);
     void SetRoot(LayoutPanel root);
     void AddFlexPanel(ContentPanel panel);
@@ -38,7 +38,7 @@ internal class PanelCollection : IPanelCollection
         return this.FirstOrDefault(x => x.Name == name) ?? throw new ArgumentException($"'{name}' does not exist.");
     }
 
-    public (ContentPanel, ContentTab) GetTabByName(string name)
+    public ContentTab GetTabByName(string name)
     {
         foreach (var panel in this.OfType<ContentPanel>())
         {
@@ -46,7 +46,7 @@ internal class PanelCollection : IPanelCollection
             {
                 if (tab.Name == name)
                 {
-                    return (panel, tab);
+                    return tab;
                 }
             }
         }
@@ -54,7 +54,7 @@ internal class PanelCollection : IPanelCollection
         throw new ArgumentException($"'{name}' does not exist.");
     }
 
-    public (ContentPanel, ContentTab) GetTabById(object id)
+    public ContentTab GetTabById(object id)
     {
         foreach (var panel in this.OfType<ContentPanel>())
         {
@@ -62,7 +62,7 @@ internal class PanelCollection : IPanelCollection
             {
                 if (tab.Content.Id == id)
                 {
-                    return (panel, tab);
+                    return tab;
                 }
             }
         }

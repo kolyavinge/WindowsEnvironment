@@ -50,18 +50,16 @@ internal class SetPanelPositionActionTest
     [Test]
     public void SetPanelPositionLeft_ReturnValue()
     {
-        var (panel, tab) = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
+        var tab = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
 
-        Assert.That(panel, Is.EqualTo(_panel1));
         Assert.That(tab.Name, Is.EqualTo("tab_0"));
     }
 
     [Test]
     public void SetPanelPositionMiddle_ReturnValue()
     {
-        var (panel, tab) = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Middle, _content);
+        var tab = _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Middle, _content);
 
-        Assert.That(panel, Is.EqualTo(_mainPanel));
         Assert.That(tab.Name, Is.EqualTo("tab_0"));
     }
 
@@ -426,7 +424,7 @@ internal class SetPanelPositionActionTest
     {
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Left, _content);
 
-        _events.Verify(x => x.RaisePanelAdded(_panel10, _panel1, new("tab_0", _content)));
+        _events.Verify(x => x.RaisePanelAdded(_panel10, _panel1, new("tab_0", _content, _panel1)));
     }
 
     [Test]
@@ -442,7 +440,7 @@ internal class SetPanelPositionActionTest
     {
         _action.SetPanelPosition(_mainPanel.Name, PanelPosition.Middle, _content);
 
-        _events.Verify(x => x.RaiseTabAdded(_mainPanel, new("tab_0", _content)));
+        _events.Verify(x => x.RaiseTabAdded(_mainPanel, new("tab_0", _content, _mainPanel)));
     }
 
     [Test]

@@ -31,7 +31,8 @@ internal class RemoveTabAction : IRemoveTabAction
 
     public void RemoveTab(string tabName, RemoveTabMode mode)
     {
-        var (panel, tab) = _panels.GetTabByName(tabName);
+        var tab = _panels.GetTabByName(tabName);
+        var panel = tab.ParentPanel;
         panel.TabCollection.Remove(tab);
         Panel? removedPanel = null;
         if (!panel.IsMain && !panel.TabCollection.Any())
