@@ -10,6 +10,8 @@ internal class ContentTabCollection : IReadOnlyCollection<ContentTab>
 
     public int Count => _tabs.Count;
 
+    public ContentTab this[int i] => _tabs[i];
+
     public ContentTabCollection(INameGenerator nameGenerator)
     {
         _tabs = new List<ContentTab>();

@@ -62,10 +62,10 @@ internal class MasterGrid : Grid
         Grid.SetColumn(parentGrid, Grid.GetColumn(childGrid));
     }
 
-    private void RemovePanel(RemovedPanelInfo removedPanel)
+    private void RemovePanel(IPanel removedPanel)
     {
-        var parentGrid = this.FindChildRec<Grid>(removedPanel.Parent.Name);
-        var removedGrid = this.FindChildRec<Grid>(removedPanel.Removed!.Name);
+        var parentGrid = this.FindChildRec<Grid>(removedPanel.Parent!.Name);
+        var removedGrid = this.FindChildRec<Grid>(removedPanel.Name);
         var removedSplitter = parentGrid.FindChildren<GridSplitter>().First();
         if (removedPanel.Parent.Orientation == PanelOrientation.ByRows)
         {
@@ -184,7 +184,7 @@ internal class MasterGrid : Grid
         MakeNewTab(tabControl, parentPanel, tab);
     }
 
-    public void RemoveTab(RemovedPanelInfo? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    public void RemoveTab(IPanel? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (tabPanel.State == PanelState.Flex)
         {
@@ -201,7 +201,7 @@ internal class MasterGrid : Grid
         FlexWindows!.First(x => x.Content == tab.Content).Close();
     }
 
-    private void RemoveTabForSetPanel(RemovedPanelInfo? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
+    private void RemoveTabForSetPanel(IPanel? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
         if (Model == null) throw new InvalidOperationException();
         if (Styles == null) throw new InvalidOperationException();

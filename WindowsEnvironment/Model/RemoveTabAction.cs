@@ -33,21 +33,20 @@ internal class RemoveTabAction : IRemoveTabAction
     {
         var (panel, tab) = _panels.GetTabByName(tabName);
         panel.TabCollection.Remove(tab);
-        RemovedPanelInfo? removedPanelInfo = null;
+        Panel? removedPanel = null;
         if (!panel.IsMain && !panel.TabCollection.Any())
         {
             var parentsChain = _parentsChainFinder.FindChain(panel.Name);
-            var parentPanel = parentsChain.OfType<LayoutPanel>().FirstOrDefault(x => x.ChildrenList.Count > 1) ?? _panels.RootPanel;
-            var removedPanel = parentsChain.GetBefore(parentPanel);
-            if (removedPanel != null) parentPanel.ChildrenList.Remove(removedPanel);
-            removedPanelInfo = new RemovedPanelInfo(parentPanel, removedPanel);
+            var parentPanel = parentsChain.First(x => x.ChildrenList.Count > 1);
+            removedPanel = (Panel?)parentsChain.GetBefore(parentPanel) ?? panel;
+            parentPanel.ChildrenList.Remove(removedPanel);
         }
-        if (removedPanelInfo != null)
+        if (removedPanel != null)
         {
-            var lastChild = removedPanelInfo.Parent.Children.LastOrDefault();
+            var lastChild = removedPanel.Parent!.Children.LastOrDefault();
             if (lastChild is ContentPanel lastChildContentPanel) lastChildContentPanel.Size = null;
         }
-        _events.RaiseTabRemoved(removedPanelInfo, panel, tab, mode);
+        _events.RaiseTabRemoved(removedPanel, panel, tab, mode);
         if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
         {
             tab.Content.CloseCallback();

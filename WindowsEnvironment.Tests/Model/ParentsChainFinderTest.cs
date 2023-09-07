@@ -24,8 +24,7 @@ internal class ParentsChainFinderTest
     {
         var result = _finder.FindChain(MainPanel.Name);
 
-        Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result.First(), Is.EqualTo(_rootPanel));
+        Assert.That(result, Has.Count.EqualTo(0));
     }
 
     [Test]
@@ -36,9 +35,8 @@ internal class ParentsChainFinderTest
 
         var result = _finder.FindChain(panel1.Name);
 
-        Assert.That(result, Has.Count.EqualTo(2));
-        Assert.That(result[0], Is.EqualTo(panel1));
-        Assert.That(result[1], Is.EqualTo(_rootPanel));
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0], Is.EqualTo(_rootPanel));
     }
 
     [Test]
@@ -51,9 +49,8 @@ internal class ParentsChainFinderTest
 
         var result = _finder.FindChain(panel1.Name);
 
-        Assert.That(result, Has.Count.EqualTo(2));
-        Assert.That(result[0], Is.EqualTo(panel1));
-        Assert.That(result[1], Is.EqualTo(_rootPanel));
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0], Is.EqualTo(_rootPanel));
     }
 
     [Test]
