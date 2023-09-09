@@ -28,7 +28,8 @@ internal partial class FlexWindow : Window
         DependencyProperty.Register("HeaderForeground", typeof(Brush), typeof(FlexWindow), new PropertyMetadata(Brushes.Black));
     #endregion
 
-    private readonly IInputElement? _flexEnvironment;
+    private readonly IFlexWindowsEnvironment? _flexEnvironment;
+    private readonly IInputElement? _flexEnvironmentView;
     private bool _needToCapture;
     private Point? _lastMousePosition;
 
@@ -43,7 +44,8 @@ internal partial class FlexWindow : Window
     }
 
     public FlexWindow(
-        IInputElement flexEnvironment,
+        IFlexWindowsEnvironment flexEnvironment,
+        IInputElement flexEnvironmentView,
         IContentTab contentTab,
         TabControl tabControl,
         Point parentPosition,
@@ -51,6 +53,7 @@ internal partial class FlexWindow : Window
         : this()
     {
         _flexEnvironment = flexEnvironment;
+        _flexEnvironmentView = flexEnvironmentView;
         Content = contentTab.Content;
         DataContext = contentTab.Content;
         SetBinding(TitleProperty, $"Header.SourceObject.{Content.Header.PropertyName}");
@@ -70,7 +73,7 @@ internal partial class FlexWindow : Window
     {
         if (e.LeftButton == MouseButtonState.Pressed && _lastMousePosition != null)
         {
-            var mousePosition = Mouse.GetPosition(_flexEnvironment);
+            var mousePosition = Mouse.GetPosition(_flexEnvironmentView);
             Left += mousePosition.X - _lastMousePosition.Value.X;
             Top += mousePosition.Y - _lastMousePosition.Value.Y;
             _lastMousePosition = mousePosition;
@@ -87,7 +90,7 @@ internal partial class FlexWindow : Window
 
     public void CaptureHeader(Point? mousePosition = null)
     {
-        _lastMousePosition = mousePosition ?? Mouse.GetPosition(_flexEnvironment);
+        _lastMousePosition = mousePosition ?? Mouse.GetPosition(_flexEnvironmentView);
         _needToCapture = true;
     }
 
@@ -114,7 +117,8 @@ internal partial class FlexWindow : Window
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
     {
-        Content!.CloseCallback?.Invoke();
+        var tab = _flexEnvironment!.GetTabById(Content!.Id);
+        _flexEnvironment!.RemoveTab(tab.Name, RemoveTabMode.Close);
         Close();
     }
 }

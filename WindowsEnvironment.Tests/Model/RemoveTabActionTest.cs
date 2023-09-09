@@ -199,6 +199,61 @@ internal class RemoveTabActionTest
     }
 
     [Test]
+    public void RemoveFlexPanel()
+    {
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object)) { State = PanelState.Flex };
+        var tab = flexPanel.TabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
+
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
+
+        _panels.Verify(x => x.RemoveFlexPanelTabById(_contentId), Times.Once());
+        _events.Verify(x => x.RaiseTabRemoved(null, flexPanel, tab, RemoveTabMode.Close), Times.Once());
+    }
+
+    [Test]
+    public void RemoveFlexPanel_CloseCallbackInvoke()
+    {
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object)) { State = PanelState.Flex };
+        var tab = flexPanel.TabCollection.Add(_content);
+        var invoke = false;
+        _content.CloseCallback = () => invoke = true;
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
+
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
+
+        Assert.That(invoke, Is.True);
+    }
+
+    [Test]
+    public void RemoveFlexPanel_CloseCallbackNull_NotInvoke()
+    {
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object)) { State = PanelState.Flex };
+        var tab = flexPanel.TabCollection.Add(_content);
+        _content.CloseCallback = null;
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
+
+        _action.RemoveTab(tab.Name, RemoveTabMode.Close);
+    }
+
+    [Test]
+    public void RemoveFlexPanel_Uset_Error()
+    {
+        var flexPanel = new ContentPanel("", new(_nameGenerator.Object)) { State = PanelState.Flex };
+        var tab = flexPanel.TabCollection.Add(_content);
+        _panels.Setup(x => x.GetTabByName(tab.Name)).Returns(tab);
+        try
+        {
+            _action.RemoveTab(tab.Name, RemoveTabMode.Unset);
+            Assert.Fail();
+        }
+        catch (ArgumentException)
+        {
+            Assert.Pass();
+        }
+    }
+
+    [Test]
     public void RemoveTabResetSizeBeforePanel()
     {
         var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));

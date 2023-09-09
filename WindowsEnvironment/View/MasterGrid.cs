@@ -226,7 +226,7 @@ internal class MasterGrid : Grid
         {
             var parentPosition = PointToScreen(new());
             var mousePosition = Mouse.GetPosition(this);
-            var flexWindow = new FlexWindow(this, tab, tabControl, parentPosition, mousePosition);
+            var flexWindow = new FlexWindow(Model, this, tab, tabControl, parentPosition, mousePosition);
             flexWindow.HeaderBackground = Styles.FlexWindowHeaderBackground;
             flexWindow.HeaderForeground = Styles.FlexWindowHeaderForeground;
             flexWindow.HeaderMouseUp += (s, e) =>
