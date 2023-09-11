@@ -29,7 +29,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         var panel = _panels.GetPanelByName(panelName);
         if (position != PanelPosition.Middle)
         {
-            var parent = panel.ParentPanel;
+            var parent = panel.Parent;
             if (parent == null || !parent.IsSuitableOrientation(position))
             {
                 parent = _panelFactory.MakeNewLayoutPanel();
@@ -38,11 +38,11 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
                 _events.RaiseParentChanged(parent, panel);
             }
             var childPanel = _panelFactory.MakeNewContentPanel();
-            childPanel.ParentPanel = parent;
-            var childPanelIndex = parent.ChildrenList.IndexOf(panel);
+            childPanel.Parent = parent;
+            var childPanelIndex = parent.Children.IndexOf(panel);
             if (position is PanelPosition.Right or PanelPosition.Bottom) childPanelIndex++;
-            parent.ChildrenList.Insert(childPanelIndex, childPanel);
-            var tab = childPanel.TabCollection.Add(content);
+            parent.Children.Insert(childPanelIndex, childPanel);
+            var tab = childPanel.Tab.Add(content);
             _events.RaisePanelAdded(parent, childPanel, tab);
 
             return tab;
@@ -50,7 +50,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         else
         {
             if (panel is not ContentPanel contentPanel) throw new ArgumentException($"{panelName} does not contain tabs.");
-            var tab = contentPanel.TabCollection.Add(content);
+            var tab = contentPanel.Tab.Add(content);
             _events.RaiseTabAdded(contentPanel, tab);
 
             return tab;
@@ -59,17 +59,17 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
 
     private void ChangeParent(LayoutPanel parent, Panel child)
     {
-        var oldParent = child.ParentPanel;
+        var oldParent = child.Parent;
         if (oldParent != null)
         {
-            oldParent.ChildrenList.Replace(child, parent);
+            oldParent.Children.Replace(child, parent);
         }
         else
         {
             _panels.SetRoot(parent);
         }
-        child.ParentPanel = parent;
-        parent.ParentPanel = oldParent;
-        parent.ChildrenList.Add(child);
+        child.Parent = parent;
+        parent.Parent = oldParent;
+        parent.Children.Add(child);
     }
 }

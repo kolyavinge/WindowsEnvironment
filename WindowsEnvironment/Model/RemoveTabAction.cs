@@ -32,7 +32,7 @@ internal class RemoveTabAction : IRemoveTabAction
     public void RemoveTab(string tabName, RemoveTabMode mode)
     {
         var tab = _panels.GetTabByName(tabName);
-        var panel = tab.ParentPanel;
+        var panel = tab.Parent;
         if (panel.State == PanelState.Set)
         {
             RemoveSetTab(panel, tab, mode);
@@ -46,14 +46,14 @@ internal class RemoveTabAction : IRemoveTabAction
 
     private void RemoveSetTab(ContentPanel panel, ContentTab tab, RemoveTabMode mode)
     {
-        panel.TabCollection.Remove(tab);
+        panel.Tab.Remove(tab);
         Panel? removedPanel = null;
-        if (!panel.IsMain && !panel.TabCollection.Any())
+        if (!panel.IsMain && !panel.Tab.Any())
         {
             var parentsChain = _parentsChainFinder.FindChain(panel.Name);
-            var parentPanel = parentsChain.First(x => x.ChildrenList.Count > 1);
+            var parentPanel = parentsChain.First(x => x.Children.Count > 1);
             removedPanel = (Panel?)parentsChain.GetBefore(parentPanel) ?? panel;
-            parentPanel.ChildrenList.Remove(removedPanel);
+            parentPanel.Children.Remove(removedPanel);
         }
         if (removedPanel != null)
         {
@@ -69,7 +69,7 @@ internal class RemoveTabAction : IRemoveTabAction
         {
             var flexPanel = _panelFactory.MakeNewContentPanel();
             flexPanel.State = PanelState.Flex;
-            flexPanel.TabCollection.Add(tab.Content);
+            flexPanel.Tab.Add(tab.Content);
             _panels.AddFlexPanel(flexPanel);
         }
     }

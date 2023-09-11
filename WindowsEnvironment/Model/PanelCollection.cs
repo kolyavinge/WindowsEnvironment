@@ -30,7 +30,7 @@ internal class PanelCollection : IPanelCollection
         _flexPanels = new List<ContentPanel>();
         var mainPanel = panelFactory.MakeNewContentPanel();
         RootPanel = panelFactory.MakeNewLayoutPanel();
-        RootPanel.ChildrenList.Add(mainPanel);
+        RootPanel.Children.Add(mainPanel);
     }
 
     public Panel GetPanelByName(string name)
@@ -42,7 +42,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var panel in this.OfType<ContentPanel>())
         {
-            foreach (var tab in panel.TabCollection)
+            foreach (var tab in panel.Tab)
             {
                 if (tab.Name == name)
                 {
@@ -58,7 +58,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var panel in this.OfType<ContentPanel>())
         {
-            foreach (var tab in panel.TabCollection)
+            foreach (var tab in panel.Tab)
             {
                 if (tab.Content.Id == id)
                 {
@@ -75,7 +75,7 @@ internal class PanelCollection : IPanelCollection
         var parentPanel = (LayoutPanel)GetPanelByName(parentPanelName); // TODO check LayoutPanel, else throw exception
         var childPanel = GetPanelByName(childPanelName);
 
-        return parentPanel.ChildrenList.IndexOf(childPanel);
+        return parentPanel.Children.IndexOf(childPanel);
     }
 
     public void SetRoot(LayoutPanel root)
@@ -93,8 +93,8 @@ internal class PanelCollection : IPanelCollection
         var (flexPanel, tab) = GetFlexPanelById(id);
         if (flexPanel != null)
         {
-            flexPanel.TabCollection.Remove(tab!);
-            if (!flexPanel.TabCollection.Any())
+            flexPanel.Tab.Remove(tab!);
+            if (!flexPanel.Tab.Any())
             {
                 _flexPanels.Remove(flexPanel);
             }
@@ -105,7 +105,7 @@ internal class PanelCollection : IPanelCollection
     {
         foreach (var flexPanel in _flexPanels)
         {
-            foreach (var tab in flexPanel.TabCollection)
+            foreach (var tab in flexPanel.Tab)
             {
                 if (tab.Content.Id == id)
                 {

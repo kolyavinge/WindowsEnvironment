@@ -31,7 +31,7 @@ internal class ParentsChainFinderTest
     public void FindChainOneChild()
     {
         var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
-        _rootPanel.ChildrenList.Add(panel1);
+        _rootPanel.Children.Add(panel1);
 
         var result = _finder.FindChain(panel1.Name);
 
@@ -44,8 +44,8 @@ internal class ParentsChainFinderTest
     {
         var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
         var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
-        _rootPanel.ChildrenList.Add(panel1);
-        _rootPanel.ChildrenList.Add(panel2);
+        _rootPanel.Children.Add(panel1);
+        _rootPanel.Children.Add(panel2);
 
         var result = _finder.FindChain(panel1.Name);
 
@@ -58,8 +58,8 @@ internal class ParentsChainFinderTest
     {
         var panel1 = new ContentPanel("panel_1", new(_nameGenerator.Object));
         var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
-        _rootPanel.ChildrenList.Add(panel1);
-        _rootPanel.ChildrenList.Add(panel2);
+        _rootPanel.Children.Add(panel1);
+        _rootPanel.Children.Add(panel2);
 
         var result = _finder.FindChain("wrong panel");
 

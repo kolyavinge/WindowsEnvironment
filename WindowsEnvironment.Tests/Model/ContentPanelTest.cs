@@ -35,6 +35,6 @@ internal class ContentPanelTest
     [Test]
     public void TabCollection_ParentPanel()
     {
-        Assert.That(_panel.TabCollection.ParentPanel, Is.EqualTo(_panel));
+        Assert.That(_panel.Tab.ParentPanel, Is.EqualTo(_panel));
     }
 }

@@ -4,9 +4,11 @@ namespace WindowsEnvironment.Model;
 
 internal class ContentPanel : Panel, IContentPanel
 {
-    public IReadOnlyCollection<IContentTab> Tabs => TabCollection;
+    #region IContentPanel
+    IReadOnlyCollection<IContentTab> IContentPanel.Tabs => Tab;
+    #endregion
 
-    public ContentTabCollection TabCollection { get; }
+    public ContentTabCollection Tab { get; }
 
     private string? _selectedTabName;
     public string? SelectedTabName
@@ -24,12 +26,12 @@ internal class ContentPanel : Panel, IContentPanel
 
     public bool IsMain => Name == MainPanel.Name;
 
-    public PanelState State { get; internal set; }
+    public PanelState State { get; set; }
 
     public ContentPanel(string name, ContentTabCollection tabs) : base(name)
     {
-        TabCollection = tabs;
-        TabCollection.ParentPanel = this;
+        Tab = tabs;
+        Tab.ParentPanel = this;
         State = PanelState.Set;
     }
 }

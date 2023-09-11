@@ -9,13 +9,15 @@ public static class MainPanel
 
 internal abstract class Panel : IPanel
 {
+    #region IPanel
+    ILayoutPanel? IPanel.Parent => Parent;
+    #endregion
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string Name { get; }
 
-    public ILayoutPanel? Parent => ParentPanel;
-
-    public LayoutPanel? ParentPanel { get; internal set; }
+    public LayoutPanel? Parent { get; set; }
 
     public Panel(string name)
     {

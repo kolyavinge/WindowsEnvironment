@@ -33,8 +33,8 @@ internal class LayoutPanelTest
     {
         var panel1 = new LayoutPanel("panel_1");
         var panel2 = new LayoutPanel("panel_2");
-        _panel.ChildrenList.Add(panel1);
-        _panel.ChildrenList.Add(panel2);
+        _panel.Children.Add(panel1);
+        _panel.Children.Add(panel2);
         var result = _panel.GetAllChildren().ToList();
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -47,8 +47,8 @@ internal class LayoutPanelTest
     {
         var panel1 = new LayoutPanel("panel_1");
         var panel2 = new LayoutPanel("panel_2");
-        _panel.ChildrenList.Add(panel1);
-        panel1.ChildrenList.Add(panel2);
+        _panel.Children.Add(panel1);
+        panel1.Children.Add(panel2);
         var result = _panel.GetAllChildren().ToList();
 
         Assert.That(result, Has.Count.EqualTo(2));
@@ -61,8 +61,8 @@ internal class LayoutPanelTest
     {
         var panel1 = new LayoutPanel("panel_1");
         var panel2 = new ContentPanel("panel_2", new(_nameGenerator.Object));
-        _panel.ChildrenList.Add(panel1);
-        panel1.ChildrenList.Add(panel2);
+        _panel.Children.Add(panel1);
+        panel1.Children.Add(panel2);
         var result = _panel.GetAllChildren().ToList();
 
         Assert.That(result, Has.Count.EqualTo(2));

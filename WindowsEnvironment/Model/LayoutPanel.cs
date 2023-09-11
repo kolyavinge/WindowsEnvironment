@@ -5,16 +5,18 @@ namespace WindowsEnvironment.Model;
 
 internal class LayoutPanel : Panel, ILayoutPanel
 {
+    #region ILayoutPanel
+    IReadOnlyList<IPanel> ILayoutPanel.Children => Children;
+    #endregion
+
     public PanelOrientation Orientation { get; private set; }
 
-    public IReadOnlyList<IPanel> Children => ChildrenList;
-
-    public List<Panel> ChildrenList { get; }
+    public List<Panel> Children { get; }
 
     public LayoutPanel(string name) : base(name)
     {
         Orientation = PanelOrientation.Unspecified;
-        ChildrenList = new List<Panel>();
+        Children = new List<Panel>();
     }
 
     public void SetOrientation(PanelPosition position)
@@ -45,9 +47,9 @@ internal class LayoutPanel : Panel, ILayoutPanel
 
     public IEnumerable<Panel> GetAllChildren()
     {
-        if (!ChildrenList.Any()) return Enumerable.Empty<Panel>();
+        if (!Children.Any()) return Enumerable.Empty<Panel>();
         var result = new List<Panel>();
-        foreach (var child in ChildrenList)
+        foreach (var child in Children)
         {
             result.Add(child);
             if (child is LayoutPanel layoutPanel)

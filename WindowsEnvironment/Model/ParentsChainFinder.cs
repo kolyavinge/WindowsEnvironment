@@ -32,7 +32,7 @@ internal class ParentsChainFinder : IParentsChainFinder
         }
         else if (parentPanel is LayoutPanel parentLayoutPanel)
         {
-            foreach (var child in parentLayoutPanel.ChildrenList)
+            foreach (var child in parentLayoutPanel.Children)
             {
                 if (FindParentsChain(child, findPanelName, parentChain))
                 {
