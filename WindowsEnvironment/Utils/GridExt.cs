@@ -23,7 +23,7 @@ internal static class GridExt
             else if (child is Grid childGrid)
             {
                 foundChild = childGrid.FindChildRecOrDefault<T>(childName);
-                if (foundChild != null)
+                if (foundChild is not null)
                 {
                     return foundChild;
                 }

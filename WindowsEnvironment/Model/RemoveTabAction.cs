@@ -55,13 +55,13 @@ internal class RemoveTabAction : IRemoveTabAction
             removedPanel = (Panel?)parentsChain.GetBefore(parentPanel) ?? panel;
             parentPanel.Children.Remove(removedPanel);
         }
-        if (removedPanel != null)
+        if (removedPanel is not null)
         {
             var lastChild = removedPanel.Parent!.Children.LastOrDefault();
             if (lastChild is ContentPanel lastChildContentPanel) lastChildContentPanel.Size = null;
         }
         _events.RaiseTabRemoved(removedPanel, panel, tab, mode);
-        if (mode == RemoveTabMode.Close && tab.Content.CloseCallback != null)
+        if (mode == RemoveTabMode.Close && tab.Content.CloseCallback is not null)
         {
             tab.Content.CloseCallback();
         }
@@ -78,7 +78,7 @@ internal class RemoveTabAction : IRemoveTabAction
     {
         _panels.RemoveFlexPanelTabById(tab.Content.Id);
         _events.RaiseTabRemoved(null, panel, tab, RemoveTabMode.Close);
-        if (tab.Content.CloseCallback != null)
+        if (tab.Content.CloseCallback is not null)
         {
             tab.Content.CloseCallback();
         }

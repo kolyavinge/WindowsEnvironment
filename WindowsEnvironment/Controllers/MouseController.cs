@@ -30,7 +30,7 @@ internal class MouseController : IMouseController
 
     public void OnTabHeaderMouseMove(double x, double y)
     {
-        if (_lastMousePoint == null) return;
+        if (_lastMousePoint is null) return;
         var dx = _lastMousePoint.X - x;
         var dy = _lastMousePoint.Y - y;
         var distance = Math.Sqrt(dx * dx + dy * dy);

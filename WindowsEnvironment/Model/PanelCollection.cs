@@ -91,7 +91,7 @@ internal class PanelCollection : IPanelCollection
     public void RemoveFlexPanelTabById(object id)
     {
         var (flexPanel, tab) = GetFlexPanelById(id);
-        if (flexPanel != null)
+        if (flexPanel is not null)
         {
             flexPanel.Tab.Remove(tab!);
             if (!flexPanel.Tab.Any())

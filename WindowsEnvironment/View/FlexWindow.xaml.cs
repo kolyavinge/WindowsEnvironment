@@ -71,7 +71,7 @@ internal partial class FlexWindow : Window
 
     private void OnHeaderMouseMove(object sender, MouseEventArgs e)
     {
-        if (e.LeftButton == MouseButtonState.Pressed && _lastMousePosition != null)
+        if (e.LeftButton == MouseButtonState.Pressed && _lastMousePosition is not null)
         {
             var mousePosition = Mouse.GetPosition(_flexEnvironmentView);
             Left += mousePosition.X - _lastMousePosition.Value.X;

@@ -30,7 +30,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
         if (position != PanelPosition.Middle)
         {
             var parent = panel.Parent;
-            if (parent == null || !parent.IsSuitableOrientation(position))
+            if (parent is null || !parent.IsSuitableOrientation(position))
             {
                 parent = _panelFactory.MakeNewLayoutPanel();
                 parent.SetOrientation(position);
@@ -60,7 +60,7 @@ internal class SetPanelPositionAction : ISetPanelPositionAction
     private void ChangeParent(LayoutPanel parent, Panel child)
     {
         var oldParent = child.Parent;
-        if (oldParent != null)
+        if (oldParent is not null)
         {
             oldParent.Children.Replace(child, parent);
         }

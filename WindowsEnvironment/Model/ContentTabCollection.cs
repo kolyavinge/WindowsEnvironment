@@ -22,7 +22,7 @@ internal class ContentTabCollection : IReadOnlyCollection<ContentTab>
 
     public ContentTab Add(Content content)
     {
-        if (ParentPanel == null) throw new InvalidOperationException("ParentPanel has not been initialized.");
+        if (ParentPanel is null) throw new InvalidOperationException("ParentPanel has not been initialized.");
 
         var tab = new ContentTab(_nameGenerator.GetContentTabName(), content, ParentPanel!);
         _tabs.Add(tab);

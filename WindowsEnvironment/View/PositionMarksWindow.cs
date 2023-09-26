@@ -39,7 +39,7 @@ internal class PositionMarksWindow : Window
         AllowsTransparency = true;
         ShowInTaskbar = false;
         _contentGrid = new Grid();
-        if (flexEnvironment != null)
+        if (flexEnvironment is not null)
         {
             var parentPosition = flexEnvironment.PointToScreen(new());
             Left = parentPosition.X;
@@ -73,7 +73,7 @@ internal class PositionMarksWindow : Window
         foreach (var marks in Marks)
         {
             var selectedPosition = marks.GetSelectedPosition(flexEnvironment);
-            if (selectedPosition != null)
+            if (selectedPosition is not null)
             {
                 return (marks, selectedPosition);
             }

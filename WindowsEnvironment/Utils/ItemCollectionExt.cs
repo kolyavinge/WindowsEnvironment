@@ -28,7 +28,7 @@ internal static class ItemCollectionExt
                 break;
             }
         }
-        if (result != null)
+        if (result is not null)
         {
             collection.Remove(result);
             return true;

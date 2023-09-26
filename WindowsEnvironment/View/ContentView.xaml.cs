@@ -60,7 +60,7 @@ public partial class ContentView : UserControl, IDisposable
         var control = (ContentView)d;
         var contentElement = (UIElement)e.NewValue;
         control._contentGrid.Children.Clear();
-        if (contentElement != null) control._contentGrid.Children.Add(contentElement);
+        if (contentElement is not null) control._contentGrid.Children.Add(contentElement);
     }
     #endregion
 

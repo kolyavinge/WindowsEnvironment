@@ -21,7 +21,7 @@ internal class MasterGrid : Grid
 
     public Grid AddPanel(ILayoutPanel? parentPanel, IPanel childPanel)
     {
-        var parentGrid = parentPanel != null ? this.FindChildRec<Grid>(parentPanel.Name) : this;
+        var parentGrid = parentPanel is not null ? this.FindChildRec<Grid>(parentPanel.Name) : this;
         if (parentPanel?.Orientation == PanelOrientation.ByRows)
         {
             parentGrid.RowDefinitions.Add(new());
@@ -38,7 +38,7 @@ internal class MasterGrid : Grid
 
     public Grid AddPanelWithTab(ILayoutPanel parentPanel, IContentPanel childPanel, IContentTab tab)
     {
-        if (Styles == null) throw new InvalidOperationException();
+        if (Styles is null) throw new InvalidOperationException();
         var childGrid = AddPanel(parentPanel, childPanel);
         AddTab(childPanel, tab);
         MakeSplitters(parentPanel);
@@ -89,7 +89,7 @@ internal class MasterGrid : Grid
 
     public void MakeSplitters(ILayoutPanel parentPanel)
     {
-        if (Styles == null) throw new InvalidOperationException();
+        if (Styles is null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         var needSplittersCount = parentGrid.Children.OfType<Grid>().Count() - 1;
         var currentSplittersCount = parentGrid.Children.OfType<GridSplitter>().Count();
@@ -165,7 +165,7 @@ internal class MasterGrid : Grid
 
     public void AddTab(IContentPanel parentPanel, IContentTab tab)
     {
-        if (Styles == null) throw new InvalidOperationException();
+        if (Styles is null) throw new InvalidOperationException();
         var parentGrid = this.FindChildRec<Grid>(parentPanel.Name);
         TabControl tabControl;
         if (parentGrid.FindChildren<TabControl>().Any())
@@ -205,8 +205,8 @@ internal class MasterGrid : Grid
 
     private void RemoveTabForSetPanel(IPanel? removedPanel, IContentPanel tabPanel, IContentTab tab, RemoveTabMode mode)
     {
-        if (Model == null) throw new InvalidOperationException();
-        if (Styles == null) throw new InvalidOperationException();
+        if (Model is null) throw new InvalidOperationException();
+        if (Styles is null) throw new InvalidOperationException();
         var tabPanelGrid = this.FindChildRec<Grid>(tabPanel.Name);
         var tabControl = tabPanelGrid.FindChildren<TabControl>().First();
         var tabItem = tabControl.Items.GetByName(tab.Name)!;
@@ -218,7 +218,7 @@ internal class MasterGrid : Grid
         {
             tabPanelGrid.Children.Remove(tabControl);
         }
-        if (removedPanel != null)
+        if (removedPanel is not null)
         {
             RemovePanel(removedPanel);
         }
@@ -231,9 +231,9 @@ internal class MasterGrid : Grid
             flexWindow.HeaderForeground = Styles.FlexWindowHeaderForeground;
             flexWindow.HeaderMouseUp += (s, e) =>
             {
-                if (_marksWindow == null) return;
+                if (_marksWindow is null) return;
                 var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
-                if (marks != null)
+                if (marks is not null)
                 {
                     flexWindow.Close();
                     Model.SetPanelPosition(selectedPosition!.PanelName, selectedPosition.Position, flexWindow.Content!);
@@ -243,7 +243,7 @@ internal class MasterGrid : Grid
             };
             flexWindow.WindowMoved += (s, e) =>
             {
-                if (_marksWindow == null)
+                if (_marksWindow is null)
                 {
                     _marksWindow = new PositionMarksWindow(this);
                     _marksWindow.PositionMarksBackground = Styles.PositionMarksBackground;
@@ -263,7 +263,7 @@ internal class MasterGrid : Grid
                     _marksWindow.Topmost = true;
                     _marksWindow.DeactivateAllPositions();
                     var (marks, selectedPosition) = _marksWindow.GetSelectedMarkAndPosition(this);
-                    if (marks != null)
+                    if (marks is not null)
                     {
                         marks.ActivatePosition(selectedPosition!.Position);
                     }
@@ -276,9 +276,9 @@ internal class MasterGrid : Grid
 
     private void MakeNewTab(TabControl tabControl, IContentPanel panel, IContentTab contentTab)
     {
-        if (Model == null) throw new InvalidOperationException();
-        if (Styles == null) throw new InvalidOperationException();
-        if (MouseController == null) throw new InvalidOperationException();
+        if (Model is null) throw new InvalidOperationException();
+        if (Styles is null) throw new InvalidOperationException();
+        if (MouseController is null) throw new InvalidOperationException();
         // tab header
         var headerGrid = new TabItemHeaderView
         {
